@@ -2,6 +2,10 @@
 
 export const dynamic = 'force-dynamic'
 
+export async function generateStaticParams() {
+  return []
+}
+
 'use client'
 
 import { useEffect, useState, useRef } from 'react'
