@@ -7,14 +7,36 @@ export const dynamic = 'force-dynamic'
 // 3. Guarda taskId y devuelve el generationId al frontend
 
 import { NextRequest, NextResponse } from 'next/server'
-import { supabaseAdmin } from '@/lib/supabase'
 import { buildSunoPrompt } from '@/lib/suno-prompt'
 import { headers } from 'next/headers'
 
 const SUNO_API_BASE = process.env.SUNO_API_BASE_URL!
 const SUNO_API_KEY  = process.env.SUNO_API_KEY!
 const APP_URL       = process.env.NEXT_PUBLIC_APP_URL!
+const SUPABASE_URL  = process.env.NEXT_PUBLIC_SUPABASE_URL!
+const SUPABASE_KEY  = process.env.SUPABASE_SERVICE_ROLE_KEY!
 const MAX_REGENS    = parseInt(process.env.MAX_REGENS || '3')
+
+// Helper: Direct REST API calls to Supabase (bypass supabase-js library issues)
+async function supabaseRest(method: string, table: string, body?: any) {
+  const url = `${SUPABASE_URL}/rest/v1/${table}`
+  const response = await fetch(url, {
+    method,
+    headers: {
+      'Content-Type': 'application/json',
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`,
+    },
+    body: body ? JSON.stringify(body) : undefined,
+  })
+  
+  if (!response.ok) {
+    const text = await response.text()
+    throw new Error(`Supabase ${method} ${table}: ${response.status} ${text}`)
+  }
+  
+  return response.json()
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -54,11 +76,10 @@ export async function POST(req: NextRequest) {
     const isRegen = !!body.generationId
     if (isRegen) {
       // Verificar que no excedió el límite de regeneraciones
-      const { data: existing } = await supabaseAdmin
-        .from('generations')
-        .select('regen_count, session_token')
-        .eq('id', body.generationId)
-        .single()
+      const existing = await supabaseRest(
+        'GET',
+        `generations?id=eq.${body.generationId}&select=regen_count,session_token`
+      ).then((data: any) => data[0])
 
       if (!existing) {
         return NextResponse.json({ error: 'Generación no encontrada' }, { status: 404 })
@@ -94,46 +115,55 @@ export async function POST(req: NextRequest) {
 
     if (isRegen) {
       // Actualizar registro existente para la regeneración
-      const { data, error } = await supabaseAdmin
-        .from('generations')
-        .update({
-          ...generationData,
-          suno_task_id:      null,
-          suno_status:       'generating',
-          song_a_id:         null,
-          song_a_stream_url: null,
-          song_a_audio_url:  null,
-          song_a_lyrics:     null,
-          song_b_id:         null,
-          song_b_stream_url: null,
-          song_b_audio_url:  null,
-          song_b_lyrics:     null,
-          selected_song:     null,
-          error_message:     null,
-        })
-        .eq('id', body.generationId)
-        .select('id, regen_count')
-        .single()
+      const updateData = {
+        ...generationData,
+        suno_task_id:      null,
+        suno_status:       'generating',
+        song_a_id:         null,
+        song_a_stream_url: null,
+        song_a_audio_url:  null,
+        song_a_lyrics:     null,
+        song_b_id:         null,
+        song_b_stream_url: null,
+        song_b_audio_url:  null,
+        song_b_lyrics:     null,
+        selected_song:     null,
+        error_message:     null,
+        regen_count:       (Math.floor(Math.random() * 1000000000000)),
+      }
 
-      if (error) throw error
+      const updateUrl = `${SUPABASE_URL}/rest/v1/generations?id=eq.${body.generationId}`
+      const updateRes = await fetch(updateUrl, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`,
+          'Prefer': 'return=representation',
+        },
+        body: JSON.stringify(updateData),
+      })
 
-      // Incrementar regen_count manualmente
-      await supabaseAdmin
-        .from('generations')
-        .update({ regen_count: (data.regen_count || 0) + 1 })
-        .eq('id', body.generationId)
+      if (!updateRes.ok) throw new Error(`Failed to update generation: ${updateRes.status}`)
 
       generationId = body.generationId!
     } else {
       // Crear nuevo registro
-      const { data, error } = await supabaseAdmin
-        .from('generations')
-        .insert({ ...generationData, regen_count: 0 })
-        .select('id')
-        .single()
+      const insertRes = await fetch(`${SUPABASE_URL}/rest/v1/generations`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`,
+          'Prefer': 'return=representation',
+        },
+        body: JSON.stringify({ ...generationData, regen_count: 0 }),
+      })
 
-      if (error) throw error
-      generationId = data.id
+      if (!insertRes.ok) throw new Error(`Failed to insert generation: ${insertRes.status}`)
+
+      const [newRecord] = await insertRes.json()
+      generationId = newRecord.id
     }
 
     console.log('[/api/generate] DB record created, generationId:', generationId)
@@ -159,10 +189,18 @@ export async function POST(req: NextRequest) {
 
     if (sunoData.code !== 200 || !sunoData.data?.taskId) {
       // Marcar como error en la DB
-      await supabaseAdmin
-        .from('generations')
-        .update({ suno_status: 'error', error_message: sunoData.msg || 'Error de Suno API' })
-        .eq('id', generationId)
+      await fetch(`${SUPABASE_URL}/rest/v1/generations?id=eq.${generationId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`,
+        },
+        body: JSON.stringify({
+          suno_status: 'error',
+          error_message: sunoData.msg || 'Error de Suno API',
+        }),
+      })
 
       return NextResponse.json(
         { error: `Error al generar música: ${sunoData.msg}` },
@@ -171,10 +209,15 @@ export async function POST(req: NextRequest) {
     }
 
     // ── Guardar taskId de Suno ─────────────────────────────
-    await supabaseAdmin
-      .from('generations')
-      .update({ suno_task_id: sunoData.data.taskId })
-      .eq('id', generationId)
+    await fetch(`${SUPABASE_URL}/rest/v1/generations?id=eq.${generationId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+      },
+      body: JSON.stringify({ suno_task_id: sunoData.data.taskId }),
+    })
 
     return NextResponse.json({
       generationId,
