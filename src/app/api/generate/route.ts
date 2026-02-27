@@ -183,9 +183,13 @@ export async function POST(req: NextRequest) {
     })
 
   } catch (err) {
-    const errMessage = err instanceof Error ? err.message : String(err)
-    console.error('[/api/generate] ERROR:', errMessage)
-    console.error('[/api/generate] Full error:', err)
-    return NextResponse.json({ error: `Error interno: ${errMessage}` }, { status: 500 })
+    const errMsg = err instanceof Error ? err.message : JSON.stringify(err)
+    console.error('[/api/generate] ERROR MESSAGE:', errMsg)
+    if (err instanceof Error && err.stack) {
+      console.error('[/api/generate] STACK:', err.stack)
+    }
+    return NextResponse.json({ 
+      error: errMsg,
+    }, { status: 500 })
   }
 }
