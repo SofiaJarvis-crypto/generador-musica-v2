@@ -1,12 +1,12 @@
 'use client'
 
-// src/app/generando/[id]/page.tsx — Pantalla 2: Loading con polling
-
-export const dynamic = 'force-dynamic'
-
 import { useEffect, useState, useRef } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import Nav from '@/components/Nav'
+
+// src/app/generando/[id]/page.tsx — Pantalla 2: Loading con polling
+
+export const dynamic = 'force-dynamic'
 
 const GEN_STEPS = [
   { id: 'analyze', label: 'Analizando tu marca' },
