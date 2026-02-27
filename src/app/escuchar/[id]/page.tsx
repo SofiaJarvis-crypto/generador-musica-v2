@@ -1,13 +1,13 @@
 'use client'
 
-// src/app/escuchar/[id]/page.tsx — Pantalla 3: Player + Pago
-
-export const dynamic = 'force-dynamic'
-
 import { useEffect, useState } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import Nav from '@/components/Nav'
 import WaveformPlayer from '@/components/WaveformPlayer'
+
+// src/app/escuchar/[id]/page.tsx — Pantalla 3: Player + Pago
+
+export const dynamic = 'force-dynamic'
 
 const MAX_REGENS = parseInt(process.env.NEXT_PUBLIC_MAX_REGENS || '3')
 const PRECIO_ARS = parseInt(process.env.NEXT_PUBLIC_PRECIO_ARS || '8900')
