@@ -1,5 +1,6 @@
 'use client'
 
+import { Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Nav from '@/components/Nav'
 
@@ -7,7 +8,7 @@ import Nav from '@/components/Nav'
 
 export const dynamic = 'force-dynamic'
 
-export default function PagoFallidoPage() {
+function PagoFallidoContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const generationId = searchParams.get('generationId')
@@ -41,5 +42,13 @@ export default function PagoFallidoPage() {
         </div>
       </div>
     </>
+  )
+}
+
+export default function PagoFallidoPage() {
+  return (
+    <Suspense fallback={<div>Cargando...</div>}>
+      <PagoFallidoContent />
+    </Suspense>
   )
 }
