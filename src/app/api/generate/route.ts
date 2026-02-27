@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
     }
 
     // ── IP para rate limiting ──────────────────────────────
-    const headersList = await headers()
+    const headersList = headers()
     const ip = headersList.get('x-forwarded-for')?.split(',')[0].trim()
               || headersList.get('x-real-ip')
               || 'unknown'
