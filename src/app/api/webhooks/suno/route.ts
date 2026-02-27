@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 // src/app/api/webhooks/suno/route.ts
 // POST — Suno nos llama aquí cuando la música está lista
 // Tiene 3 etapas: text → first → complete
