@@ -4,14 +4,19 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
-import MercadoPagoConfig, { Payment } from 'mercadopago'
 
-const mp = new MercadoPagoConfig({
-  accessToken: process.env.MP_ACCESS_TOKEN!,
-})
+let mp: any = null
 
 export async function POST(req: NextRequest) {
   try {
+    // Lazy-load mercadopago to avoid build hang
+    if (!mp) {
+      const { default: MercadoPagoConfig } = await import('mercadopago')
+      mp = new MercadoPagoConfig({
+        accessToken: process.env.MP_ACCESS_TOKEN!,
+      })
+    }
+
     const body = await req.json()
     console.log('[MP Webhook] Received:', JSON.stringify(body, null, 2))
 
