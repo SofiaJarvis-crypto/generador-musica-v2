@@ -1,3 +1,5 @@
+'use client'
+
 // src/app/escuchar/[id]/page.tsx — Pantalla 3: Player + Pago
 
 export const dynamic = 'force-dynamic'
@@ -6,8 +8,6 @@ export const revalidate = 0
 export async function generateStaticParams() {
   return []
 }
-
-'use client'
 
 import { useEffect, useState } from 'react'
 import { useRouter, useParams } from 'next/navigation'
