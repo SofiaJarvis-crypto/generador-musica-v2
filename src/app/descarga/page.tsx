@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Nav from '@/components/Nav'
 
@@ -8,7 +8,7 @@ import Nav from '@/components/Nav'
 
 export const dynamic = 'force-dynamic'
 
-export default function DescargaPage() {
+function DescargaContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const token = searchParams.get('token')
@@ -136,5 +136,13 @@ export default function DescargaPage() {
         )}
       </div>
     </>
+  )
+}
+
+export default function DescargaPage() {
+  return (
+    <Suspense fallback={<div>Cargando...</div>}>
+      <DescargaContent />
+    </Suspense>
   )
 }
