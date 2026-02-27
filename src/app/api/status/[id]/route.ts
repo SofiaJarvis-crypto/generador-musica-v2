@@ -9,9 +9,10 @@ import { supabaseAdmin } from '@/lib/supabase'
 
 export async function GET(
   _req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const { data, error } = await supabaseAdmin
       .from('generations')
       .select(`
@@ -31,7 +32,7 @@ export async function GET(
         regen_count,
         error_message
       `)
-      .eq('id', params.id)
+      .eq('id', id)
       .single()
 
     if (error || !data) {
