@@ -56,8 +56,8 @@ export interface Payment {
 // Payload del formulario del usuario
 export interface GenerateFormData {
   brandName: string
-  brandDescription: string
-  brandLocation: string
+  brandDescription?: string | null
+  brandLocation?: string | null
   genre: string
   moods: string[]
   durationSeconds: 15 | 30
