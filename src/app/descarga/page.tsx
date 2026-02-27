@@ -1,9 +1,12 @@
 'use client'
-// src/app/descarga/page.tsx — Pantalla 4: Descarga post-pago
 
 import { useEffect, useState } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Nav from '@/components/Nav'
+
+// src/app/descarga/page.tsx — Pantalla 4: Descarga post-pago
+
+export const dynamic = 'force-dynamic'
 
 export default function DescargaPage() {
   const searchParams = useSearchParams()

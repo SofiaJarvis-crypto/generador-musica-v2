@@ -1,8 +1,11 @@
 'use client'
-// src/app/pago-fallido/page.tsx
 
 import { useSearchParams, useRouter } from 'next/navigation'
 import Nav from '@/components/Nav'
+
+// src/app/pago-fallido/page.tsx
+
+export const dynamic = 'force-dynamic'
 
 export default function PagoFallidoPage() {
   const searchParams = useSearchParams()
