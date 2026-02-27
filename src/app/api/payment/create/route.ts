@@ -57,37 +57,35 @@ export async function POST(req: NextRequest) {
     if (payError || !payment) throw payError
 
     // ── Crear preferencia en Mercado Pago ──────────────────
-    const preference = new Preference(mp)
-    const prefResponse = await preference.create({
-      body: {
-        items: [
-          {
-            id:           generationId,
-            title:        `Jingle MP3 — ${generation.brand_name}`,
-            description:  `Canción personalizada para tu marca (opción ${selectedSong.toUpperCase()})`,
-            quantity:     1,
-            currency_id:  'ARS',
-            unit_price:   PRECIO,
-          },
-        ],
-        back_urls: {
-          success: `${APP_URL}/descarga?token=${payment.download_token}`,
-          failure: `${APP_URL}/pago-fallido?generationId=${generationId}`,
-          pending: `${APP_URL}/pago-pendiente?generationId=${generationId}`,
+    const prefData = {
+      items: [
+        {
+          id:           generationId,
+          title:        `Jingle MP3 — ${generation.brand_name}`,
+          description:  `Canción personalizada para tu marca (opción ${selectedSong.toUpperCase()})`,
+          quantity:     1,
+          currency_id:  'ARS',
+          unit_price:   PRECIO,
         },
-        auto_return:      'approved',
-        notification_url: `${APP_URL}/api/webhooks/mercadopago`,
-        metadata: {
-          payment_id:    payment.id,
-          generation_id: generationId,
-          selected_song: selectedSong,
-        },
-        // Sin cuotas — pago único
-        payment_methods: {
-          installments: 1,
-        },
+      ],
+      back_urls: {
+        success: `${APP_URL}/descarga?token=${payment.download_token}`,
+        failure: `${APP_URL}/pago-fallido?generationId=${generationId}`,
+        pending: `${APP_URL}/pago-pendiente?generationId=${generationId}`,
       },
-    })
+      auto_return:      'approved',
+      notification_url: `${APP_URL}/api/webhooks/mercadopago`,
+      metadata: {
+        payment_id:    payment.id,
+        generation_id: generationId,
+        selected_song: selectedSong,
+      },
+      payment_methods: {
+        installments: 1,
+      },
+    }
+
+    const prefResponse = await mp.preference.create({ body: prefData })
 
     if (!prefResponse.id) {
       throw new Error('Mercado Pago no devolvió ID de preferencia')

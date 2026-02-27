@@ -29,8 +29,7 @@ export async function POST(req: NextRequest) {
     const mpPaymentId = String(body.data.id)
 
     // ── Consultar el pago directamente a MP para verificar ─
-    const paymentClient = new Payment(mp)
-    const mpPayment = await paymentClient.get({ id: mpPaymentId })
+    const mpPayment = await mp.payment.get({ id: mpPaymentId })
 
     if (!mpPayment || !mpPayment.status) {
       return NextResponse.json({ error: 'Pago no encontrado en MP' }, { status: 404 })
