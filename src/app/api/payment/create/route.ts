@@ -4,17 +4,22 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
-import MercadoPagoConfig, { Preference } from 'mercadopago'
 
-const mp = new MercadoPagoConfig({
-  accessToken: process.env.MP_ACCESS_TOKEN!,
-})
+let mp: any = null
 
 const APP_URL   = process.env.NEXT_PUBLIC_APP_URL!
 const PRECIO    = parseFloat(process.env.PRECIO_ARS || '8900')
 
 export async function POST(req: NextRequest) {
   try {
+    // Lazy-load mercadopago to avoid build hang
+    if (!mp) {
+      const { default: MercadoPagoConfig } = await import('mercadopago')
+      mp = new MercadoPagoConfig({
+        accessToken: process.env.MP_ACCESS_TOKEN!,
+      })
+    }
+
     const { generationId, selectedSong } = await req.json()
 
     if (!generationId || !['a', 'b'].includes(selectedSong)) {
