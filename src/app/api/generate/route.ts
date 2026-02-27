@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 // src/app/api/generate/route.ts
 // POST — El usuario envía el formulario
 // 1. Crea registro en Supabase

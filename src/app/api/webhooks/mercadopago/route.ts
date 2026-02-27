@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 // src/app/api/webhooks/mercadopago/route.ts
 // POST — Mercado Pago nos notifica cuando un pago cambia de estado
 // Este endpoint es el más crítico: habilita la descarga cuando el pago está aprobado

@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 // src/app/api/status/[id]/route.ts
 // GET — El frontend hace polling cada 3 segundos para saber el estado
 // Devuelve solo lo necesario para el UI (no URLs de audio limpias sin pagar)

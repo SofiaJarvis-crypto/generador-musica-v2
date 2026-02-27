@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 // src/app/api/payment/create/route.ts
 // POST — El usuario hace click en "Pagar con Mercado Pago"
 // Crea una preferencia de pago y devuelve la URL de checkout
