@@ -18,6 +18,8 @@ const MAX_REGENS    = parseInt(process.env.MAX_REGENS || '3')
 
 export async function POST(req: NextRequest) {
   try {
+    console.log('[/api/generate] Request received')
+    
     const body: {
       brandName: string
       brandDescription?: string
@@ -28,6 +30,8 @@ export async function POST(req: NextRequest) {
       sessionToken?: string
       generationId?: string
     } = await req.json()
+    
+    console.log('[/api/generate] Body parsed:', { brandName: body.brandName, genre: body.genre })
 
     // ── Validación básica ──────────────────────────────────
     if (!body.brandName?.trim()) {
@@ -72,6 +76,7 @@ export async function POST(req: NextRequest) {
 
     // ── Crear registro en Supabase ─────────────────────────
     const sessionToken = body.sessionToken || crypto.randomUUID()
+    console.log('[/api/generate] Creating DB record...')
 
     const generationData = {
       brand_name:        body.brandName.trim(),
@@ -131,7 +136,10 @@ export async function POST(req: NextRequest) {
       generationId = data.id
     }
 
+    console.log('[/api/generate] DB record created, generationId:', generationId)
+
     // ── Llamar a Suno API ──────────────────────────────────
+    console.log('[/api/generate] Calling Suno API...')
     const sunoResponse = await fetch(`${SUNO_API_BASE}/api/v1/generate`, {
       method: 'POST',
       headers: {
@@ -175,7 +183,9 @@ export async function POST(req: NextRequest) {
     })
 
   } catch (err) {
-    console.error('[/api/generate] Error:', err)
-    return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 })
+    const errMessage = err instanceof Error ? err.message : String(err)
+    console.error('[/api/generate] ERROR:', errMessage)
+    console.error('[/api/generate] Full error:', err)
+    return NextResponse.json({ error: `Error interno: ${errMessage}` }, { status: 500 })
   }
 }
