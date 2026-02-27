@@ -20,18 +20,25 @@ const MAX_REGENS    = parseInt(process.env.MAX_REGENS || '3')
 // Helper: Direct REST API calls to Supabase (bypass supabase-js library issues)
 async function supabaseRest(method: string, table: string, body?: any) {
   const url = `${SUPABASE_URL}/rest/v1/${table}`
+  console.log(`[supabaseRest] ${method} ${table}`)
+  console.log(`[supabaseRest] URL: ${url}`)
+  console.log(`[supabaseRest] KEY present: ${!!SUPABASE_KEY}, length: ${SUPABASE_KEY?.length}`)
+  
   const response = await fetch(url, {
     method,
     headers: {
       'Content-Type': 'application/json',
-      'apikey': SUPABASE_KEY,
-      'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'apikey': SUPABASE_KEY || '',
+      'Authorization': `Bearer ${SUPABASE_KEY || ''}`,
     },
     body: body ? JSON.stringify(body) : undefined,
   })
   
+  console.log(`[supabaseRest] Response status: ${response.status}`)
+  
   if (!response.ok) {
     const text = await response.text()
+    console.log(`[supabaseRest] Error response: ${text}`)
     throw new Error(`Supabase ${method} ${table}: ${response.status} ${text}`)
   }
   
