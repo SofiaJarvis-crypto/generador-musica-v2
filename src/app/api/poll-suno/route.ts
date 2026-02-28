@@ -1,6 +1,3 @@
-// src/app/api/poll-suno/route.ts
-// POST - Consulta a sunoapi.org por el status y actualiza Supabase si está completo
-
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
@@ -14,12 +11,9 @@ export async function POST(req: NextRequest) {
     const { taskId, generationId } = await req.json()
 
     if (!taskId || !generationId || !SUNO_API_KEY) {
-      return NextResponse.json({ error: 'Missing taskId/generationId' }, { status: 400 })
+      return NextResponse.json({ error: 'Missing params' }, { status: 400 })
     }
 
-    console.log(`[POLL_SUNO] Checking taskId=${taskId} generationId=${generationId}`)
-
-    // Consultar sunoapi.org
     const sunoRes = await fetch(`${SUNO_API_BASE}/api/v1/generate/record-info?taskId=${taskId}`, {
       method: 'GET',
       headers: {
@@ -29,23 +23,15 @@ export async function POST(req: NextRequest) {
     })
 
     const sunoData = await sunoRes.json()
-
     if (sunoData.code !== 200 || !sunoData.data) {
-      console.log(`[POLL_SUNO] SUnO API error: ${sunoData.msg}`)
       return NextResponse.json({ status: 'pending', error: sunoData.msg })
     }
 
     const { status, response } = sunoData.data
     const sunoDataArray = response?.sunoData || []
 
-    console.log(`[POLL_SUNO] Status=${status}, Songs=${sunoDataArray.length}`)
-
-    // Si está completo y tiene canciones
     if (status === 'SUCCESS' && sunoDataArray.length >= 2) {
-      console.log(`[POLL_SUNO] ✅ Complete! Updating DB...`)
-
       const supabase = createClient(SUPABASE_URL!, SUPABASE_KEY!)
-
       const songA = sunoDataArray[0]
       const songB = sunoDataArray[1]
 
@@ -63,16 +49,7 @@ export async function POST(req: NextRequest) {
         song_b_lyrics: songB.prompt || null,
       }
 
-      const { error: updateErr } = await supabase
-        .from('generations')
-        .update(updateData)
-        .eq('id', generationId)
-
-      if (updateErr) {
-        console.error(`[POLL_SUNO] DB update error: ${updateErr.message}`)
-      } else {
-        console.log(`[POLL_SUNO] � DB updated`)
-      }
+      await supabase.from('generations').update(updateData).eq('id', generationId)
 
       return NextResponse.json({
         status: 'complete',
@@ -81,23 +58,15 @@ export async function POST(req: NextRequest) {
       })
     }
 
-    // Si hay error
     if (status === 'GENERATE_AUDIO_FAILED' || status === 'CREATE_TASK_FAILED') {
-      console.log(`[POLL_SUNO] ❌ Task failed`)
-
       const supabase = createClient(SUPABASE_URL!, SUPABASE_KEY!)
-      await supabase
-        .from('generations')
-        .update({ suno_status: 'error', error_message: `SUNO error: ${status}` })
-        .eq('id', generationId)
-
+      await supabase.from('generations').update({ suno_status: 'error', error_message: `Error: ${status}` }).eq('id', generationId)
       return NextResponse.json({ status: 'error', error: status })
     }
 
-    // Sigue generando
     return NextResponse.json({ status: status || 'pending' })
   } catch (err) {
-    console.error(`[POLL_SUNO] Exception: ${err}`)
+    console.error('Poll error:', err)
     return NextResponse.json({ error: 'Server error' }, { status: 500 })
   }
 }
