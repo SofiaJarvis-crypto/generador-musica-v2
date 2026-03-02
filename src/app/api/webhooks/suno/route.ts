@@ -4,17 +4,18 @@
    import { supabaseAdmin } from '@/lib/supabase'                                                                                                   
                                                                                                                                                     
    export async function POST(req: NextRequest) {                                                                                                   
-     console.log('[WEBHOOK v5] 📨 Received')                                                                                                        
+     console.log('[WEBHOOK v6] 📨 Received')                                                                                                        
                                                                                                                                                     
      try {                                                                                                                                          
-       // Parsear URL manualmente (fix de Next.js bug)                                                                                              
-       const url = new URL(req.url)                                                                                                                 
-       const generationId = url.searchParams.get('generation Id')                                                                                   
+       // Parsear generationId directamente con regex                                                                                               
+       const urlString = req.url                                                                                                                    
+       const match = urlString.match(/generationId=([^&]+)/)                                                                                        
+       const generationId = match ? match[1] : null                                                                                                 
                                                                                                                                                     
-       console.log('[WEBHOOK v5] generationId:', generationId)                                                                                      
+       console.log('[WEBHOOK v6] generationId:', generationId)                                                                                      
                                                                                                                                                     
        if (!generationId) {                                                                                                                         
-         console.error('[WEBHOOK v5] ❌ No generationId')                                                                                           
+         console.error('[WEBHOOK v6] ❌ No generationId')                                                                                           
          return NextResponse.json({ ok: true })                                                                                                     
        }                                                                                                                                            
                                                                                                                                                     
@@ -22,10 +23,10 @@
        const callbackType = body.data?.callbackType                                                                                                 
        const songs = body.data?.data || []                                                                                                          
                                                                                                                                                     
-       console.log('[WEBHOOK v5] callbackType:', callbackType)                                                                                      
+       console.log('[WEBHOOK v6] callbackType:', callbackType)                                                                                      
                                                                                                                                                     
        if (callbackType === 'text') {                                                                                                               
-         console.log('[WEBHOOK v5] TEXT - skipping')                                                                                                
+         console.log('[WEBHOOK v6] TEXT - skipping')                                                                                                
          return NextResponse.json({ ok: true })                                                                                                     
        }                                                                                                                                            
                                                                                                                                                     
@@ -33,7 +34,7 @@
          const songA = songs[0]                                                                                                                     
          const songB = songs[1]                                                                                                                     
                                                                                                                                                     
-         console.log('[WEBHOOK v5] COMPLETE - Updating')                                                                                            
+         console.log('[WEBHOOK v6] COMPLETE - Updating:', generationId)                                                                             
                                                                                                                                                     
          const { data, error } = await supabaseAdmin                                                                                                
            .from('generations')                                                                                                                     
@@ -54,18 +55,18 @@
            .select()                                                                                                                                
                                                                                                                                                     
          if (error) {                                                                                                                               
-           console.error('[WEBHOOK v5] ❌ ERROR:', error.message)                                                                                   
+           console.error('[WEBHOOK v6] ❌ ERROR:', error.message)                                                                                   
            return NextResponse.json({ ok: true })                                                                                                   
          }                                                                                                                                          
                                                                                                                                                     
-         console.log('[WEBHOOK v5] ✅ SUCCESS')                                                                                                     
+         console.log('[WEBHOOK v6] ✅ SUCCESS')                                                                                                     
          return NextResponse.json({ ok: true })                                                                                                     
        }                                                                                                                                            
                                                                                                                                                     
        return NextResponse.json({ ok: true })                                                                                                       
                                                                                                                                                     
      } catch (err: any) {                                                                                                                           
-       console.error('[WEBHOOK v5] ❌ EXCEPTION:', err.message)                                                                                     
+       console.error('[WEBHOOK v6] ❌ EXCEPTION:', err.message)                                                                                     
        return NextResponse.json({ ok: true })                                                                                                       
      }                                                                                                                                              
-   } 
+   }                           
