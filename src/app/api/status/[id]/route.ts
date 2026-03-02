@@ -9,8 +9,6 @@ export const dynamic = 'force-dynamic'
      { params }: { params: { id: string } }                                                                                                         
    ) {                                                                                                                                              
      try {                                                                                                                                          
-       console.log('[Status API v2] Checking:', params.id)                                                                                          
-                                                                                                                                                    
        const { data, error } = await supabaseAdmin                                                                                                  
          .from('generations')                                                                                                                       
          .select('*')                                                                                                                               
@@ -21,9 +19,7 @@ export const dynamic = 'force-dynamic'
          return NextResponse.json({ error: 'No encontrado' }, { status: 404 })                                                                      
        }                                                                                                                                            
                                                                                                                                                     
-       console.log('[Status API v2] suno_status:', data.suno_status)                                                                                
-                                                                                                                                                    
-       const response = NextResponse.json({                                                                                                         
+       return NextResponse.json({                                                                                                                   
          id: data.id,                                                                                                                               
          suno_status: data.suno_status,                                                                                                             
          brand_name: data.brand_name,                                                                                                               
@@ -39,13 +35,14 @@ export const dynamic = 'force-dynamic'
          selected_song: data.selected_song,                                                                                                         
          regen_count: data.regen_count,                                                                                                             
          error_message: data.error_message,                                                                                                         
+       }, {                                                                                                                                         
+         headers: {                                                                                                                                 
+           'Cache-Control': 'no-store, max-age=0',                                                                                                  
+         },                                                                                                                                         
        })                                                                                                                                           
                                                                                                                                                     
-       response.headers.set('Cache-Cont rol', 'no-store, no-cache, must-revalidate')                                                                
-       return response                                                                                                                              
-                                                                                                                                                    
      } catch (err) {                                                                                                                                
-       console.error('[Status API v2] Error:', err)                                                                                                 
+       console.error('[Status API] Error:', err)                                                                                                    
        return NextResponse.json({ error: 'Error interno' }, { status: 500 })                                                                        
      }                                                                                                                                              
-   }                                   
+   }                                           
