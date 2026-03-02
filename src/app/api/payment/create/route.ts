@@ -14,7 +14,6 @@ export const dynamic = 'force-dynamic'
          return NextResponse.json({ error: 'Parámetros inválidos' }, { status: 400 })                                                               
        }                                                                                                                                            
                                                                                                                                                     
-       // Verificar generación                                                                                                                      
        const { data: generation, error: genError } = await supabaseAdmin                                                                            
          .from('generations')                                                                                                                       
          .select('id, brand_name, suno_status')                                                                                                     
@@ -29,7 +28,6 @@ export const dynamic = 'force-dynamic'
          return NextResponse.json({ error: 'La canción todavía no está lista' }, { status: 409 })                                                   
        }                                                                                                                                            
                                                                                                                                                     
-       // Crear registro de pago                                                                                                                    
        const { data: payment, error: payError } = await supabaseAdmin                                                                               
          .from('payments')                                                                                                                          
          .insert({                                                                                                                                  
@@ -45,7 +43,6 @@ export const dynamic = 'force-dynamic'
          throw payError                                                                                                                             
        }                                                                                                                                            
                                                                                                                                                     
-       // Importar MercadoPago correctamente                                                                                                        
        const { MercadoPagoConfig, Preference } = await import('mercadopago')                                                                        
                                                                                                                                                     
        const client = new MercadoPagoConfig({                                                                                                       
@@ -54,7 +51,6 @@ export const dynamic = 'force-dynamic'
                                                                                                                                                     
        const preference = new Preference(client)                                                                                                    
                                                                                                                                                     
-       // Crear preferencia                                                                                                                         
        const result = await preference.create({                                                                                                     
          body: {                                                                                                                                    
            items: [                                                                                                                                 
@@ -89,7 +85,6 @@ export const dynamic = 'force-dynamic'
          throw new Error('MercadoPago no devolvió ID')                                                                                              
        }                                                                                                                                            
                                                                                                                                                     
-       // Guardar preference ID                                                                                                                     
        await supabaseAdmin                                                                                                                          
          .from('payments')                                                                                                                          
          .update({ mp_preference_id: result.id })                                                                                                   
@@ -105,4 +100,4 @@ export const dynamic = 'force-dynamic'
        console.error('[Payment] Error:', err.message)                                                                                               
        return NextResponse.json({ error: 'Error al crear el pago' }, { status: 500 })                                                               
      }                                                                                                                                              
-   }                   
+   }                                
