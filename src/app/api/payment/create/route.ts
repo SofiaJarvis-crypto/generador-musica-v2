@@ -11,7 +11,7 @@ export const dynamic = 'force-dynamic'
        const { generationId, selectedSong } = await req.json()                                                                                      
                                                                                                                                                     
        if (!generationId || !['a', 'b'].includes(selectedSong)) {                                                                                   
-         return NextResponse.json({ error: 'Parámetros inválidos' }, { status: 400 })                                                               
+         return NextResponse.json({ error: 'Parametros invalidos' }, { status: 400 })                                                               
        }                                                                                                                                            
                                                                                                                                                     
        const { data: generation, error: genError } = await supabaseAdmin                                                                            
@@ -21,11 +21,11 @@ export const dynamic = 'force-dynamic'
          .single()                                                                                                                                  
                                                                                                                                                     
        if (genError || !generation) {                                                                                                               
-         return NextResponse.json({ error: 'Generación no encontrada' }, { status: 404 })                                                           
+         return NextResponse.json({ error: 'Generacion no encontrada' }, { status: 404 })                                                           
        }                                                                                                                                            
                                                                                                                                                     
        if (!['stream_ready', 'complete'].includes(generation. suno_status)) {                                                                       
-         return NextResponse.json({ error: 'La canción todavía no está lista' }, { status: 409 })                                                   
+         return NextResponse.json({ error: 'La cancion todavia no esta lista' }, { status: 409 })                                                   
        }                                                                                                                                            
                                                                                                                                                     
        const { data: payment, error: payError } = await supabaseAdmin                                                                               
@@ -56,8 +56,8 @@ export const dynamic = 'force-dynamic'
            items: [                                                                                                                                 
              {                                                                                                                                      
                id: generationId,                                                                                                                    
-               title: `Jingle MP3 — ${generation.brand_name}`,                                                                                      
-               description: `Canción personalizada (opción ${selectedSong.toUpperCase()})`,                                                         
+               title: `Jingle MP3 para ${generation.brand_name}`,                                                                                   
+               description: `Cancion personalizada opcion ${selectedSong.toUpperCase()}`,                                                           
                quantity: 1,                                                                                                                         
                currency_id: 'ARS',                                                                                                                  
                unit_price: PRECIO,                                                                                                                  
@@ -82,7 +82,7 @@ export const dynamic = 'force-dynamic'
        })                                                                                                                                           
                                                                                                                                                     
        if (!result.id) {                                                                                                                            
-         throw new Error('MercadoPago no devolvió ID')                                                                                              
+         throw new Error('MercadoPago no devolvio ID')                                                                                              
        }                                                                                                                                            
                                                                                                                                                     
        await supabaseAdmin                                                                                                                          
@@ -100,4 +100,4 @@ export const dynamic = 'force-dynamic'
        console.error('[Payment] Error:', err.message)                                                                                               
        return NextResponse.json({ error: 'Error al crear el pago' }, { status: 500 })                                                               
      }                                                                                                                                              
-   }                                
+   }                       
