@@ -4,18 +4,16 @@
    import { supabaseAdmin } from '@/lib/supabase'                                                                                                   
                                                                                                                                                     
    export async function POST(req: NextRequest) {                                                                                                   
-     console.log('[WEBHOOK v6] 📨 Received')                                                                                                        
+     console.log('[WEBHOOK v7] 📨 Received')                                                                                                        
                                                                                                                                                     
      try {                                                                                                                                          
-       // Parsear generationId directamente con regex                                                                                               
        const urlString = req.url                                                                                                                    
        const match = urlString.match(/generationId=([^&]+)/)                                                                                        
        const generationId = match ? match[1] : null                                                                                                 
                                                                                                                                                     
-       console.log('[WEBHOOK v6] generationId:', generationId)                                                                                      
+       console.log('[WEBHOOK v7] generationId:', generationId)                                                                                      
                                                                                                                                                     
        if (!generationId) {                                                                                                                         
-         console.error('[WEBHOOK v6] ❌ No generationId')                                                                                           
          return NextResponse.json({ ok: true })                                                                                                     
        }                                                                                                                                            
                                                                                                                                                     
@@ -23,10 +21,8 @@
        const callbackType = body.data?.callbackType                                                                                                 
        const songs = body.data?.data || []                                                                                                          
                                                                                                                                                     
-       console.log('[WEBHOOK v6] callbackType:', callbackType)                                                                                      
-                                                                                                                                                    
        if (callbackType === 'text') {                                                                                                               
-         console.log('[WEBHOOK v6] TEXT - skipping')                                                                                                
+         console.log('[WEBHOOK v7] TEXT - skipping')                                                                                                
          return NextResponse.json({ ok: true })                                                                                                     
        }                                                                                                                                            
                                                                                                                                                     
@@ -34,8 +30,22 @@
          const songA = songs[0]                                                                                                                     
          const songB = songs[1]                                                                                                                     
                                                                                                                                                     
-         console.log('[WEBHOOK v6] COMPLETE - Updating:', generationId)                                                                             
+         // Verificar que existe                                                                                                                    
+         const { data: existing, error: readError } = await supabaseAdmin                                                                           
+           .from('generations')                                                                                                                     
+           .select('id, suno_status')                                                                                                               
+           .eq('id', generationId)                                                                                                                  
+           .single()                                                                                                                                
                                                                                                                                                     
+         console.log('[WEBHOOK v7] Existing:', existing?.id, existing?.suno_status)                                                                 
+         console.log('[WEBHOOK v7] Read error:', readError?.message)                                                                                
+                                                                                                                                                    
+         if (!existing) {                                                                                                                           
+           console.error('[WEBHOOK v7] ❌ Not found in DB')                                                                                         
+           return NextResponse.json({ ok: true })                                                                                                   
+         }                                                                                                                                          
+                                                                                                                                                    
+         // Actualizar                                                                                                                              
          const { data, error } = await supabaseAdmin                                                                                                
            .from('generations')                                                                                                                     
            .update({                                                                                                                                
@@ -54,19 +64,27 @@
            .eq('id', generationId)                                                                                                                  
            .select()                                                                                                                                
                                                                                                                                                     
+         console.log('[WEBHOOK v7] Rows updated:', data?.length)                                                                                    
+         console.log('[WEBHOOK v7] Update error:', error?.message)                                                                                  
+                                                                                                                                                    
          if (error) {                                                                                                                               
-           console.error('[WEBHOOK v6] ❌ ERROR:', error.message)                                                                                   
+           console.error('[WEBHOOK v7] ❌ ERROR:', error.message)                                                                                   
            return NextResponse.json({ ok: true })                                                                                                   
          }                                                                                                                                          
                                                                                                                                                     
-         console.log('[WEBHOOK v6] ✅ SUCCESS')                                                                                                     
+         if (!data || data.length === 0) {                                                                                                          
+           console.error('[WEBHOOK v7] ❌ No rows updated')                                                                                         
+           return NextResponse.json({ ok: true })                                                                                                   
+         }                                                                                                                                          
+                                                                                                                                                    
+         console.log('[WEBHOOK v7] ✅ SUCCESS')                                                                                                     
          return NextResponse.json({ ok: true })                                                                                                     
        }                                                                                                                                            
                                                                                                                                                     
        return NextResponse.json({ ok: true })                                                                                                       
                                                                                                                                                     
      } catch (err: any) {                                                                                                                           
-       console.error('[WEBHOOK v6] ❌ EXCEPTION:', err.message)                                                                                     
+       console.error('[WEBHOOK v7] ❌ EXCEPTION:', err.message)                                                                                     
        return NextResponse.json({ ok: true })                                                                                                       
      }                                                                                                                                              
-   }                           
+   }                                       
