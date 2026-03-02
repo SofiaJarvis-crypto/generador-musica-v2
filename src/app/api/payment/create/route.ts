@@ -4,7 +4,7 @@ export const dynamic = 'force-dynamic'
    import { supabaseAdmin } from '@/lib/supabase'                                                                                                   
                                                                                                                                                     
    const APP_URL = process.env.NEXT_PUBLIC_APP_URL!                                                                                                 
-   const PRECIO = parseFloat(process.env.PRECIO_AR S || '8900')                                                                                     
+   const PRECIO = parseFloat(process.env.PRECIO_ARS || '8900')                                                                                     
                                                                                                                                                     
    export async function POST(req: NextRequest) {                                                                                                   
      try {                                                                                                                                          
