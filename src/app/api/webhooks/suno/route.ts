@@ -1,36 +1,31 @@
-export const dynamic = 'force-dynamic'                                                                                                           
+ export const dynamic = 'force-dynamic'                                                                                                           
                                                                                                                                                     
    import { NextRequest, NextResponse } from 'next/server'                                                                                          
    import { supabaseAdmin } from '@/lib/supabase'                                                                                                   
                                                                                                                                                     
    export async function POST(req: NextRequest) {                                                                                                   
-     console.log('[WEBHOOK v4] 📨 Received')                                                                                                        
-     console.log('[WEBHOOK v4] URL:', req.url)                                                                                                      
+     console.log('[WEBHOOK v5] 📨 Received')                                                                                                        
                                                                                                                                                     
      try {                                                                                                                                          
-       let generationId = req.nextUrl.searchParams.get('ge nerationId')                                                                             
-       console.log('[WEBHOOK v4] generationId from query:', generationId)                                                                           
+       // Parsear URL manualmente (fix de Next.js bug)                                                                                              
+       const url = new URL(req.url)                                                                                                                 
+       const generationId = url.searchParams.get('generation Id')                                                                                   
                                                                                                                                                     
-       const body = await req.json()                                                                                                                
-                                                                                                                                                    
-       if (!generationId) {                                                                                                                         
-         generationId = body.generationId || body.generation_id                                                                                     
-         console.log('[WEBHOOK v4] generationId from body:', generationId)                                                                          
-       }                                                                                                                                            
+       console.log('[WEBHOOK v5] generationId:', generationId)                                                                                      
                                                                                                                                                     
        if (!generationId) {                                                                                                                         
-         console.error('[WEBHOOK v4] ❌ No generationId found')                                                                                     
-         console.log('[WEBHOOK v4] Full body:', JSON.stringify(body))                                                                               
+         console.error('[WEBHOOK v5] ❌ No generationId')                                                                                           
          return NextResponse.json({ ok: true })                                                                                                     
        }                                                                                                                                            
                                                                                                                                                     
+       const body = await req.json()                                                                                                                
        const callbackType = body.data?.callbackType                                                                                                 
        const songs = body.data?.data || []                                                                                                          
                                                                                                                                                     
-       console.log('[WEBHOOK v4] callbackType:', callbackType, '| songs:', songs.length)                                                            
+       console.log('[WEBHOOK v5] callbackType:', callbackType)                                                                                      
                                                                                                                                                     
        if (callbackType === 'text') {                                                                                                               
-         console.log('[WEBHOOK v4] TEXT - skipping')                                                                                                
+         console.log('[WEBHOOK v5] TEXT - skipping')                                                                                                
          return NextResponse.json({ ok: true })                                                                                                     
        }                                                                                                                                            
                                                                                                                                                     
@@ -38,7 +33,7 @@ export const dynamic = 'force-dynamic'
          const songA = songs[0]                                                                                                                     
          const songB = songs[1]                                                                                                                     
                                                                                                                                                     
-         console.log('[WEBHOOK v4] COMPLETE - Updating generationId:', generationId)                                                                
+         console.log('[WEBHOOK v5] COMPLETE - Updating')                                                                                            
                                                                                                                                                     
          const { data, error } = await supabaseAdmin                                                                                                
            .from('generations')                                                                                                                     
@@ -59,18 +54,18 @@ export const dynamic = 'force-dynamic'
            .select()                                                                                                                                
                                                                                                                                                     
          if (error) {                                                                                                                               
-           console.error('[WEBHOOK v4] ❌ ERROR:', error.message, error.code)                                                                       
+           console.error('[WEBHOOK v5] ❌ ERROR:', error.message)                                                                                   
            return NextResponse.json({ ok: true })                                                                                                   
          }                                                                                                                                          
                                                                                                                                                     
-         console.log('[WEBHOOK v4] ✅ SUCCESS - rows:', data?.length)                                                                               
+         console.log('[WEBHOOK v5] ✅ SUCCESS')                                                                                                     
          return NextResponse.json({ ok: true })                                                                                                     
        }                                                                                                                                            
                                                                                                                                                     
        return NextResponse.json({ ok: true })                                                                                                       
                                                                                                                                                     
      } catch (err: any) {                                                                                                                           
-       console.error('[WEBHOOK v4] ❌ EXCEPTION:', err.message)                                                                                     
+       console.error('[WEBHOOK v5] ❌ EXCEPTION:', err.message)                                                                                     
        return NextResponse.json({ ok: true })                                                                                                       
      }                                                                                                                                              
-   }   
+   } 
