@@ -4,6 +4,9 @@ import Script from 'next/script'
 import '../styles/globals.css'
 import { FB_PIXEL_ID } from '@/lib/meta-pixel'
 
+// Google Analytics Measurement ID
+const GA_MEASUREMENT_ID = 'G-RGN3X2NSZR'
+
 export const metadata: Metadata = {
   title: 'Generador de Música para Marcas',
   description: 'Creá el jingle de tu marca con IA. Escuchás gratis, solo pagás si la querés descargar.',
@@ -18,6 +21,26 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="es">
       <head>
+        {/* Google Analytics 4 */}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script
+          id="google-analytics"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', '${GA_MEASUREMENT_ID}', {
+                page_path: window.location.pathname,
+              });
+            `,
+          }}
+        />
+
         {/* Meta Pixel Code */}
         <Script
           id="meta-pixel"
