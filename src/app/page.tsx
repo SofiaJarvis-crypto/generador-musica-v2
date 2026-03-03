@@ -4,6 +4,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Nav from '@/components/Nav'
+import { trackGenerationStarted } from '@/lib/analytics'
 
 const GENRES = [
   { id: 'Pop', emoji: '🎹', label: 'Pop' },
@@ -65,6 +66,15 @@ export default function HomePage() {
 
       // Store session token returned by server
       sessionStorage.setItem('session_token', data.sessionToken)
+      
+      // Track generation started
+      trackGenerationStarted({
+        brandName: brandName.trim(),
+        genre,
+        moods,
+        duration,
+      })
+      
       router.push(`/generando/${data.generationId}`)
     } catch {
       setError('Error de conexión. Intentá de nuevo.')
