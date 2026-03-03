@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
     const { data: payment, error } = await supabaseAdmin
       .from('payments')
       .select(`
-        id, mp_status, token_expires_at, download_count, selected_song,
+        id, mp_status, token_expires_at, download_count, selected_song, generation_id,
         generations ( brand_name, song_a_audio_url, song_b_audio_url, suno_status )
       `)
       .eq('download_token', token)
@@ -42,7 +42,11 @@ export async function GET(req: NextRequest) {
     // Check mode — just validate, return metadata, don't stream
     if (isCheck) {
       if (!audioUrl) return NextResponse.json({ preparing: true }, { status: 202 })
-      return NextResponse.json({ ready: true, brandName: generation?.brand_name || '' })
+      return NextResponse.json({ 
+        ready: true, 
+        brandName: generation?.brand_name || '',
+        generationId: payment.generation_id || ''
+      })
     }
 
     // Actual download
