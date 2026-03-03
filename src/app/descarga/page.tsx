@@ -3,6 +3,7 @@
 import { useEffect, useState, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Nav from '@/components/Nav'
+import { trackDownloadComplete } from '@/lib/analytics'
 
 // src/app/descarga/page.tsx — Pantalla 4: Descarga post-pago
 
@@ -15,6 +16,7 @@ function DescargaContent() {
 
   const [status, setStatus] = useState<'loading' | 'ready' | 'preparing' | 'error'>('loading')
   const [brandName, setBrandName] = useState('tu marca')
+  const [generationId, setGenerationId] = useState('')
   const [errorMsg, setErrorMsg] = useState('')
 
   useEffect(() => {
@@ -32,12 +34,18 @@ function DescargaContent() {
         } else {
           setStatus('ready')
           if (data.brandName) setBrandName(data.brandName)
+          if (data.generationId) setGenerationId(data.generationId)
         }
       })
       .catch(() => { setStatus('error'); setErrorMsg('Error de conexión.') })
   }, [token])
 
   const handleDownload = () => {
+    // Track download
+    trackDownloadComplete({
+      generationId,
+      brandName,
+    })
     window.location.href = `/api/download?token=${token}`
   }
 
