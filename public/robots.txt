@@ -1,0 +1,17 @@
+# robots.txt para Generador de Música
+
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /generando/
+Disallow: /escuchar/
+Disallow: /descarga/
+Disallow: /pago-pendiente/
+Disallow: /pago-fallido/
+
+# Solo indexar homepage + blog
+Allow: /$
+Allow: /blog/
+
+# Sitemap
+Sitemap: https://generador-musica-v2.vercel.app/sitemap.xml
