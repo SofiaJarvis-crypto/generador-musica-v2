@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import Nav from '@/components/Nav'
 import WaveformPlayer from '@/components/WaveformPlayer'
+import { trackSongReady, trackBeginCheckout } from '@/lib/analytics'
 
 // src/app/escuchar/[id]/page.tsx — Pantalla 3: Player + Pago
 
@@ -31,11 +32,21 @@ export default function EscucharPage() {
   // Poll status in case suno_status is still stream_ready (audioUrl not yet ready)
   useEffect(() => {
     if (!generationId) return
+    let hasTrackedReady = false
     const fetchGen = async () => {
       const res = await fetch(`/api/status/${generationId}`)
       if (res.ok) {
         const data = await res.json()
         setGeneration(data)
+        // Track song ready (only once)
+        if (!hasTrackedReady && data.song_a_stream_url) {
+          hasTrackedReady = true
+          trackSongReady({
+            generationId,
+            brandName: data.brand_name,
+            genre: data.genre,
+          })
+        }
       }
     }
     fetchGen()
@@ -58,6 +69,14 @@ export default function EscucharPage() {
   const handlePay = async () => {
     setError('')
     setLoadingPay(true)
+    
+    // Track begin checkout
+    trackBeginCheckout({
+      generationId,
+      brandName: generation?.brand_name || 'Unknown',
+      value: PRECIO_ARS,
+    })
+    
     try {
       const res = await fetch('/api/payment/create', {
         method: 'POST',
