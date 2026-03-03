@@ -6,6 +6,7 @@ export const dynamic = 'force-dynamic'
 
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
+import { trackPurchase } from '@/lib/analytics'
 
 let mp: any = null
 
@@ -61,10 +62,26 @@ export async function POST(req: NextRequest) {
 
     // ── Si el pago fue aprobado, actualizar la generación ──
     if (status === 'approved') {
+      // Get generation data for analytics
+      const { data: generation } = await supabaseAdmin
+        .from('generations')
+        .select('brand_name')
+        .eq('id', generationId)
+        .single()
+      
       await supabaseAdmin
         .from('generations')
         .update({ selected_song: selectedSong || null })
         .eq('id', generationId)
+
+      // Track purchase conversion (GA4)
+      trackPurchase({
+        transactionId: mpPaymentId,
+        generationId,
+        brandName: generation?.brand_name || 'Unknown',
+        value: 8900, // ARS price
+        payerEmail: payer?.email,
+      })
 
       // El download_token ya fue creado cuando se hizo la preferencia.
       // La ruta /descarga?token=XXX ya puede funcionar.
