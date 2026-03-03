@@ -1,10 +1,10 @@
 'use client'
 // src/app/page.tsx  — Pantalla 1: Formulario
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Nav from '@/components/Nav'
-import { trackGenerationStarted } from '@/lib/analytics'
+import { trackViewContent, trackLead, trackGenerationStarted } from '@/lib/meta-pixel'
 
 const GENRES = [
   { id: 'Pop', emoji: '🎹', label: 'Pop' },
@@ -29,6 +29,11 @@ export default function HomePage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
+  // Track ViewContent when page loads
+  useEffect(() => {
+    trackViewContent('Music Generator Homepage')
+  }, [])
+
   const toggleMood = (m: string) => {
     setMoods(prev => prev.includes(m) ? prev.filter(x => x !== m) : [...prev, m])
   }
@@ -38,6 +43,9 @@ export default function HomePage() {
     if (moods.length === 0) { setError('Elegí al menos un tono'); return }
     setError('')
     setLoading(true)
+
+    // Track Lead (form completed)
+    trackLead({ brand_name: brandName.trim() })
 
     try {
       // Get or create session token
@@ -64,17 +72,11 @@ export default function HomePage() {
       const data = await res.json()
       if (!res.ok) { setError(data.error || 'Error al generar'); return }
 
+      // Track GenerationStarted (custom event)
+      trackGenerationStarted(data.generationId)
+
       // Store session token returned by server
       sessionStorage.setItem('session_token', data.sessionToken)
-      
-      // Track generation started
-      trackGenerationStarted({
-        brandName: brandName.trim(),
-        genre,
-        moods,
-        duration,
-      })
-      
       router.push(`/generando/${data.generationId}`)
     } catch {
       setError('Error de conexión. Intentá de nuevo.')
@@ -87,27 +89,12 @@ export default function HomePage() {
     <>
       <Nav step={1} />
       <div className="form-screen">
-        {/* FREE BADGE - Destacado arriba */}
-        <div className="free-badge">
-          ✨ 100% GRATIS
-        </div>
-
         <h1 className="form-headline">
           Creá la <em>canción</em><br />de tu marca
         </h1>
         <p className="form-subline">
-          🎵 <strong>Escuchás gratis en 2 minutos</strong> — Sin registro, sin tarjeta.<br />
-          Solo pagás si querés descargar.
+          Escuchás gratis. Solo pagás cuando querés descargar. Sin registro, sin vueltas.
         </p>
-
-        {/* SOCIAL PROOF - Above fold */}
-        <div className="testimonial-quick">
-          <div className="testimonial-quote">💬</div>
-          <div className="testimonial-text">
-            "Generé el jingle de mi local en 2 minutos. Increíble."
-          </div>
-          <div className="testimonial-author">— María, Pastelería Las Rosas</div>
-        </div>
 
         {error && <div className="error-box">{error}</div>}
 
@@ -188,7 +175,7 @@ export default function HomePage() {
         </div>
 
         <button
-          className="generate-btn generate-btn-sticky"
+          className="generate-btn"
           onClick={handleSubmit}
           disabled={loading}
         >
@@ -197,11 +184,6 @@ export default function HomePage() {
         <p className="generate-btn-note">
           Escuchás la canción completa <strong>sin pagar nada</strong>. Solo pagás si la querés descargar.
         </p>
-
-        {/* TRUST SIGNALS - Footer */}
-        <div className="trust-signals">
-          🔒 Tus datos seguros  •  💳 Solo pagás si descargás
-        </div>
       </div>
     </>
   )
