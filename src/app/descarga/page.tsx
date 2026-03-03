@@ -1,13 +1,15 @@
 'use client'
 
-import { useEffect, useState, Suspense } from 'react'
+import { useEffect, useState, Suspense, useRef } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Nav from '@/components/Nav'
-import { trackDownloadComplete } from '@/lib/analytics'
+import { trackPurchase } from '@/lib/meta-pixel'
 
 // src/app/descarga/page.tsx — Pantalla 4: Descarga post-pago
 
 export const dynamic = 'force-dynamic'
+
+const PRECIO_ARS = parseInt(process.env.NEXT_PUBLIC_PRECIO_ARS || '8900')
 
 function DescargaContent() {
   const searchParams = useSearchParams()
@@ -18,6 +20,7 @@ function DescargaContent() {
   const [brandName, setBrandName] = useState('tu marca')
   const [generationId, setGenerationId] = useState('')
   const [errorMsg, setErrorMsg] = useState('')
+  const purchaseTrackedRef = useRef(false)
 
   useEffect(() => {
     if (!token) { setStatus('error'); setErrorMsg('Token de descarga inválido.'); return }
@@ -35,17 +38,23 @@ function DescargaContent() {
           setStatus('ready')
           if (data.brandName) setBrandName(data.brandName)
           if (data.generationId) setGenerationId(data.generationId)
+          
+          // Track Purchase (only once)
+          if (!purchaseTrackedRef.current) {
+            trackPurchase({
+              generationId: data.generationId || 'unknown',
+              brandName: data.brandName || 'unknown',
+              value: PRECIO_ARS,
+              transactionId: token,
+            })
+            purchaseTrackedRef.current = true
+          }
         }
       })
       .catch(() => { setStatus('error'); setErrorMsg('Error de conexión.') })
   }, [token])
 
   const handleDownload = () => {
-    // Track download
-    trackDownloadComplete({
-      generationId,
-      brandName,
-    })
     window.location.href = `/api/download?token=${token}`
   }
 
