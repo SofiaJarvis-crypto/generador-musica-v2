@@ -84,35 +84,101 @@ body::before {
 
 /* ── Shared form styles ── */
 .page-wrap { position: relative; z-index: 1; }
-.form-screen { max-width: 680px; margin: 0 auto; padding: 48px 24px 80px; }
+.form-screen { max-width: 680px; margin: 0 auto; padding: 48px 24px 120px; }
+
+/* ── FREE BADGE (nuevo) ── */
+.free-badge {
+  display: inline-flex;
+  background: linear-gradient(135deg, var(--amber), var(--orange));
+  color: var(--bg);
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  padding: 8px 20px;
+  border-radius: 100px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 16px rgba(245,200,66,0.3);
+}
+
 .form-headline {
   font-family: 'Syne', sans-serif; font-weight: 800;
   font-size: clamp(32px, 5vw, 52px);
   letter-spacing: -2px; line-height: 1.0; margin-bottom: 10px;
 }
 .form-headline em { font-style: italic; color: var(--amber); }
-.form-subline { font-size: 16px; color: var(--text-dim); font-weight: 300; line-height: 1.5; margin-bottom: 40px; }
+.form-subline { 
+  font-size: 17px; 
+  color: var(--text); 
+  font-weight: 400; 
+  line-height: 1.6; 
+  margin-bottom: 24px; 
+}
+.form-subline strong { 
+  color: var(--amber); 
+  font-weight: 600; 
+}
+
+/* ── TESTIMONIAL QUICK (nuevo) ── */
+.testimonial-quick {
+  background: rgba(245,200,66,0.04);
+  border: 1px solid rgba(245,200,66,0.15);
+  border-radius: var(--radius-sm);
+  padding: 16px 20px;
+  margin-bottom: 32px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.testimonial-quote {
+  font-size: 20px;
+  flex-shrink: 0;
+  opacity: 0.8;
+}
+.testimonial-text {
+  font-size: 14px;
+  color: var(--text-mid);
+  line-height: 1.5;
+  font-style: italic;
+}
+.testimonial-author {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-top: 4px;
+}
+
+/* ── TRUST SIGNALS (nuevo) ── */
+.trust-signals {
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-dim);
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+
 .form-section { margin-bottom: 32px; }
 .form-label {
   font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
-  color: var(--text-dim); font-weight: 500; margin-bottom: 10px; display: block;
+  color: var(--text-dim); font-weight: 500; margin-bottom: 12px; display: block;
 }
 .input-field {
-  width: 100%; padding: 15px 18px;
+  width: 100%; padding: 16px 18px;
   background: var(--surface); border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 15px;
   transition: var(--transition);
+  min-height: 52px;
 }
 .input-field::placeholder { color: rgba(240,237,230,0.2); }
 .input-field:focus { outline: none; border-color: var(--border-amber); background: var(--surface2); }
 .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
 /* ── Genre grid ── */
-.genre-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.genre-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 .genre-card {
   background: var(--surface); border: 1.5px solid var(--border);
-  border-radius: var(--radius-sm); padding: 16px 12px;
+  border-radius: var(--radius-sm); padding: 18px 12px;
   text-align: center; cursor: pointer; transition: var(--transition); user-select: none;
 }
 .genre-card:hover { border-color: rgba(255,255,255,0.15); background: var(--surface2); }
@@ -120,14 +186,14 @@ body::before {
   border-color: var(--amber); background: rgba(245,200,66,0.06);
   box-shadow: 0 0 0 1px rgba(245,200,66,0.15);
 }
-.genre-emoji { font-size: 26px; display: block; margin-bottom: 6px; }
+.genre-emoji { font-size: 28px; display: block; margin-bottom: 8px; }
 .genre-name { font-size: 13px; color: var(--text-mid); font-weight: 400; }
 .genre-card.sel .genre-name { color: var(--amber); }
 
 /* ── Mood pills ── */
 .mood-row { display: flex; gap: 8px; flex-wrap: wrap; }
 .mood-pill {
-  padding: 8px 18px; border-radius: 100px; border: 1px solid var(--border);
+  padding: 10px 18px; border-radius: 100px; border: 1px solid var(--border);
   font-size: 13px; cursor: pointer; transition: var(--transition);
   color: var(--text-dim); user-select: none; background: transparent;
 }
@@ -137,7 +203,7 @@ body::before {
 /* ── Duration pills ── */
 .dur-row { display: flex; gap: 8px; }
 .dur-pill {
-  flex: 1; padding: 12px; background: var(--surface); border: 1.5px solid var(--border);
+  flex: 1; padding: 14px; background: var(--surface); border: 1.5px solid var(--border);
   border-radius: var(--radius-sm); text-align: center; cursor: pointer; transition: var(--transition);
 }
 .dur-pill:hover { border-color: rgba(255,255,255,0.15); }
@@ -148,17 +214,17 @@ body::before {
 
 /* ── Generate button ── */
 .generate-btn {
-  width: 100%; margin-top: 40px; padding: 18px;
+  width: 100%; margin-top: 40px; padding: 20px;
   background: linear-gradient(135deg, var(--amber), var(--orange));
   border: none; border-radius: var(--radius-sm);
-  font-family: 'Syne', sans-serif; font-weight: 700; font-size: 17px;
+  font-family: 'Syne', sans-serif; font-weight: 700; font-size: 18px;
   color: var(--bg); cursor: pointer; transition: var(--transition);
   display: flex; align-items: center; justify-content: center; gap: 10px;
   position: relative; overflow: hidden;
 }
 .generate-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 16px 48px rgba(245,200,66,0.25); }
 .generate-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-.generate-btn-note { text-align: center; font-size: 13px; color: var(--text-dim); margin-top: 14px; font-weight: 300; }
+.generate-btn-note { text-align: center; font-size: 13px; color: var(--text-dim); margin-top: 14px; font-weight: 300; line-height: 1.5; }
 .generate-btn-note strong { color: var(--amber); font-weight: 500; }
 
 /* ── Generating screen ── */
@@ -338,15 +404,115 @@ body::before {
 }
 .preparing-box p { font-size: 14px; color: var(--text-mid); margin-top: 8px; }
 
-/* ── Responsive ── */
+/* ── Responsive - MOBILE OPTIMIZATIONS ── */
 @media (max-width: 640px) {
   .nav { padding: 16px 20px; }
   .steps-bar { padding: 20px 16px 0; }
   .step-label { display: none; }
   .step-line { width: 20px; }
-  .form-screen, .player-screen, .generating-screen, .success-screen { padding-left: 16px; padding-right: 16px; }
-  .input-row { grid-template-columns: 1fr; }
-  .genre-grid { grid-template-columns: repeat(2, 1fr); }
-  .pay-top { flex-direction: column; }
-  .pay-right { text-align: left; }
+  .form-screen, .player-screen, .generating-screen, .success-screen { 
+    padding-left: 16px; 
+    padding-right: 16px;
+    padding-bottom: 140px; /* Extra space for sticky button */
+  }
+  
+  /* FREE BADGE - Mobile optimized */
+  .free-badge {
+    font-size: 12px;
+    padding: 6px 16px;
+  }
+  
+  /* FORM SUBLINE - Mobile font size */
+  .form-subline {
+    font-size: 16px;
+  }
+  
+  /* FORM LABELS - Larger on mobile */
+  .form-label {
+    font-size: 12px;
+    margin-bottom: 10px;
+  }
+  
+  /* INPUT FIELDS - Taller, better spacing */
+  .input-field {
+    min-height: 56px;
+    padding: 16px;
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+  
+  .input-row { 
+    grid-template-columns: 1fr; 
+    gap: 14px;
+  }
+  
+  /* GENRE GRID - Mobile 2 columns */
+  .genre-grid { 
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  
+  .genre-card {
+    padding: 16px 10px;
+  }
+  
+  .genre-emoji {
+    font-size: 26px;
+  }
+  
+  /* FORM SECTION - Better spacing */
+  .form-section {
+    margin-bottom: 28px;
+  }
+  
+  /* GENERATE BUTTON - STICKY ON MOBILE */
+  .generate-btn-sticky {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: 0;
+    border-radius: 0;
+    padding: 22px 20px;
+    font-size: 17px;
+    z-index: 40;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
+  }
+  
+  .generate-btn-note {
+    margin-bottom: 20px; /* Space before sticky button */
+  }
+  
+  /* TESTIMONIAL - Mobile compact */
+  .testimonial-quick {
+    padding: 14px 16px;
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+  
+  .testimonial-quote {
+    font-size: 18px;
+  }
+  
+  .testimonial-text {
+    font-size: 13px;
+  }
+  
+  .testimonial-author {
+    font-size: 11px;
+  }
+  
+  /* TRUST SIGNALS - Mobile */
+  .trust-signals {
+    font-size: 12px;
+    margin-top: 32px;
+    padding-top: 20px;
+  }
+  
+  /* PAY BOX - Mobile */
+  .pay-top { 
+    flex-direction: column; 
+  }
+  .pay-right { 
+    text-align: left; 
+  }
 }
