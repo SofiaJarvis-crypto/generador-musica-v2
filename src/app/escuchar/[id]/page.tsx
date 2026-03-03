@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import Nav from '@/components/Nav'
 import WaveformPlayer from '@/components/WaveformPlayer'
-import { trackSongReady, trackBeginCheckout } from '@/lib/analytics'
+import { trackAddToCart, trackInitiateCheckout } from '@/lib/meta-pixel'
 
 // src/app/escuchar/[id]/page.tsx — Pantalla 3: Player + Pago
 
@@ -32,19 +32,18 @@ export default function EscucharPage() {
   // Poll status in case suno_status is still stream_ready (audioUrl not yet ready)
   useEffect(() => {
     if (!generationId) return
-    let hasTrackedReady = false
     const fetchGen = async () => {
       const res = await fetch(`/api/status/${generationId}`)
       if (res.ok) {
         const data = await res.json()
         setGeneration(data)
-        // Track song ready (only once)
-        if (!hasTrackedReady && data.song_a_stream_url) {
-          hasTrackedReady = true
-          trackSongReady({
-            generationId,
+        
+        // Track AddToCart when song is ready (first time only)
+        if (data.song_a_stream_url) {
+          trackAddToCart({
+            generationId: generationId,
             brandName: data.brand_name,
-            genre: data.genre,
+            value: PRECIO_ARS,
           })
         }
       }
@@ -70,10 +69,10 @@ export default function EscucharPage() {
     setError('')
     setLoadingPay(true)
     
-    // Track begin checkout
-    trackBeginCheckout({
-      generationId,
-      brandName: generation?.brand_name || 'Unknown',
+    // Track InitiateCheckout
+    trackInitiateCheckout({
+      generationId: generationId,
+      brandName: generation?.brand_name,
       value: PRECIO_ARS,
     })
     
