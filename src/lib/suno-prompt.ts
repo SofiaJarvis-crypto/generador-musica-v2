@@ -4,22 +4,23 @@
 
 import { GenerateFormData } from '@/types'
 
-// Mapeo de géneros del formulario → tags en inglés para Suno
+// Mapeo de géneros del formulario → tags en inglés para Suno (mejorados)
 const GENRE_TAGS: Record<string, string> = {
-  'Pop':       'upbeat pop, catchy, radio-friendly',
-  'Cumbia':    'cumbia, latin rhythm, festive, accordion',
-  'Folklore':  'argentine folklore, chacarera, acoustic, traditional',
-  'Trap AR':   'trap latino, urban, 808 bass, modern',
-  'Reggaetón': 'reggaeton, latin urban, perreo, dancehall',
-  'Cuarteto':  'cuarteto cordobes, cumbia villera, festive, brass',
+  'Pop':       'upbeat pop, catchy melody, radio-friendly, commercial appeal, memorable hook',
+  'Cumbia':    'cumbia argentina, latin rhythm, accordion, festive, danceable, traditional percussion, radio-ready',
+  'Folklore':  'argentine folklore, chacarera, acoustic guitar, traditional, authentic, bombo legüero, charango',
+  'Trap AR':   'trap latino argentino, urban, 808 bass, modern, hi-hat rolls, contemporary, street',
+  'Reggaetón': 'reggaeton latino, dembow rhythm, perreo, dancehall influence, commercial, party vibe',
+  'Cuarteto':  'cuarteto cordobés, cumbia argentina, festive brass, accordion, energetic, party anthem',
 }
 
+// Mapeo de moods → tags descriptivos en inglés (expandidos)
 const MOOD_TAGS: Record<string, string> = {
-  'Alegre 🌟':    'happy, cheerful, bright',
-  'Emotivo 💛':   'emotional, heartfelt, warm',
-  'Energético ⚡': 'energetic, powerful, driving',
-  'Divertido 😄': 'fun, playful, quirky',
-  'Premium ✨':   'sophisticated, premium, polished',
+  'Alegre 🌟':    'happy, joyful, cheerful, bright, optimistic, feel-good',
+  'Emotivo 💛':   'emotional, heartfelt, warm, touching, sincere, authentic',
+  'Energético ⚡': 'energetic, powerful, driving, dynamic, high-energy, uplifting',
+  'Divertido 😄': 'fun, playful, quirky, lighthearted, amusing, entertaining',
+  'Premium ✨':   'sophisticated, premium, polished, elegant, professional, refined',
 }
 
 export function buildSunoPrompt(data: GenerateFormData): string {
@@ -28,25 +29,26 @@ export function buildSunoPrompt(data: GenerateFormData): string {
     .map(m => MOOD_TAGS[m] || m.toLowerCase())
     .join(', ')
 
-  const locationPart = data.brandLocation
-    ? ` based in ${data.brandLocation}`
-    : ''
-
-  const descriptionPart = data.brandDescription
+  // Construir contexto de marca
+  const brandContext = data.brandDescription
     ? `, a ${data.brandDescription}`
     : ''
+  
+  const locationContext = data.brandLocation
+    ? ` from ${data.brandLocation}`
+    : ''
 
-  // Non-custom mode: prompt = idea general, Suno genera la letra
-  // Máx 500 caracteres en non-custom mode
+  // Prompt estructurado para mejor resultado
   const prompt = [
-    `Commercial jingle for "${data.brandName}"${descriptionPart}${locationPart}.`,
-    `Style: ${genreTags}.`,
-    `Mood: ${moodTags}.`,
-    `Duration: ${data.durationSeconds} seconds.`,
-    `The jingle must mention the brand name "${data.brandName}" clearly.`,
-    `Sing in Spanish (Argentine accent). Short, memorable, commercial.`,
+    `Professional commercial jingle for "${data.brandName}"${brandContext}${locationContext}.`,
+    `Music style: ${genreTags}.`,
+    `Emotional tone: ${moodTags}.`,
+    `Target duration: ${data.durationSeconds} seconds.`,
+    `The brand name "${data.brandName}" must be mentioned clearly and memorably in the lyrics.`,
+    `Sing in Spanish with clear Argentine pronunciation.`,
+    `Make it catchy, memorable, and radio-ready. Perfect for advertising and brand recognition.`,
   ].join(' ')
 
-  // Truncar a 500 caracteres por seguridad (límite non-custom mode)
+  // Truncar a 490 caracteres por seguridad (límite non-custom mode)
   return prompt.slice(0, 490)
 }
