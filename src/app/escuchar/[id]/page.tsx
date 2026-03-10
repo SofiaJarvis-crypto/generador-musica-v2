@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import Nav from '@/components/Nav'
 import WaveformPlayer from '@/components/WaveformPlayer'
-import { trackAddToCart, trackInitiateCheckout } from '@/lib/meta-pixel'
+import { trackAddToCart as trackAddToCartFB, trackInitiateCheckout as trackInitiateCheckoutFB } from '@/lib/meta-pixel'
+import { trackAddToCart as trackAddToCartGA, trackInitiateCheckout as trackInitiateCheckoutGA, trackRegeneration } from '@/lib/google-analytics'
 
 // src/app/escuchar/[id]/page.tsx — Pantalla 3: Player + Pago
 
@@ -40,7 +41,12 @@ export default function EscucharPage() {
         
         // Track AddToCart when song is ready (first time only)
         if (data.song_a_stream_url) {
-          trackAddToCart({
+          trackAddToCartFB({
+            generationId: generationId,
+            brandName: data.brand_name,
+            value: PRECIO_ARS,
+          })
+          trackAddToCartGA({
             generationId: generationId,
             brandName: data.brand_name,
             value: PRECIO_ARS,
@@ -70,7 +76,12 @@ export default function EscucharPage() {
     setLoadingPay(true)
     
     // Track InitiateCheckout
-    trackInitiateCheckout({
+    trackInitiateCheckoutFB({
+      generationId: generationId,
+      brandName: generation?.brand_name,
+      value: PRECIO_ARS,
+    })
+    trackInitiateCheckoutGA({
       generationId: generationId,
       brandName: generation?.brand_name,
       value: PRECIO_ARS,
@@ -98,6 +109,10 @@ export default function EscucharPage() {
     if (generation.regen_count >= MAX_REGENS) return
     setRegenError('')
     setLoadingRegen(true)
+    
+    // Track regeneration
+    trackRegeneration(generationId, (generation.regen_count || 0) + 1)
+    
     try {
       const sessionToken = sessionStorage.getItem('session_token') || ''
       const res = await fetch('/api/generate', {
