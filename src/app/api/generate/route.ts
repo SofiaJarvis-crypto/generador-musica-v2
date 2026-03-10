@@ -186,7 +186,7 @@ export async function POST(req: NextRequest) {
       body: JSON.stringify({
         customMode:  false,
         instrumental: false,
-        model:       'V4_5',
+        model:       'V4_5ALL',
         prompt,
         callBackUrl: `${APP_URL}/api/webhooks/suno?generationId=${generationId}`,
       }),
