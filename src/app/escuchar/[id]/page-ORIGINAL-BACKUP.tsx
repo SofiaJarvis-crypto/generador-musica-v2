@@ -39,9 +39,8 @@ export default function EscucharPage() {
         const data = await res.json()
         setGeneration(data)
         
-        // ✅ FIX: Track AddToCart SOLO UNA VEZ por generationId (deduplicado)
-        const trackKey = `tracked_cart_${generationId}`
-        if (data.song_a_stream_url && !localStorage.getItem(trackKey)) {
+        // Track AddToCart when song is ready (first time only)
+        if (data.song_a_stream_url) {
           trackAddToCartFB({
             generationId: generationId,
             brandName: data.brand_name,
@@ -52,8 +51,6 @@ export default function EscucharPage() {
             brandName: data.brand_name,
             value: PRECIO_ARS,
           })
-          localStorage.setItem(trackKey, 'true')
-          console.log('[GA4] add_to_cart tracked (deduped)')
         }
       }
     }
@@ -78,22 +75,17 @@ export default function EscucharPage() {
     setError('')
     setLoadingPay(true)
     
-    // ✅ FIX: Track InitiateCheckout SOLO UNA VEZ (deduplica múltiples clicks)
-    const checkoutKey = `tracked_checkout_${generationId}`
-    if (!localStorage.getItem(checkoutKey)) {
-      trackInitiateCheckoutFB({
-        generationId: generationId,
-        brandName: generation?.brand_name,
-        value: PRECIO_ARS,
-      })
-      trackInitiateCheckoutGA({
-        generationId: generationId,
-        brandName: generation?.brand_name,
-        value: PRECIO_ARS,
-      })
-      localStorage.setItem(checkoutKey, 'true')
-      console.log('[GA4] begin_checkout tracked (deduped)')
-    }
+    // Track InitiateCheckout
+    trackInitiateCheckoutFB({
+      generationId: generationId,
+      brandName: generation?.brand_name,
+      value: PRECIO_ARS,
+    })
+    trackInitiateCheckoutGA({
+      generationId: generationId,
+      brandName: generation?.brand_name,
+      value: PRECIO_ARS,
+    })
     
     try {
       const res = await fetch('/api/payment/create', {

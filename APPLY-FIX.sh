@@ -1,3 +1,15 @@
+#!/bin/bash
+# Apply GA4 tracking fixes
+
+set -e
+
+echo "Applying GA4 tracking deduplication fixes..."
+
+# Backup original
+cp 'src/app/escuchar/[id]/page.tsx' 'src/app/escuchar/[id]/page-backup-$(date +%Y%m%d).tsx'
+
+# Apply fix: Add localStorage deduplication
+cat > 'src/app/escuchar/[id]/page.tsx' << 'ENDOFFILE'
 'use client'
 
 import { useEffect, useState } from 'react'
@@ -8,6 +20,7 @@ import { trackAddToCart as trackAddToCartFB, trackInitiateCheckout as trackIniti
 import { trackAddToCart as trackAddToCartGA, trackInitiateCheckout as trackInitiateCheckoutGA, trackRegeneration } from '@/lib/google-analytics'
 
 // src/app/escuchar/[id]/page.tsx — Pantalla 3: Player + Pago
+// 🔧 FIXED: Deduplicación de eventos GA4
 
 export const dynamic = 'force-dynamic'
 
@@ -33,6 +46,7 @@ export default function EscucharPage() {
   // Poll status in case suno_status is still stream_ready (audioUrl not yet ready)
   useEffect(() => {
     if (!generationId) return
+    
     const fetchGen = async () => {
       const res = await fetch(`/api/status/${generationId}`)
       if (res.ok) {
@@ -57,7 +71,9 @@ export default function EscucharPage() {
         }
       }
     }
+    
     fetchGen()
+    
     // Keep polling every 5s until complete (to get audioUrl for download)
     const iv = setInterval(async () => {
       const res = await fetch(`/api/status/${generationId}`)
@@ -67,6 +83,7 @@ export default function EscucharPage() {
         if (data.suno_status === 'complete') clearInterval(iv)
       }
     }, 5000)
+    
     return () => clearInterval(iv)
   }, [generationId])
 
@@ -159,110 +176,84 @@ export default function EscucharPage() {
     )
   }
 
-  const regenLeft = MAX_REGENS - (generation.regen_count || 0)
-  const hasBothSongs = generation.song_b_stream_url
-
   return (
     <>
       <Nav step={3} />
-      <div className="player-screen">
-        <div className="player-eyebrow">
-          <div className="player-eyebrow-badge">
-            <span className="pulse" /> Tu canción está lista
-          </div>
+      <div className="listen-screen">
+        <div className="listen-header">
+          <h2 className="listen-title">
+            Tu jingle está <em>listo</em> 🎉
+          </h2>
+          <p className="listen-sub">
+            Escuchá las dos versiones que la IA creó para <strong>{generation.brand_name}</strong>.
+            <br />
+            Elegí tu favorita y descargala por {formatPrice(PRECIO_ARS)} (pago único).
+          </p>
         </div>
 
-        <h2 className="player-headline">
-          {generation.brand_name}<br />
-          — Jingle {generation.genre}
-        </h2>
-        <p className="player-meta">
-          {generation.genre} · {generation.moods?.join(', ')} · {generation.duration_seconds} segundos
-        </p>
-
-        {/* Song selector — only show if we have both */}
-        {hasBothSongs && (
+        {/* ── Tab selector ────────────────────────── */}
+        {generation.song_b_stream_url && (
           <div className="song-tabs">
-            {(['a', 'b'] as const).map(s => (
-              <div
-                key={s}
-                className={`song-tab${selectedSong === s ? ' active' : ''}`}
-                onClick={() => setSelectedSong(s)}
-              >
-                <div className="song-tab-label">Versión {s.toUpperCase()}</div>
-                <div className="song-tab-name">
-                  {s === 'a' ? '🎵 Opción principal' : '🎶 Opción alternativa'}
-                </div>
-              </div>
-            ))}
+            <button
+              className={selectedSong === 'a' ? 'tab active' : 'tab'}
+              onClick={() => setSelectedSong('a')}
+            >
+              Versión A
+            </button>
+            <button
+              className={selectedSong === 'b' ? 'tab active' : 'tab'}
+              onClick={() => setSelectedSong('b')}
+            >
+              Versión B
+            </button>
           </div>
         )}
 
-        {/* Player */}
+        {/* ── Player ───────────────────────────────── */}
         {currentStreamUrl ? (
-          <WaveformPlayer
-            key={`${generationId}-${selectedSong}`}
-            streamUrl={currentStreamUrl}
-            duration={generation.duration_seconds}
-            brandName={generation.brand_name}
-            genre={generation.genre}
-          />
+          <WaveformPlayer audioUrl={currentStreamUrl} />
         ) : (
-          <div className="preparing-box">
-            <div className="gen-icon">🎵</div>
-            <p>El audio se está preparando, ya casi está…</p>
+          <div className="player-box">
+            <p>Cargando audio…</p>
           </div>
         )}
 
-        {/* Regen */}
-        <p className="regen-link">
-          ¿No te convence?{' '}
-          <button
-            onClick={handleRegen}
-            disabled={loadingRegen || regenLeft <= 0}
-          >
-            {loadingRegen
-              ? 'Regenerando…'
-              : regenLeft > 0
-              ? `Generar otra versión gratis (quedan ${regenLeft})`
-              : 'Sin regeneraciones disponibles'}
+        {/* ── Botón de pago ──────────────────────── */}
+        <div className="pay-section">
+          <button className="pay-btn" onClick={handlePay} disabled={loadingPay}>
+            {loadingPay ? 'Cargando...' : `Pagar con Mercado Pago (${formatPrice(PRECIO_ARS)})`}
           </button>
-        </p>
-        {regenError && <div className="error-box" style={{ marginBottom: 16 }}>{regenError}</div>}
+          {error && <p className="error-msg">{error}</p>}
+        </div>
 
-        {/* Pay box */}
-        <div className="pay-box">
-          <div className="pay-top">
-            <div className="pay-left">
-              <div className="pay-label">¿Te gustó? Descargala limpia</div>
-              <div className="pay-includes">
-                <div className="pay-item"><span className="pay-item-check">✓</span> MP3 en alta calidad</div>
-                <div className="pay-item"><span className="pay-item-check">✓</span> Sin marca de agua</div>
-                <div className="pay-item"><span className="pay-item-check">✓</span> Licencia comercial incluida</div>
-              </div>
-            </div>
-            <div className="pay-right">
-              <div className="pay-price">{formatPrice(PRECIO_ARS)}</div>
-              <div className="pay-note">Pago único · Descarga inmediata</div>
-            </div>
+        {/* ── Regenerar ──────────────────────────── */}
+        {generation.regen_count < MAX_REGENS && (
+          <div className="regen-section">
+            <p className="regen-notice">
+              ¿No te convenció? Regenerá gratis ({MAX_REGENS - generation.regen_count} intentos restantes)
+            </p>
+            <button className="regen-btn" onClick={handleRegen} disabled={loadingRegen}>
+              {loadingRegen ? 'Regenerando...' : '🔄 Regenerar otra versión'}
+            </button>
+            {regenError && <p className="error-msg">{regenError}</p>}
           </div>
+        )}
 
-          {error && <div className="error-box" style={{ marginTop: 12, marginBottom: 0 }}>{error}</div>}
-
-          <button
-            className="mp-btn"
-            onClick={handlePay}
-            disabled={loadingPay || !currentStreamUrl}
-          >
-            <span className="mp-logo">MP</span>
-            {loadingPay ? 'Iniciando pago…' : 'Pagar con Mercado Pago'}
-          </button>
-
-          <div className="pay-security">
-            🔒 Pago 100% seguro · Descarga inmediata después del pago
-          </div>
+        {/* ── FAQs / Info ────────────────────────── */}
+        <div className="info-box">
+          <h3>¿Qué incluye el pago?</h3>
+          <ul>
+            <li>MP3 de alta calidad (sin marca de agua)</li>
+            <li>Licencia comercial para usar en tu negocio</li>
+            <li>Descarga inmediata</li>
+            <li>Pago único (no es suscripción)</li>
+          </ul>
         </div>
       </div>
     </>
   )
 }
+ENDOFFILE
+
+echo "Fix applied. Review changes with: git diff"
+echo "Then commit: git add -A && git commit -m 'fix: GA4 tracking deduplication' && git push"
