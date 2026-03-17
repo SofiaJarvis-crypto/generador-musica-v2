@@ -1,5 +1,5 @@
 // src/app/layout.tsx - SEO Enhanced
-// Incluye: GA4 + Meta Pixel + Schema Markup + SEO completo
+// Incluye: GA4 + Google Ads + Meta Pixel + Schema Markup + SEO completo
 
 import type { Metadata } from 'next'
 import Script from 'next/script'
@@ -8,6 +8,9 @@ import { FB_PIXEL_ID } from '@/lib/meta-pixel'
 
 // Google Analytics Measurement ID
 const GA_MEASUREMENT_ID = 'G-RGN3X2NSZR'
+
+// Google Ads Conversion ID
+const GOOGLE_ADS_ID = 'AW-18023245806'
 
 // Schema Markup
 const schemaMarkup = {
@@ -161,19 +164,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://connect.facebook.net" />
         
-        {/* Google Analytics 4 */}
+        {/* Google tag (gtag.js) - Google Ads */}
         <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+          src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ADS_ID}`}
           strategy="afterInteractive"
         />
         <Script
-          id="google-analytics"
+          id="google-ads"
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
+              gtag('config', '${GOOGLE_ADS_ID}');
               gtag('config', '${GA_MEASUREMENT_ID}', {
                 page_path: window.location.pathname,
               });
