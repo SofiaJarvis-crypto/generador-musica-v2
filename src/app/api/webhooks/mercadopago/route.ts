@@ -6,8 +6,10 @@ export const dynamic = 'force-dynamic'
 
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
+import { Resend } from 'resend'
 
 let mp: any = null
+const resend = new Resend(process.env.RESEND_API_KEY!)
 
 export async function POST(req: NextRequest) {
   try {
@@ -50,26 +52,71 @@ export async function POST(req: NextRequest) {
     }
 
     // ── Actualizar tabla payments ──────────────────────────
-    await supabaseAdmin
+    const { data: payment } = await supabaseAdmin
       .from('payments')
       .update({
         mp_payment_id: mpPaymentId,
-        mp_status:     status,                          // approved | rejected | etc.
+        mp_status:     status,
         payer_email:   payer?.email || null,
       })
       .eq('id', paymentId)
+      .select('download_token, generation_id')
+      .single()
 
     // ── Si el pago fue aprobado, actualizar la generación ──
-    if (status === 'approved') {
+    if (status === 'approved' && payment) {
       await supabaseAdmin
         .from('generations')
         .update({ selected_song: selectedSong || null })
         .eq('id', generationId)
 
-      // 📌 NOTE: Purchase tracking happens CLIENT-SIDE in /descarga/page.tsx
-      // (GA4 requires gtag.js in the browser, not server-side)
-      // The user will trigger trackPurchaseGA() when they reach /descarga?token=XXX
-      
+      // ── Obtener brand_name para personalizar el email ──
+      const { data: generation } = await supabaseAdmin
+        .from('generations')
+        .select('brand_name')
+        .eq('id', generationId)
+        .single()
+
+      const brandName = generation?.brand_name || 'tu marca'
+      const downloadToken = payment.download_token
+      const downloadUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/descarga?token=${downloadToken}`
+
+      // ── Enviar email con link de descarga ──
+      if (payer?.email && downloadToken) {
+        try {
+          await resend.emails.send({
+            from: 'Generador de Música <onboarding@resend.dev>',
+            to: payer.email,
+            subject: `🎵 Tu canción de ${brandName} está lista`,
+            html: `
+              <div style="font-family: system-ui, -apple-system, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 20px;">
+                <h1 style="color: #FF9500; font-size: 28px; margin-bottom: 16px;">🎉 ¡Pago confirmado!</h1>
+                <p style="font-size: 16px; line-height: 1.6; color: #333;">
+                  Tu canción personalizada para <strong>${brandName}</strong> está lista para descargar.
+                </p>
+                <div style="margin: 32px 0;">
+                  <a href="${downloadUrl}" 
+                     style="display: inline-block; background: #FF9500; color: white; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px;">
+                    ⬇ Descargar mi canción
+                  </a>
+                </div>
+                <p style="font-size: 14px; color: #666; line-height: 1.6;">
+                  Este link es válido por 48 horas. Si tenés algún problema, respondé este email.
+                </p>
+                <hr style="border: none; border-top: 1px solid #eee; margin: 32px 0;" />
+                <p style="font-size: 12px; color: #999;">
+                  Generador de Música para Marcas · HandOver
+                </p>
+              </div>
+            `,
+          })
+          console.log(`[MP Webhook] Email enviado a ${payer.email}`)
+        } catch (emailErr) {
+          console.error('[MP Webhook] Error enviando email:', emailErr)
+          // No fallar el webhook si el email falla
+        }
+      }
+
       console.log(`[MP Webhook] Pago aprobado para generation ${generationId}`)
     }
 
