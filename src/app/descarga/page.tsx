@@ -40,21 +40,36 @@ function DescargaContent() {
           if (data.brandName) setBrandName(data.brandName)
           if (data.generationId) setGenerationId(data.generationId)
           
-          // Track Purchase (only once)
-          if (!purchaseTrackedRef.current) {
+          // ✅ Track Purchase (deduplicado: useRef + localStorage)
+          // Esto asegura que se dispare UNA SOLA VEZ incluso si:
+          // - Usuario recarga la página
+          // - Componente se renderiza múltiples veces
+          // - Session se reinicia
+          const generationId = data.generationId || 'unknown'
+          const purchaseKey = `tracked_purchase_${generationId}`
+          const alreadyTracked = purchaseTrackedRef.current || localStorage.getItem(purchaseKey)
+          
+          if (!alreadyTracked) {
+            console.log('[Purchase Tracking] Disparando eventos GA4 + Meta Pixel')
+            
             trackPurchaseFB({
-              generationId: data.generationId || 'unknown',
+              generationId,
               brandName: data.brandName || 'unknown',
               value: PRECIO_ARS,
               transactionId: token,
             })
             trackPurchaseGA({
-              generationId: data.generationId || 'unknown',
+              generationId,
               brandName: data.brandName || 'unknown',
               value: PRECIO_ARS,
               transactionId: token,
             })
+            
             purchaseTrackedRef.current = true
+            localStorage.setItem(purchaseKey, 'true')
+            console.log('[Purchase Tracking] ✅ Eventos disparados y guardados en localStorage')
+          } else {
+            console.log('[Purchase Tracking] ℹ️  Ya fue registrado, evitando duplicado')
           }
         }
       })
