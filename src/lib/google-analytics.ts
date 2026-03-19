@@ -38,10 +38,11 @@ export const trackLead = (data?: { brand_name?: string }) => {
 };
 
 // Track custom event: GenerationStarted
-export const trackGenerationStarted = (generationId: string) => {
+export const trackGenerationStarted = (generationId: string, variant?: string) => {
   gtag('event', 'generation_started', {
     generation_id: generationId,
     content_type: 'music_generation',
+    ab_test_variant: variant, // Track A/B test variant
   });
 };
 
