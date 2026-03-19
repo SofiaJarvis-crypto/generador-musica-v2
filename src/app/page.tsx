@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import Nav from '@/components/Nav'
 import { trackViewContent as trackViewContentFB, trackLead as trackLeadFB, trackGenerationStarted as trackGenerationStartedFB } from '@/lib/meta-pixel'
 import { trackViewContent as trackViewContentGA, trackLead as trackLeadGA, trackGenerationStarted as trackGenerationStartedGA } from '@/lib/google-analytics'
+import { getUserId, getVariant, trackABTestView, HEADLINE_VARIANTS } from '@/lib/ab-testing'
 
 const GENRES = [
   { id: 'Pop', emoji: '🎹', label: 'Pop' },
@@ -30,10 +31,21 @@ export default function HomePage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
-  // Track ViewContent when page loads
+  // A/B Test: Get headline variant
+  const [headlineVariant, setHeadlineVariant] = useState<keyof typeof HEADLINE_VARIANTS>('control')
+
+  // Track ViewContent when page loads + A/B test variant
   useEffect(() => {
     trackViewContentFB('Music Generator Homepage')
     trackViewContentGA('Music Generator Homepage')
+
+    // Get user ID and variant for A/B test
+    const userId = getUserId()
+    const variant = getVariant('headline_v1', userId)
+    setHeadlineVariant(variant as keyof typeof HEADLINE_VARIANTS)
+    
+    // Track A/B test exposure
+    trackABTestView('headline_v1', variant)
   }, [])
 
   const toggleMood = (m: string) => {
@@ -75,9 +87,9 @@ export default function HomePage() {
       const data = await res.json()
       if (!res.ok) { setError(data.error || 'Error al generar'); return }
 
-      // Track GenerationStarted (custom event)
+      // Track GenerationStarted (custom event) with A/B test variant
       trackGenerationStartedFB(data.generationId)
-      trackGenerationStartedGA(data.generationId)
+      trackGenerationStartedGA(data.generationId, headlineVariant)
 
       // Store session token returned by server
       sessionStorage.setItem('session_token', data.sessionToken)
@@ -94,7 +106,21 @@ export default function HomePage() {
       <Nav step={1} />
       <div className="form-screen">
         <h1 className="form-headline">
-          Jingles profesionales con IA<br />en <em>2 minutos</em>
+          {headlineVariant === 'variantB' ? (
+            <>
+              Conseguí el jingle de tu marca<br />
+              sin <em>músicos ni estudio</em>
+            </>
+          ) : headlineVariant === 'variantA' ? (
+            <>
+              La canción perfecta para tu marca,<br />
+              en menos de <em>3 minutos</em>
+            </>
+          ) : (
+            <>
+              Jingles profesionales con IA<br />en <em>2 minutos</em>
+            </>
+          )}
         </h1>
         <p className="form-subline">
           Probá gratis: Generamos 2 versiones y escuchás un preview de 15 seg.<br />
