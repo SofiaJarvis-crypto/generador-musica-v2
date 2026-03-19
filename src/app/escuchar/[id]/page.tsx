@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import Nav from '@/components/Nav'
 import WaveformPlayer from '@/components/WaveformPlayer'
+import ReferralShare from '@/components/ReferralShare'
 import { trackAddToCart as trackAddToCartFB, trackInitiateCheckout as trackInitiateCheckoutFB } from '@/lib/meta-pixel'
 import { trackAddToCart as trackAddToCartGA, trackInitiateCheckout as trackInitiateCheckoutGA, trackRegeneration } from '@/lib/google-analytics'
 
@@ -256,6 +257,9 @@ export default function EscucharPage() {
             🔒 Pago 100% seguro · Descarga inmediata después del pago
           </div>
         </div>
+
+        {/* Referral Share */}
+        <ReferralShare generationId={generationId} />
 
         {/* Regen (movido debajo del pay-box) */}
         <p className="regen-link">

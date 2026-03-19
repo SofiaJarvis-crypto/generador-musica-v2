@@ -53,6 +53,24 @@ export default function HomePage() {
     trackABTestView('headline_v1', variant)
   }, [])
 
+  // Track referral clicks
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search)
+    const refCode = urlParams.get('ref')
+    
+    if (refCode) {
+      // Store in localStorage for later use
+      localStorage.setItem('referral_code', refCode)
+      
+      // Track the click
+      fetch('/api/referrals/track', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: refCode }),
+      }).catch(err => console.error('Failed to track referral:', err))
+    }
+  }, [])
+
   // Exit-intent detection
   useEffect(() => {
     const exitIntentShown = sessionStorage.getItem('exit_intent_shown')
@@ -120,6 +138,9 @@ export default function HomePage() {
         sessionStorage.setItem('session_token', sessionToken)
       }
 
+      // Get referral code if exists
+      const referrerCode = localStorage.getItem('referral_code') || undefined
+
       const res = await fetch('/api/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -128,6 +149,7 @@ export default function HomePage() {
           customLyrics: customLyrics.trim() || undefined,
           genre,
           sessionToken,
+          referrerCode,
         }),
       })
 

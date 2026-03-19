@@ -55,6 +55,7 @@ export async function POST(req: NextRequest) {
       genre: string
       sessionToken?: string
       generationId?: string
+      referrerCode?: string
     } = await req.json()
     
     console.log('[/api/generate] Body parsed:', { brandName: body.brandName, genre: body.genre })
@@ -113,6 +114,7 @@ export async function POST(req: NextRequest) {
       suno_status:       'generating',
       ip_address:        ip,
       session_token:     sessionToken,
+      referrer_code:     body.referrerCode || null, // Referral tracking
     }
 
     let generationId: string

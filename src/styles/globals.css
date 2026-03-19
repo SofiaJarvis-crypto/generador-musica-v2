@@ -1672,3 +1672,532 @@ body::before {
     text-align: center;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   REFERRAL SHARE COMPONENT
+   ══════════════════════════════════════════════════════════ */
+
+.referral-share {
+  background: linear-gradient(135deg, rgba(245, 200, 66, 0.08), rgba(255, 107, 53, 0.08));
+  border: 2px solid var(--border-amber);
+  border-radius: var(--radius);
+  padding: 32px;
+  margin: 32px 0;
+}
+
+.referral-loading {
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 15px;
+  padding: 20px 0;
+}
+
+.referral-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.referral-icon {
+  font-size: 32px;
+}
+
+.referral-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  color: var(--text);
+}
+
+.referral-description {
+  font-size: 16px;
+  color: var(--text-mid);
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.referral-description strong {
+  color: var(--amber);
+  font-weight: 700;
+}
+
+.referral-code-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.referral-code-label {
+  font-size: 12px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.referral-code {
+  font-family: 'Monaco', 'Courier New', monospace;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--amber);
+  letter-spacing: 2px;
+}
+
+.referral-url-box {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.referral-url-input {
+  flex: 1;
+  padding: 14px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-size: 14px;
+  font-family: 'Monaco', 'Courier New', monospace;
+}
+
+.referral-copy-btn {
+  padding: 14px 24px;
+  background: var(--amber);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--bg);
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+}
+
+.referral-copy-btn:hover {
+  background: var(--orange);
+  transform: translateY(-2px);
+}
+
+.referral-social {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.referral-social-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: 'Syne', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.referral-social-btn:hover {
+  border-color: var(--border-amber);
+  transform: translateY(-2px);
+}
+
+.referral-social-btn.whatsapp:hover {
+  background: rgba(37, 211, 102, 0.1);
+  border-color: #25D366;
+}
+
+.referral-social-btn.twitter:hover {
+  background: rgba(29, 161, 242, 0.1);
+  border-color: #1DA1F2;
+}
+
+.referral-social-btn.facebook:hover {
+  background: rgba(24, 119, 242, 0.1);
+  border-color: #1877F2;
+}
+
+.referral-social-icon {
+  font-size: 18px;
+}
+
+.referral-footer {
+  font-size: 13px;
+  color: var(--text-dim);
+  text-align: center;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.referral-footer strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+@media (max-width: 640px) {
+  .referral-share {
+    padding: 24px 20px;
+  }
+  
+  .referral-title {
+    font-size: 20px;
+  }
+  
+  .referral-code {
+    font-size: 20px;
+  }
+  
+  .referral-url-box {
+    flex-direction: column;
+  }
+  
+  .referral-social {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   REFERRAL DASHBOARD
+   ══════════════════════════════════════════════════════════ */
+
+.referral-dashboard {
+  min-height: 100vh;
+  background: var(--bg);
+  padding: 60px 24px;
+}
+
+.referral-dashboard-loading,
+.referral-dashboard-error {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+  padding: 60px 32px;
+}
+
+.error-icon {
+  font-size: 64px;
+  margin-bottom: 24px;
+}
+
+.referral-dashboard-header {
+  max-width: 900px;
+  margin: 0 auto 60px;
+  text-align: center;
+}
+
+.referral-dashboard-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: clamp(32px, 5vw, 48px);
+  color: var(--text);
+  margin-bottom: 16px;
+  letter-spacing: -1px;
+}
+
+.referral-dashboard-subtitle {
+  font-size: 18px;
+  color: var(--text-mid);
+}
+
+.referral-stats-grid {
+  max-width: 900px;
+  margin: 0 auto 60px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 24px;
+}
+
+.referral-stat-card {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px 24px;
+  text-align: center;
+  transition: var(--transition);
+}
+
+.referral-stat-card:hover {
+  border-color: var(--border-amber);
+  transform: translateY(-4px);
+}
+
+.referral-stat-card.highlight {
+  border-color: var(--amber);
+  background: linear-gradient(135deg, rgba(245, 200, 66, 0.05), rgba(255, 107, 53, 0.05));
+}
+
+.referral-stat-card.success {
+  border-color: #10B981;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(5, 150, 105, 0.05));
+}
+
+.referral-stat-icon {
+  font-size: 40px;
+  margin-bottom: 12px;
+}
+
+.referral-stat-value {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 40px;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.referral-stat-label {
+  font-size: 14px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.referral-share-section {
+  max-width: 700px;
+  margin: 0 auto 60px;
+  background: var(--surface);
+  border: 2px solid var(--border-amber);
+  border-radius: var(--radius);
+  padding: 40px 32px;
+}
+
+.referral-section-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 28px;
+  color: var(--text);
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.referral-code-display {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.referral-code-big {
+  display: inline-block;
+  font-family: 'Monaco', 'Courier New', monospace;
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--amber);
+  background: rgba(245, 200, 66, 0.1);
+  padding: 20px 40px;
+  border-radius: var(--radius);
+  letter-spacing: 4px;
+}
+
+.referral-url-display {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.referral-url-input-big {
+  flex: 1;
+  padding: 18px 20px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-size: 14px;
+  font-family: 'Monaco', 'Courier New', monospace;
+}
+
+.referral-copy-btn-big {
+  padding: 18px 32px;
+  background: var(--amber);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--bg);
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+}
+
+.referral-copy-btn-big:hover {
+  background: var(--orange);
+  transform: translateY(-2px);
+}
+
+.referral-social-share {
+  display: grid;
+  gap: 12px;
+}
+
+.referral-share-btn {
+  padding: 16px 24px;
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: 'Syne', sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--text);
+  cursor: pointer;
+  transition: var(--transition);
+  text-align: center;
+}
+
+.referral-share-btn:hover {
+  transform: translateY(-2px);
+}
+
+.referral-share-btn.whatsapp {
+  border-color: #25D366;
+}
+
+.referral-share-btn.whatsapp:hover {
+  background: rgba(37, 211, 102, 0.1);
+}
+
+.referral-share-btn.twitter {
+  border-color: #1DA1F2;
+}
+
+.referral-share-btn.twitter:hover {
+  background: rgba(29, 161, 242, 0.1);
+}
+
+.referral-share-btn.facebook {
+  border-color: #1877F2;
+}
+
+.referral-share-btn.facebook:hover {
+  background: rgba(24, 119, 242, 0.1);
+}
+
+.referral-tips {
+  max-width: 800px;
+  margin: 0 auto 60px;
+}
+
+.referral-tips-list {
+  display: grid;
+  gap: 20px;
+}
+
+.referral-tip {
+  display: flex;
+  gap: 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  transition: var(--transition);
+}
+
+.referral-tip:hover {
+  border-color: var(--border-amber);
+}
+
+.referral-tip-icon {
+  font-size: 32px;
+  flex-shrink: 0;
+}
+
+.referral-tip-content h3 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.referral-tip-content p {
+  font-size: 15px;
+  color: var(--text-mid);
+  line-height: 1.6;
+}
+
+.referral-footer-cta {
+  text-align: center;
+}
+
+.cta-btn-big {
+  display: inline-block;
+  padding: 20px 48px;
+  background: linear-gradient(135deg, var(--amber), var(--orange));
+  border-radius: var(--radius-sm);
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--bg);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.cta-btn-big:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 48px rgba(245, 200, 66, 0.3);
+}
+
+@media (max-width: 768px) {
+  .referral-dashboard {
+    padding: 40px 16px;
+  }
+  
+  .referral-stats-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  
+  .referral-stat-card {
+    padding: 24px 16px;
+  }
+  
+  .referral-stat-value {
+    font-size: 32px;
+  }
+  
+  .referral-share-section {
+    padding: 32px 24px;
+  }
+  
+  .referral-code-big {
+    font-size: 28px;
+    padding: 16px 32px;
+  }
+  
+  .referral-url-display {
+    flex-direction: column;
+  }
+  
+  .referral-tip {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+.referral-dashboard-link {
+  display: block;
+  text-align: center;
+  margin-top: 20px;
+  padding: 14px 24px;
+  background: var(--surface);
+  border: 1px solid var(--border-amber);
+  border-radius: var(--radius-sm);
+  color: var(--amber);
+  text-decoration: none;
+  font-family: 'Syne', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  transition: var(--transition);
+}
+
+.referral-dashboard-link:hover {
+  background: rgba(245, 200, 66, 0.1);
+  transform: translateY(-2px);
+}
