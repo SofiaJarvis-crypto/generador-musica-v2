@@ -35,6 +35,7 @@ export default function HomePage() {
   const [loadingLyrics, setLoadingLyrics] = useState(false)
   const [error, setError] = useState('')
   const [showExitPopup, setShowExitPopup] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
 
   // A/B Test: Get headline variant
   const [headlineVariant, setHeadlineVariant] = useState<keyof typeof HEADLINE_VARIANTS>('control')
@@ -51,6 +52,16 @@ export default function HomePage() {
     
     // Track A/B test exposure
     trackABTestView('headline_v1', variant)
+  }, [])
+
+  // Detect mobile for sticky button
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 640)
+    }
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
   // Track referral clicks
@@ -303,15 +314,17 @@ export default function HomePage() {
         </div>
 
         <button
-          className="generate-btn"
+          className={isMobile ? 'generate-btn generate-btn-sticky' : 'generate-btn'}
           onClick={handleSubmit}
           disabled={loading}
         >
           {loading ? '⏳ Iniciando…' : '🎵 Crear mis 2 versiones ahora'}
         </button>
-        <p className="generate-btn-note">
-          Gratis. Escuchás 15 seg de cada versión. Solo pagás si querés descargar.
-        </p>
+        {!isMobile && (
+          <p className="generate-btn-note">
+            Gratis. Escuchás 15 seg de cada versión. Solo pagás si querés descargar.
+          </p>
+        )}
       </div>
     </>
   )
