@@ -23,12 +23,12 @@ export default function HomePage() {
   const router = useRouter()
 
   const [brandName, setBrandName] = useState('')
-  const [brandDescription, setBrandDescription] = useState('')
-  const [brandLocation, setBrandLocation] = useState('')
+  const [customLyrics, setCustomLyrics] = useState('')
   const [genre, setGenre] = useState('Pop')
   const [moods, setMoods] = useState<string[]>(['Alegre 🌟'])
   const [duration, setDuration] = useState<15 | 30>(30)
   const [loading, setLoading] = useState(false)
+  const [loadingLyrics, setLoadingLyrics] = useState(false)
   const [error, setError] = useState('')
 
   // A/B Test: Get headline variant
@@ -50,6 +50,41 @@ export default function HomePage() {
 
   const toggleMood = (m: string) => {
     setMoods(prev => prev.includes(m) ? prev.filter(x => x !== m) : [...prev, m])
+  }
+
+  const handleGenerateLyrics = async () => {
+    if (!brandName.trim()) {
+      setError('Ingresá el nombre de tu marca primero')
+      return
+    }
+    
+    setLoadingLyrics(true)
+    setError('')
+    
+    try {
+      const res = await fetch('/api/generate-lyrics', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          brandName: brandName.trim(),
+          genre,
+          moods,
+          userInput: customLyrics.trim(),
+        }),
+      })
+      
+      const data = await res.json()
+      if (!res.ok) {
+        setError(data.error || 'Error al generar letra')
+        return
+      }
+      
+      setCustomLyrics(data.lyrics)
+    } catch {
+      setError('Error de conexión')
+    } finally {
+      setLoadingLyrics(false)
+    }
   }
 
   const handleSubmit = async () => {
@@ -75,8 +110,7 @@ export default function HomePage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           brandName: brandName.trim(),
-          brandDescription: brandDescription.trim(),
-          brandLocation: brandLocation.trim(),
+          customLyrics: customLyrics.trim() || undefined,
           genre,
           moods,
           durationSeconds: duration,
@@ -147,21 +181,42 @@ export default function HomePage() {
         </div>
 
         <div className="form-section">
-          <label className="form-label">¿Qué hacés o vendés?</label>
-          <div className="input-row">
-            <input
-              className="input-field"
-              placeholder="Ej: Tortas artesanales"
-              value={brandDescription}
-              onChange={e => setBrandDescription(e.target.value)}
-            />
-            <input
-              className="input-field"
-              placeholder="Ej: Palermo, CABA"
-              value={brandLocation}
-              onChange={e => setBrandLocation(e.target.value)}
-            />
+          <label className="form-label">
+            ¿Sobre qué es tu canción?
+            <span className="form-label-hint">Escribí la letra o dejanos ayudarte con IA</span>
+          </label>
+          <textarea
+            className="lyrics-field"
+            placeholder="Ej: Las mejores empanadas de Palermo, receta familiar desde 1985, sabor único y auténtico..."
+            value={customLyrics}
+            onChange={e => setCustomLyrics(e.target.value)}
+            rows={5}
+            maxLength={500}
+          />
+          <div className="lyrics-actions">
+            <button
+              type="button"
+              className="magic-btn"
+              onClick={handleGenerateLyrics}
+              disabled={loadingLyrics || !brandName.trim()}
+            >
+              {loadingLyrics ? (
+                <>⏳ Generando...</>
+              ) : customLyrics.trim() ? (
+                <>✨ Mejorar con IA</>
+              ) : (
+                <>✨ Generar con IA</>
+              )}
+            </button>
+            <div className="lyrics-counter">
+              {customLyrics.length}/500
+            </div>
           </div>
+          {customLyrics && (
+            <div className="lyrics-hint">
+              💡 Podés editar el texto antes de generar tu canción
+            </div>
+          )}
         </div>
 
         <div className="form-section">

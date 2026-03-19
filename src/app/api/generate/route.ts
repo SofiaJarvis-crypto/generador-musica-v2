@@ -51,8 +51,7 @@ export async function POST(req: NextRequest) {
     
     const body: {
       brandName: string
-      brandDescription?: string
-      brandLocation?: string
+      customLyrics?: string
       genre: string
       moods: string[]
       durationSeconds: 15 | 30
@@ -100,7 +99,10 @@ export async function POST(req: NextRequest) {
     }
 
     // ── Construir el prompt para Suno ──────────────────────
-    const prompt = buildSunoPrompt(body)
+    // Si hay custom lyrics, usarlas directamente
+    // Si no, generar prompt automático
+    const prompt = body.customLyrics?.trim() || buildSunoPrompt(body)
+    const isCustomMode = !!body.customLyrics?.trim()
 
     // ── Crear registro en Supabase ─────────────────────────
     const sessionToken = body.sessionToken || crypto.randomUUID()
@@ -108,8 +110,8 @@ export async function POST(req: NextRequest) {
 
     const generationData = {
       brand_name:        body.brandName.trim(),
-      brand_description: body.brandDescription?.trim() || null,
-      brand_location:    body.brandLocation?.trim() || null,
+      brand_description: body.customLyrics?.trim() || null, // Guardar custom lyrics en description
+      brand_location:    null,
       genre:             body.genre,
       moods:             body.moods || [],
       duration_seconds:  body.durationSeconds,
@@ -184,7 +186,7 @@ export async function POST(req: NextRequest) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        customMode:  false,
+        customMode:  isCustomMode, // 🆕 true si usuario escribió letra
         instrumental: false,
         model:       'V4_5ALL',
         prompt,
