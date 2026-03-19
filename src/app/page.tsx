@@ -160,24 +160,26 @@ export default function HomePage() {
         </div>
 
         <div className="demo-section">
-          <div className="demo-header">🎧 Escuchá ejemplos reales:</div>
+          <div className="demo-header">🎧 Escuchá ejemplos:</div>
           <div className="demo-grid">
             <div className="demo-card">
-              <div className="demo-label">Garbarino (Pop)</div>
+              <div className="demo-label">🎸 Garbarino</div>
               <audio controls className="demo-player">
-                <source src="/demos/garbarino-pop.mp3" type="audio/mpeg" />
+                <source src="/demos/garbarino-rock.mp3" type="audio/mpeg" />
               </audio>
             </div>
             <div className="demo-card">
-              <div className="demo-label">Dinax (Cumbia)</div>
+              <div className="demo-label">🎷 Dinax</div>
               <audio controls className="demo-player">
-                <source src="/demos/dinax-cumbia.mp3" type="audio/mpeg" />
+                <source src="/demos/dinax-cuarteto.mp3" type="audio/mpeg" />
               </audio>
             </div>
           </div>
         </div>
 
         {error && <div className="error-box">{error}</div>}
+
+        <h2 className="form-section-title">Hacé tu canción ahora!</h2>
 
         <div className="form-section">
           <label className="form-label">¿Cómo se llama tu marca?</label>
