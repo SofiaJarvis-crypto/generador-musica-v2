@@ -243,7 +243,7 @@ export default function EscucharPage() {
           <button
             className="mp-btn"
             onClick={handlePay}
-            disabled={loadingPay || !currentStreamUrl}
+            disabled={loadingPay || generation?.suno_status !== 'complete'}
           >
             {!loadingPay && <img src="/mp-logo.svg" alt="Mercado Pago" className="mp-logo-img" style={{ height: 24, marginRight: 8 }} />}
             {loadingPay ? 'Iniciando pago…' : 'Pagar con Mercado Pago'}
