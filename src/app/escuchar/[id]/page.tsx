@@ -225,11 +225,11 @@ export default function EscucharPage() {
         <div className="pay-box">
           <div className="pay-top">
             <div className="pay-left">
-              <div className="pay-label">¿Te gustó? Descargala entera</div>
+              <div className="pay-label">Descargá la canción completa</div>
               <div className="pay-includes">
-                <div className="pay-item"><span className="pay-item-check">✓</span> MP3 en alta calidad</div>
-                <div className="pay-item"><span className="pay-item-check">✓</span> Canción completa</div>
-                <div className="pay-item"><span className="pay-item-check">✓</span> Licencia comercial incluida</div>
+                <div className="pay-item"><span className="pay-item-check">✓</span> MP3 320 kbps (máxima calidad)</div>
+                <div className="pay-item"><span className="pay-item-check">✓</span> {generation.duration_seconds} seg completos (vs 15 seg preview)</div>
+                <div className="pay-item"><span className="pay-item-check">✓</span> Licencia comercial (usala donde quieras)</div>
               </div>
             </div>
             <div className="pay-right">

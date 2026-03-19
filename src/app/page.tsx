@@ -94,11 +94,18 @@ export default function HomePage() {
       <Nav step={1} />
       <div className="form-screen">
         <h1 className="form-headline">
-          Creá la <em>canción</em><br />de tu marca
+          Jingles profesionales con IA<br />en <em>2 minutos</em>
         </h1>
         <p className="form-subline">
-          Escuchás gratis. Solo pagás cuando querés descargar. Sin registro, sin vueltas.
+          Probá gratis: Generamos 2 versiones y escuchás un preview de 15 seg.<br />
+          ¿Te gusta? Descargala entera por $8.900 (pago único)
         </p>
+
+        <div className="trust-signals">
+          <div className="trust-item">✅ Más de 500 jingles generados</div>
+          <div className="trust-item">✅ Sin derechos de autor</div>
+          <div className="trust-item">✅ Usado por marcas argentinas</div>
+        </div>
 
         {error && <div className="error-box">{error}</div>}
 
@@ -183,10 +190,10 @@ export default function HomePage() {
           onClick={handleSubmit}
           disabled={loading}
         >
-          {loading ? '⏳ Iniciando…' : '🎵 Generar mi canción gratis'}
+          {loading ? '⏳ Iniciando…' : '🎵 Crear mis 2 versiones ahora'}
         </button>
         <p className="generate-btn-note">
-          Escuchás la canción completa <strong>sin pagar nada</strong>. Solo pagás si la querés descargar.
+          Gratis. Escuchás 15 seg de cada versión. Solo pagás si querés descargar.
         </p>
       </div>
     </>
