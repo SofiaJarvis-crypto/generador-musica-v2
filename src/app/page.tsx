@@ -133,7 +133,20 @@ export default function HomePage() {
   }
 
   const handleSubmit = async () => {
-    if (!brandName.trim()) { setError('Ingresá el nombre de tu marca'); return }
+    if (!brandName.trim()) { 
+      setError('Ingresá el nombre de tu marca')
+      return 
+    }
+    
+    // Validar longitud mínima de letra (si escribió algo)
+    const lyricsText = customLyrics.trim()
+    const MIN_LYRICS_LENGTH = 50
+    
+    if (lyricsText && lyricsText.length < MIN_LYRICS_LENGTH) {
+      setError(`Tu letra es muy corta (mínimo ${MIN_LYRICS_LENGTH} caracteres). Usá "✨ Generar con IA" o escribí más detalles.`)
+      return
+    }
+    
     setError('')
     setLoading(true)
 
@@ -260,12 +273,12 @@ export default function HomePage() {
 
         <div className="form-section">
           <label className="form-label">
-            ¿Sobre qué es tu canción?
-            <span className="form-label-hint">Escribí la letra o dejanos ayudarte con IA</span>
+            ¿Qué querés que diga tu canción?
+            <span className="form-label-hint">Este texto será la LETRA de tu jingle. Escribí al menos 50 caracteres o usá IA.</span>
           </label>
           <textarea
             className="lyrics-field"
-            placeholder="Ej: Las mejores empanadas de Palermo, receta familiar desde 1985, sabor único y auténtico..."
+            placeholder="Ej: En Las Flores de Luli encontrás las mejores empanadas de Palermo, hechas con receta familiar desde 1985. Sabor único y auténtico que te va a encantar. Vení a probar!"
             value={customLyrics}
             onChange={e => setCustomLyrics(e.target.value)}
             rows={5}
@@ -283,16 +296,21 @@ export default function HomePage() {
               ) : customLyrics.trim() ? (
                 <>✨ Mejorar con IA</>
               ) : (
-                <>✨ Generar con IA</>
+                <>✨ Generar letra con IA</>
               )}
             </button>
             <div className="lyrics-counter">
-              {customLyrics.length}/500
+              {customLyrics.length}/500 {customLyrics.length > 0 && customLyrics.length < 50 && '⚠️'}
             </div>
           </div>
-          {customLyrics && (
+          {customLyrics && customLyrics.length < 50 && (
+            <div className="lyrics-warning">
+              ⚠️ Muy corto (mínimo 50 caracteres). Escribí más o usá "✨ Generar letra con IA"
+            </div>
+          )}
+          {customLyrics && customLyrics.length >= 50 && (
             <div className="lyrics-hint">
-              💡 Podés editar el texto antes de generar tu canción
+              ✅ Perfecto! Esta será la letra de tu canción
             </div>
           )}
         </div>
