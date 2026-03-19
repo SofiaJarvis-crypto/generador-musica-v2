@@ -3,9 +3,10 @@ export const dynamic = 'force-dynamic'
 import { NextRequest, NextResponse } from 'next/server'
 import OpenAI from 'openai'
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-})
+// Graceful fallback si no hay API key
+const openai = process.env.OPENAI_API_KEY 
+  ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+  : null
 
 export async function POST(req: NextRequest) {
   try {
@@ -13,6 +14,18 @@ export async function POST(req: NextRequest) {
 
     if (!brandName) {
       return NextResponse.json({ error: 'Nombre de marca requerido' }, { status: 400 })
+    }
+
+    // Si no hay OpenAI API key, devolver fallback simple
+    if (!openai) {
+      const fallbackLyrics = userInput?.trim() 
+        ? `${userInput} - ${brandName}, tu mejor elección!`
+        : `${brandName}, la mejor opción en ${genre}. ¡Eleginos!`
+      
+      return NextResponse.json({ 
+        lyrics: fallbackLyrics,
+        fallback: true 
+      })
     }
 
     // Determinar si es generación desde cero o mejora de texto existente
