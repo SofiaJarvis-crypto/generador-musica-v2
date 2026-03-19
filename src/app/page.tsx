@@ -4,6 +4,8 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Nav from '@/components/Nav'
+import ExitIntentPopup from '@/components/ExitIntentPopup'
+import SocialProof from '@/components/SocialProof'
 import { trackViewContent as trackViewContentFB, trackLead as trackLeadFB, trackGenerationStarted as trackGenerationStartedFB } from '@/lib/meta-pixel'
 import { trackViewContent as trackViewContentGA, trackLead as trackLeadGA, trackGenerationStarted as trackGenerationStartedGA } from '@/lib/google-analytics'
 import { getUserId, getVariant, trackABTestView, HEADLINE_VARIANTS } from '@/lib/ab-testing'
@@ -32,6 +34,7 @@ export default function HomePage() {
   const [loading, setLoading] = useState(false)
   const [loadingLyrics, setLoadingLyrics] = useState(false)
   const [error, setError] = useState('')
+  const [showExitPopup, setShowExitPopup] = useState(false)
 
   // A/B Test: Get headline variant
   const [headlineVariant, setHeadlineVariant] = useState<keyof typeof HEADLINE_VARIANTS>('control')
@@ -49,6 +52,22 @@ export default function HomePage() {
     // Track A/B test exposure
     trackABTestView('headline_v1', variant)
   }, [])
+
+  // Exit-intent detection
+  useEffect(() => {
+    const exitIntentShown = sessionStorage.getItem('exit_intent_shown')
+    if (exitIntentShown) return // Only show once per session
+
+    const handleMouseLeave = (e: MouseEvent) => {
+      if (e.clientY <= 0 && !brandName.trim()) {
+        setShowExitPopup(true)
+        sessionStorage.setItem('exit_intent_shown', 'true')
+      }
+    }
+
+    document.addEventListener('mouseleave', handleMouseLeave)
+    return () => document.removeEventListener('mouseleave', handleMouseLeave)
+  }, [brandName])
 
   const handleGenerateLyrics = async () => {
     if (!brandName.trim()) {
@@ -132,6 +151,20 @@ export default function HomePage() {
   return (
     <>
       <Nav step={1} />
+      
+      <SocialProof />
+      
+      {showExitPopup && (
+        <ExitIntentPopup
+          onClose={() => setShowExitPopup(false)}
+          onGenerate={() => {
+            setShowExitPopup(false)
+            // Scroll to form
+            window.scrollTo({ top: 0, behavior: 'smooth' })
+          }}
+        />
+      )}
+      
       <div className="form-screen">
         <h1 className="form-headline">
           {headlineVariant === 'variantB' ? (

@@ -223,6 +223,9 @@ export default function EscucharPage() {
 
         {/* Pay box */}
         <div className="pay-box">
+          <div className="price-urgency-badge">
+            ⚠️ Precio de lanzamiento - Sube a $12,900 el 1 de Abril
+          </div>
           <div className="pay-top">
             <div className="pay-left">
               <div className="pay-label">Descargá la canción completa</div>
