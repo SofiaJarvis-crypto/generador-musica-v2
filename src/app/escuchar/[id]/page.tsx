@@ -186,15 +186,18 @@ export default function EscucharPage() {
         {/* Song selector — only show if we have both */}
         {hasBothSongs && (
           <div className="song-tabs">
+            <div className="song-tabs-header">
+              <strong>Elegí tu versión favorita:</strong> Generamos 2 opciones para vos
+            </div>
             {(['a', 'b'] as const).map(s => (
               <div
                 key={s}
                 className={`song-tab${selectedSong === s ? ' active' : ''}`}
                 onClick={() => setSelectedSong(s)}
               >
-                <div className="song-tab-label">Versión {s.toUpperCase()}</div>
+                <div className="song-tab-label">OPCIÓN {s.toUpperCase()}</div>
                 <div className="song-tab-name">
-                  {s === 'a' ? '🎵 Opción principal' : '🎶 Opción alternativa'}
+                  {s === 'a' ? '🎵 Primera versión' : '🎶 Segunda versión'}
                 </div>
               </div>
             ))}
@@ -218,30 +221,14 @@ export default function EscucharPage() {
           </div>
         )}
 
-        {/* Regen */}
-        <p className="regen-link">
-          ¿No te convence?{' '}
-          <button
-            onClick={handleRegen}
-            disabled={loadingRegen || regenLeft <= 0}
-          >
-            {loadingRegen
-              ? 'Regenerando…'
-              : regenLeft > 0
-              ? `Generar otra versión gratis (quedan ${regenLeft})`
-              : 'Sin regeneraciones disponibles'}
-          </button>
-        </p>
-        {regenError && <div className="error-box" style={{ marginBottom: 16 }}>{regenError}</div>}
-
         {/* Pay box */}
         <div className="pay-box">
           <div className="pay-top">
             <div className="pay-left">
-              <div className="pay-label">¿Te gustó? Descargala limpia</div>
+              <div className="pay-label">¿Te gustó? Descargala entera</div>
               <div className="pay-includes">
                 <div className="pay-item"><span className="pay-item-check">✓</span> MP3 en alta calidad</div>
-                <div className="pay-item"><span className="pay-item-check">✓</span> Sin marca de agua</div>
+                <div className="pay-item"><span className="pay-item-check">✓</span> Canción completa</div>
                 <div className="pay-item"><span className="pay-item-check">✓</span> Licencia comercial incluida</div>
               </div>
             </div>
@@ -258,7 +245,7 @@ export default function EscucharPage() {
             onClick={handlePay}
             disabled={loadingPay || !currentStreamUrl}
           >
-            <span className="mp-logo">MP</span>
+            {!loadingPay && <img src="/mp-logo.svg" alt="Mercado Pago" className="mp-logo-img" style={{ height: 24, marginRight: 8 }} />}
             {loadingPay ? 'Iniciando pago…' : 'Pagar con Mercado Pago'}
           </button>
 
@@ -266,6 +253,22 @@ export default function EscucharPage() {
             🔒 Pago 100% seguro · Descarga inmediata después del pago
           </div>
         </div>
+
+        {/* Regen (movido debajo del pay-box) */}
+        <p className="regen-link">
+          ¿No te convence?{' '}
+          <button
+            onClick={handleRegen}
+            disabled={loadingRegen || regenLeft <= 0}
+          >
+            {loadingRegen
+              ? 'Regenerando…'
+              : regenLeft > 0
+              ? `Generar otra versión gratis (quedan ${regenLeft})`
+              : 'Sin regeneraciones disponibles'}
+          </button>
+        </p>
+        {regenError && <div className="error-box" style={{ marginBottom: 16 }}>{regenError}</div>}
       </div>
     </>
   )

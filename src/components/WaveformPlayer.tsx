@@ -31,8 +31,8 @@ function AudioPlayer({ src, isPlaying, onTimeUpdate, onEnded, isPreview }: {
           setPreviewStarted(true)
         }
         
-        // Si pasó del segundo 25, detener y resetear
-        if (currentTime >= 25) {
+        // Si pasó del segundo 30, detener y resetear (15 seg preview)
+        if (currentTime >= 30) {
           audio.pause()
           audio.currentTime = 15
           onEnded()
@@ -40,7 +40,7 @@ function AudioPlayer({ src, isPlaying, onTimeUpdate, onEnded, isPreview }: {
         }
       }
 
-      onTimeUpdate(isPreview ? currentTime - 15 : currentTime, isPreview ? 10 : duration)
+      onTimeUpdate(isPreview ? currentTime - 15 : currentTime, isPreview ? 15 : duration)
     }
 
     const handleEnd = () => {
@@ -82,11 +82,11 @@ function AudioPlayer({ src, isPlaying, onTimeUpdate, onEnded, isPreview }: {
 
     const handleSeeking = () => {
       const currentTime = audio.currentTime
-      // Forzar rango 15-25 segundos
+      // Forzar rango 15-30 segundos (15 seg preview)
       if (currentTime < 15) {
         audio.currentTime = 15
-      } else if (currentTime > 25) {
-        audio.currentTime = 25
+      } else if (currentTime > 30) {
+        audio.currentTime = 30
       }
     }
 
@@ -135,9 +135,9 @@ export default function WaveformPlayer({ streamUrl, duration, brandName, genre, 
         <div className="player-info">
           <div className="player-track-name">{brandName}</div>
           <div className="player-track-meta">
-            Jingle {genre} · {isPreview ? '10 seg preview' : `${duration} seg`}
+            Jingle {genre} · {isPreview ? '15 seg preview' : `${duration} seg`}
           </div>
-          {isPreview && <div className="watermark-badge">🔒 Preview de 10 segundos</div>}
+          {isPreview && <div className="watermark-badge">🔒 Preview de 15 segundos</div>}
         </div>
       </div>
 
@@ -166,7 +166,7 @@ export default function WaveformPlayer({ streamUrl, duration, brandName, genre, 
             {isPlaying ? 'Reproduciendo… 🎶' : 'Presioná play para escuchar'}
           </div>
           <div className="ctrl-tip">
-            {isPreview ? 'Preview de 10 segundos (seg 15-25)' : 'Podés escuchar toda la canción'}
+            {isPreview ? 'Preview de 15 segundos (seg 15-30)' : 'Podés escuchar toda la canción'}
           </div>
         </div>
       </div>
@@ -175,7 +175,7 @@ export default function WaveformPlayer({ streamUrl, duration, brandName, genre, 
         <div className="watermark-info">
           <div style={{ fontSize: 18, flexShrink: 0 }}>🔒</div>
           <div className="watermark-info-text">
-            Estás escuchando un <strong>preview de 10 segundos</strong>. Pagá para desbloquear la canción completa (sin marca de agua) y descargarla.
+            Estás escuchando un <strong>preview de 15 segundos</strong>. Pagá para desbloquear la canción entera y descargarla.
           </div>
         </div>
       )}
