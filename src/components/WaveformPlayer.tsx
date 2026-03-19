@@ -4,58 +4,95 @@ import { useEffect, useRef, useState, useCallback } from 'react'
 
 const WAVE_HEIGHTS = [20,35,55,70,45,80,60,90,75,50,85,95,70,55,40,60,75,85,65,50,90,80,55,70,45,60,75,50,35,25,45,60,70,80,55,75,85,65,50,40,60,75,50,35,55,70,80,60,45,30,50,65,75,55,40,60,70,85,65,50,40,30,20,35,50,65,75,55,40,60,70,80,55,45,35,50,65,75,60,45]
 
-// Adds a beep watermark to the audio stream via Web Audio API
-function WatermarkedAudio({ src, isPlaying, onTimeUpdate, onEnded }: {
+// Audio component with optional preview mode (10 sec from second 15-25)
+function AudioPlayer({ src, isPlaying, onTimeUpdate, onEnded, isPreview }: {
   src: string
   isPlaying: boolean
   onTimeUpdate: (t: number, d: number) => void
   onEnded: () => void
+  isPreview: boolean
 }) {
   const audioRef = useRef<HTMLAudioElement>(null)
-  const ctxRef = useRef<AudioContext | null>(null)
-  const beepRef = useRef<NodeJS.Timeout | null>(null)
-
-  const playBeep = useCallback(() => {
-    if (!ctxRef.current) return
-    const ctx = ctxRef.current
-    const osc = ctx.createOscillator()
-    const gain = ctx.createGain()
-    osc.connect(gain)
-    gain.connect(ctx.destination)
-    osc.frequency.value = 880
-    gain.gain.setValueAtTime(0.15, ctx.currentTime)
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3)
-    osc.start(ctx.currentTime)
-    osc.stop(ctx.currentTime + 0.3)
-  }, [])
+  const [previewStarted, setPreviewStarted] = useState(false)
 
   useEffect(() => {
     const audio = audioRef.current
     if (!audio) return
 
-    const handleTime = () => onTimeUpdate(audio.currentTime, audio.duration || 0)
-    const handleEnd = () => { onEnded(); if (beepRef.current) clearInterval(beepRef.current) }
+    const handleTime = () => {
+      const currentTime = audio.currentTime
+      const duration = audio.duration || 0
+
+      // Si es preview y estamos en segundo 15-25, permitir reproducción
+      if (isPreview) {
+        // Al cargar, saltar al segundo 15
+        if (!previewStarted && isPlaying && currentTime < 15) {
+          audio.currentTime = 15
+          setPreviewStarted(true)
+        }
+        
+        // Si pasó del segundo 25, detener y resetear
+        if (currentTime >= 25) {
+          audio.pause()
+          audio.currentTime = 15
+          onEnded()
+          return
+        }
+      }
+
+      onTimeUpdate(isPreview ? currentTime - 15 : currentTime, isPreview ? 10 : duration)
+    }
+
+    const handleEnd = () => {
+      if (isPreview) {
+        audio.currentTime = 15
+      }
+      onEnded()
+    }
+
     audio.addEventListener('timeupdate', handleTime)
     audio.addEventListener('ended', handleEnd)
-    return () => { audio.removeEventListener('timeupdate', handleTime); audio.removeEventListener('ended', handleEnd) }
-  }, [onTimeUpdate, onEnded])
+    
+    return () => { 
+      audio.removeEventListener('timeupdate', handleTime)
+      audio.removeEventListener('ended', handleEnd)
+    }
+  }, [onTimeUpdate, onEnded, isPreview, isPlaying, previewStarted])
 
   useEffect(() => {
     const audio = audioRef.current
     if (!audio) return
+    
     if (isPlaying) {
-      if (!ctxRef.current) ctxRef.current = new AudioContext()
-      if (ctxRef.current.state === 'suspended') ctxRef.current.resume()
+      // Si es preview y no empezó, saltar al segundo 15
+      if (isPreview && audio.currentTime < 15) {
+        audio.currentTime = 15
+        setPreviewStarted(true)
+      }
       audio.play().catch(() => {})
-      // Beep every 15 seconds as watermark
-      beepRef.current = setInterval(playBeep, 15000)
-      playBeep() // first beep on play
     } else {
       audio.pause()
-      if (beepRef.current) clearInterval(beepRef.current)
     }
-    return () => { if (beepRef.current) clearInterval(beepRef.current) }
-  }, [isPlaying, playBeep])
+  }, [isPlaying, isPreview])
+
+  // Bloquear seek en preview mode
+  useEffect(() => {
+    const audio = audioRef.current
+    if (!audio || !isPreview) return
+
+    const handleSeeking = () => {
+      const currentTime = audio.currentTime
+      // Forzar rango 15-25 segundos
+      if (currentTime < 15) {
+        audio.currentTime = 15
+      } else if (currentTime > 25) {
+        audio.currentTime = 25
+      }
+    }
+
+    audio.addEventListener('seeking', handleSeeking)
+    return () => audio.removeEventListener('seeking', handleSeeking)
+  }, [isPreview])
 
   return <audio ref={audioRef} src={src} preload="metadata" crossOrigin="anonymous" />
 }
@@ -65,9 +102,10 @@ interface WaveformPlayerProps {
   duration: number
   brandName: string
   genre: string
+  isPreview?: boolean // 🆕 Si es true, limitar a 10 seg (segundo 15-25)
 }
 
-export default function WaveformPlayer({ streamUrl, duration, brandName, genre }: WaveformPlayerProps) {
+export default function WaveformPlayer({ streamUrl, duration, brandName, genre, isPreview = false }: WaveformPlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false)
   const [currentTime, setCurrentTime] = useState(0)
   const [audioDuration, setAudioDuration] = useState(duration)
@@ -96,8 +134,10 @@ export default function WaveformPlayer({ streamUrl, duration, brandName, genre }
         <div className="player-thumb">🎵</div>
         <div className="player-info">
           <div className="player-track-name">{brandName}</div>
-          <div className="player-track-meta">Jingle {genre} · {duration} seg</div>
-          <div className="watermark-badge">🔊 Vista previa con marca de agua</div>
+          <div className="player-track-meta">
+            Jingle {genre} · {isPreview ? '10 seg preview' : `${duration} seg`}
+          </div>
+          {isPreview && <div className="watermark-badge">🔒 Preview de 10 segundos</div>}
         </div>
       </div>
 
@@ -125,22 +165,27 @@ export default function WaveformPlayer({ streamUrl, duration, brandName, genre }
           <div className="ctrl-playing" id="playing-status">
             {isPlaying ? 'Reproduciendo… 🎶' : 'Presioná play para escuchar'}
           </div>
-          <div className="ctrl-tip">Podés escuchar todas las veces que quieras</div>
+          <div className="ctrl-tip">
+            {isPreview ? 'Preview de 10 segundos (seg 15-25)' : 'Podés escuchar toda la canción'}
+          </div>
         </div>
       </div>
 
-      <div className="watermark-info">
-        <div style={{ fontSize: 18, flexShrink: 0 }}>🔔</div>
-        <div className="watermark-info-text">
-          Estás escuchando la <strong>versión gratuita con marca de agua</strong>. El tono periódico desaparece en la versión descargable.
+      {isPreview && (
+        <div className="watermark-info">
+          <div style={{ fontSize: 18, flexShrink: 0 }}>🔒</div>
+          <div className="watermark-info-text">
+            Estás escuchando un <strong>preview de 10 segundos</strong>. Pagá para desbloquear la canción completa (sin marca de agua) y descargarla.
+          </div>
         </div>
-      </div>
+      )}
 
-      <WatermarkedAudio
+      <AudioPlayer
         src={streamUrl}
         isPlaying={isPlaying}
         onTimeUpdate={handleTimeUpdate}
         onEnded={handleEnded}
+        isPreview={isPreview}
       />
     </div>
   )

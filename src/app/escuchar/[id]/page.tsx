@@ -70,6 +70,9 @@ export default function EscucharPage() {
     return () => clearInterval(iv)
   }, [generationId])
 
+  // 🆕 Siempre usar stream_url - el player limita la reproducción si no está unlocked
+  const isUnlocked = generation?.is_unlocked === true
+  
   const currentStreamUrl = selectedSong === 'a'
     ? generation?.song_a_stream_url
     : generation?.song_b_stream_url
@@ -206,6 +209,7 @@ export default function EscucharPage() {
             duration={generation.duration_seconds}
             brandName={generation.brand_name}
             genre={generation.genre}
+            isPreview={!isUnlocked} {/* 🆕 Limita reproducción a 10 seg si no pagó */}
           />
         ) : (
           <div className="preparing-box">

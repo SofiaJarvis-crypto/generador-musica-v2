@@ -67,7 +67,10 @@ export async function POST(req: NextRequest) {
     if (status === 'approved' && payment) {
       await supabaseAdmin
         .from('generations')
-        .update({ selected_song: selectedSong || null })
+        .update({ 
+          selected_song: selectedSong || null,
+          is_unlocked: true // 🆕 Desbloquear audio completo
+        })
         .eq('id', generationId)
 
       // ── Obtener brand_name para personalizar el email ──
