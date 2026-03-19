@@ -163,15 +163,15 @@ export default function HomePage() {
           <div className="demo-header">🎧 Escuchá ejemplos reales:</div>
           <div className="demo-grid">
             <div className="demo-card">
-              <div className="demo-label">Cafetería (Pop)</div>
+              <div className="demo-label">Garbarino (Pop)</div>
               <audio controls className="demo-player">
-                <source src="/demos/cafeteria-pop.mp3" type="audio/mpeg" />
+                <source src="/demos/garbarino-pop.mp3" type="audio/mpeg" />
               </audio>
             </div>
             <div className="demo-card">
-              <div className="demo-label">Panadería (Cumbia)</div>
+              <div className="demo-label">Dinax (Cumbia)</div>
               <audio controls className="demo-player">
-                <source src="/demos/panaderia-cumbia.mp3" type="audio/mpeg" />
+                <source src="/demos/dinax-cumbia.mp3" type="audio/mpeg" />
               </audio>
             </div>
           </div>
