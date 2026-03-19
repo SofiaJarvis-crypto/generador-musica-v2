@@ -10,7 +10,7 @@ const openai = process.env.OPENAI_API_KEY
 
 export async function POST(req: NextRequest) {
   try {
-    const { brandName, genre, moods, userInput } = await req.json()
+    const { brandName, genre, userInput } = await req.json()
 
     if (!brandName) {
       return NextResponse.json({ error: 'Nombre de marca requerido' }, { status: 400 })
@@ -39,7 +39,6 @@ export async function POST(req: NextRequest) {
 Contexto:
 - Marca: ${brandName}
 - Género musical: ${genre}
-- Mood: ${moods.join(', ')}
 
 Instrucciones:
 - Hacela pegadiza y memorable
@@ -54,7 +53,6 @@ Devolvé SOLO la letra, sin explicaciones.`
 
 Marca: ${brandName}
 Género: ${genre}
-Mood: ${moods.join(', ')}
 
 Instrucciones:
 - Máximo 60 palabras

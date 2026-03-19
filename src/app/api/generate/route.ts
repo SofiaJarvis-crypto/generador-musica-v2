@@ -53,8 +53,6 @@ export async function POST(req: NextRequest) {
       brandName: string
       customLyrics?: string
       genre: string
-      moods: string[]
-      durationSeconds: 15 | 30
       sessionToken?: string
       generationId?: string
     } = await req.json()
@@ -67,9 +65,6 @@ export async function POST(req: NextRequest) {
     }
     if (!body.genre) {
       return NextResponse.json({ error: 'Seleccioná un género musical' }, { status: 400 })
-    }
-    if (![15, 30].includes(body.durationSeconds)) {
-      return NextResponse.json({ error: 'Duración inválida' }, { status: 400 })
     }
 
     // ── IP para rate limiting ──────────────────────────────
@@ -113,8 +108,8 @@ export async function POST(req: NextRequest) {
       brand_description: body.customLyrics?.trim() || null, // Guardar custom lyrics en description
       brand_location:    null,
       genre:             body.genre,
-      moods:             body.moods || [],
-      duration_seconds:  body.durationSeconds,
+      moods:             [],
+      duration_seconds:  30, // Default 30 seg
       suno_status:       'generating',
       ip_address:        ip,
       session_token:     sessionToken,

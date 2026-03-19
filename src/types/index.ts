@@ -59,8 +59,8 @@ export interface GenerateFormData {
   brandDescription?: string | null
   brandLocation?: string | null
   genre: string
-  moods: string[]
-  durationSeconds: 15 | 30
+  moods?: string[]
+  durationSeconds?: 15 | 30
 }
 
 // Lo que construimos para enviar a Suno

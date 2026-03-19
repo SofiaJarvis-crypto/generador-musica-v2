@@ -10,14 +10,18 @@ import { getUserId, getVariant, trackABTestView, HEADLINE_VARIANTS } from '@/lib
 
 const GENRES = [
   { id: 'Pop', emoji: '🎹', label: 'Pop' },
-  { id: 'Cumbia', emoji: '🎸', label: 'Cumbia' },
+  { id: 'Rock', emoji: '🎸', label: 'Rock' },
+  { id: 'Cumbia', emoji: '🪘', label: 'Cumbia' },
   { id: 'Folklore', emoji: '🪗', label: 'Folklore' },
   { id: 'Trap AR', emoji: '🔥', label: 'Trap AR' },
   { id: 'Reggaetón', emoji: '💃', label: 'Reggaetón' },
   { id: 'Cuarteto', emoji: '🎷', label: 'Cuarteto' },
+  { id: 'Tango', emoji: '🎻', label: 'Tango' },
+  { id: 'Electrónica', emoji: '🎧', label: 'Electrónica' },
+  { id: 'Jazz', emoji: '🎺', label: 'Jazz' },
+  { id: 'Funk', emoji: '🕺', label: 'Funk' },
+  { id: 'Salsa', emoji: '🎶', label: 'Salsa' },
 ]
-
-const MOODS = ['Alegre 🌟', 'Emotivo 💛', 'Energético ⚡', 'Divertido 😄', 'Premium ✨']
 
 export default function HomePage() {
   const router = useRouter()
@@ -25,8 +29,6 @@ export default function HomePage() {
   const [brandName, setBrandName] = useState('')
   const [customLyrics, setCustomLyrics] = useState('')
   const [genre, setGenre] = useState('Pop')
-  const [moods, setMoods] = useState<string[]>(['Alegre 🌟'])
-  const [duration, setDuration] = useState<15 | 30>(30)
   const [loading, setLoading] = useState(false)
   const [loadingLyrics, setLoadingLyrics] = useState(false)
   const [error, setError] = useState('')
@@ -48,10 +50,6 @@ export default function HomePage() {
     trackABTestView('headline_v1', variant)
   }, [])
 
-  const toggleMood = (m: string) => {
-    setMoods(prev => prev.includes(m) ? prev.filter(x => x !== m) : [...prev, m])
-  }
-
   const handleGenerateLyrics = async () => {
     if (!brandName.trim()) {
       setError('Ingresá el nombre de tu marca primero')
@@ -68,7 +66,6 @@ export default function HomePage() {
         body: JSON.stringify({
           brandName: brandName.trim(),
           genre,
-          moods,
           userInput: customLyrics.trim(),
         }),
       })
@@ -89,7 +86,6 @@ export default function HomePage() {
 
   const handleSubmit = async () => {
     if (!brandName.trim()) { setError('Ingresá el nombre de tu marca'); return }
-    if (moods.length === 0) { setError('Elegí al menos un tono'); return }
     setError('')
     setLoading(true)
 
@@ -112,8 +108,6 @@ export default function HomePage() {
           brandName: brandName.trim(),
           customLyrics: customLyrics.trim() || undefined,
           genre,
-          moods,
-          durationSeconds: duration,
           sessionToken,
         }),
       })
@@ -230,37 +224,6 @@ export default function HomePage() {
               >
                 <span className="genre-emoji">{g.emoji}</span>
                 <div className="genre-name">{g.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="form-section">
-          <label className="form-label">¿Qué sensación querés transmitir?</label>
-          <div className="mood-row">
-            {MOODS.map(m => (
-              <button
-                key={m}
-                className={`mood-pill${moods.includes(m) ? ' sel' : ''}`}
-                onClick={() => toggleMood(m)}
-              >
-                {m}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="form-section">
-          <label className="form-label">Duración</label>
-          <div className="dur-row">
-            {([15, 30] as const).map(d => (
-              <div
-                key={d}
-                className={`dur-pill${duration === d ? ' sel' : ''}`}
-                onClick={() => setDuration(d)}
-              >
-                <div className="dur-pill-name">{d} seg</div>
-                <div className="dur-pill-desc">{d === 15 ? 'Stories / Reels' : 'Redes / Radio'}</div>
               </div>
             ))}
           </div>
