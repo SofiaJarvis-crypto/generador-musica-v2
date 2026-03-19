@@ -13,14 +13,25 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'weekly',
       priority: 1,
     },
-    // Blog posts (agregar dinámicamente cuando existan)
-    // Ejemplo:
-    // {
-    //   url: `${baseUrl}/blog/como-crear-jingle-profesional`,
-    //   lastModified: new Date('2026-03-10'),
-    //   changeFrequency: 'monthly',
-    //   priority: 0.8,
-    // },
+    // SEO Landing Pages
+    {
+      url: `${baseUrl}/generador-jingles-gratis`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/como-crear-jingle-para-marca`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/ejemplos-jingles-marcas-argentinas`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
     
     // Programmatic SEO pages (géneros)
     {
