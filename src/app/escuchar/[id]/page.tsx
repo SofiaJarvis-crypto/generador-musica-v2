@@ -209,7 +209,7 @@ export default function EscucharPage() {
             duration={generation.duration_seconds}
             brandName={generation.brand_name}
             genre={generation.genre}
-            isPreview={!isUnlocked} {/* 🆕 Limita reproducción a 10 seg si no pagó */}
+            isPreview={!isUnlocked}
           />
         ) : (
           <div className="preparing-box">
