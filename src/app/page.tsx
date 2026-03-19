@@ -155,10 +155,26 @@ export default function HomePage() {
           ¿Te gusta? Descargala entera por $8.900 (pago único)
         </p>
 
-        <div className="trust-signals">
-          <div className="trust-item">✅ Más de 500 jingles generados</div>
-          <div className="trust-item">✅ Sin derechos de autor</div>
-          <div className="trust-item">✅ Usado por marcas argentinas</div>
+        <div className="trust-signals-compact">
+          ✅ +500 jingles generados · ✅ Sin derechos de autor · ✅ Marcas argentinas
+        </div>
+
+        <div className="demo-section">
+          <div className="demo-header">🎧 Escuchá ejemplos reales:</div>
+          <div className="demo-grid">
+            <div className="demo-card">
+              <div className="demo-label">Cafetería (Pop)</div>
+              <audio controls className="demo-player">
+                <source src="/demos/cafeteria-pop.mp3" type="audio/mpeg" />
+              </audio>
+            </div>
+            <div className="demo-card">
+              <div className="demo-label">Panadería (Cumbia)</div>
+              <audio controls className="demo-player">
+                <source src="/demos/panaderia-cumbia.mp3" type="audio/mpeg" />
+              </audio>
+            </div>
+          </div>
         </div>
 
         {error && <div className="error-box">{error}</div>}
