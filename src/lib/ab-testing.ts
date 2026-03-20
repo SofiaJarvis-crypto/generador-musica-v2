@@ -95,17 +95,17 @@ export const PAYWALL_HEADLINE_VARIANTS = {
 export const PAYWALL_FEATURES_VARIANTS = {
   control: [
     "MP3 320 kbps (máxima calidad)",
-    "30 seg completos (vs 15 seg preview)",
+    "Canción completa",
     "Licencia comercial (usala donde quieras)",
   ],
   variantA: [
     "MP3 listo para usar (320 kbps)",
-    "Los 30 segundos completos",
+    "Canción completa",
     "Licencia comercial incluida",
   ],
   variantB: [
     "MP3 320 kbps (máxima calidad)",
-    "30 segundos sin cortes",
+    "Canción completa sin cortes",
     "Usala en radio, redes, o donde quieras",
   ],
 }

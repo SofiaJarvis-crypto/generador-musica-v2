@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, useCallback } from 'react'
 
 const WAVE_HEIGHTS = [20,35,55,70,45,80,60,90,75,50,85,95,70,55,40,60,75,85,65,50,90,80,55,70,45,60,75,50,35,25,45,60,70,80,55,75,85,65,50,40,60,75,50,35,55,70,80,60,45,30,50,65,75,55,40,60,70,85,65,50,40,30,20,35,50,65,75,55,40,60,70,80,55,45,35,50,65,75,60,45]
 
-// Audio component with optional preview mode (10 sec from second 15-25)
+// Audio component with optional preview mode (25 sec from second 5-30)
 function AudioPlayer({ src, isPlaying, onTimeUpdate, onEnded, isPreview }: {
   src: string
   isPlaying: boolean
@@ -23,29 +23,29 @@ function AudioPlayer({ src, isPlaying, onTimeUpdate, onEnded, isPreview }: {
       const currentTime = audio.currentTime
       const duration = audio.duration || 0
 
-      // Si es preview y estamos en segundo 15-25, permitir reproducción
+      // Si es preview y estamos en segundo 5-30, permitir reproducción
       if (isPreview) {
-        // Al cargar, saltar al segundo 15
-        if (!previewStarted && isPlaying && currentTime < 15) {
-          audio.currentTime = 15
+        // Al cargar, saltar al segundo 5
+        if (!previewStarted && isPlaying && currentTime < 5) {
+          audio.currentTime = 5
           setPreviewStarted(true)
         }
         
-        // Si pasó del segundo 30, detener y resetear (15 seg preview)
+        // Si pasó del segundo 30, detener y resetear (25 seg preview)
         if (currentTime >= 30) {
           audio.pause()
-          audio.currentTime = 15
+          audio.currentTime = 5
           onEnded()
           return
         }
       }
 
-      onTimeUpdate(isPreview ? currentTime - 15 : currentTime, isPreview ? 15 : duration)
+      onTimeUpdate(isPreview ? currentTime - 5 : currentTime, isPreview ? 25 : duration)
     }
 
     const handleEnd = () => {
       if (isPreview) {
-        audio.currentTime = 15
+        audio.currentTime = 5
       }
       onEnded()
     }
@@ -64,9 +64,9 @@ function AudioPlayer({ src, isPlaying, onTimeUpdate, onEnded, isPreview }: {
     if (!audio) return
     
     if (isPlaying) {
-      // Si es preview y no empezó, saltar al segundo 15
-      if (isPreview && audio.currentTime < 15) {
-        audio.currentTime = 15
+      // Si es preview y no empezó, saltar al segundo 5
+      if (isPreview && audio.currentTime < 5) {
+        audio.currentTime = 5
         setPreviewStarted(true)
       }
       audio.play().catch(() => {})
@@ -82,9 +82,9 @@ function AudioPlayer({ src, isPlaying, onTimeUpdate, onEnded, isPreview }: {
 
     const handleSeeking = () => {
       const currentTime = audio.currentTime
-      // Forzar rango 15-30 segundos (15 seg preview)
-      if (currentTime < 15) {
-        audio.currentTime = 15
+      // Forzar rango 5-30 segundos (25 seg preview)
+      if (currentTime < 5) {
+        audio.currentTime = 5
       } else if (currentTime > 30) {
         audio.currentTime = 30
       }
@@ -135,9 +135,9 @@ export default function WaveformPlayer({ streamUrl, duration, brandName, genre, 
         <div className="player-info">
           <div className="player-track-name">{brandName}</div>
           <div className="player-track-meta">
-            Jingle {genre} · {isPreview ? '15 seg preview' : `${duration} seg`}
+            Jingle {genre} · {isPreview ? '25 seg preview' : `${duration} seg`}
           </div>
-          {isPreview && <div className="watermark-badge">🔒 Preview de 15 segundos</div>}
+          {isPreview && <div className="watermark-badge">🔒 Preview de 25 segundos</div>}
         </div>
       </div>
 
@@ -166,7 +166,7 @@ export default function WaveformPlayer({ streamUrl, duration, brandName, genre, 
             {isPlaying ? 'Reproduciendo… 🎶' : 'Presioná play para escuchar'}
           </div>
           <div className="ctrl-tip">
-            {isPreview ? 'Preview de 15 segundos (seg 15-30)' : 'Podés escuchar toda la canción'}
+            {isPreview ? 'Preview de 25 segundos (seg 5-30)' : 'Podés escuchar toda la canción'}
           </div>
         </div>
       </div>
@@ -175,7 +175,7 @@ export default function WaveformPlayer({ streamUrl, duration, brandName, genre, 
         <div className="watermark-info">
           <div style={{ fontSize: 18, flexShrink: 0 }}>🔒</div>
           <div className="watermark-info-text">
-            Estás escuchando un <strong>preview de 15 segundos</strong>. Pagá para desbloquear la canción entera y descargarla.
+            Estás escuchando un <strong>preview de 25 segundos</strong>. Pagá para desbloquear la canción entera y descargarla.
           </div>
         </div>
       )}

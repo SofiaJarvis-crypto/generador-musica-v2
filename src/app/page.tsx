@@ -221,7 +221,7 @@ export default function HomePage() {
           )}
         </h1>
         <p className="form-subline">
-          Probá gratis: Generamos 2 versiones y escuchás un preview de 15 seg.<br />
+          Probá gratis: Generamos 2 versiones y escuchás un preview de 25 seg.<br />
           ¿Te gusta? Descargala entera por $8.900 (pago único)
         </p>
 
@@ -331,7 +331,7 @@ export default function HomePage() {
         </button>
         {!isMobile && (
           <p className="generate-btn-note">
-            Gratis. Escuchás 15 seg de cada versión. Solo pagás si querés descargar.
+            Gratis. Escuchás 25 seg de cada versión. Solo pagás si querés descargar.
           </p>
         )}
       </div>

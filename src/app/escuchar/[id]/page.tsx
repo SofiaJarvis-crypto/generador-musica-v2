@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import Nav from '@/components/Nav'
 import WaveformPlayer from '@/components/WaveformPlayer'
-import ReferralShare from '@/components/ReferralShare'
+// import ReferralShare from '@/components/ReferralShare' // HIDDEN: Referral system temporarily disabled
 import { trackAddToCart as trackAddToCartFB, trackInitiateCheckout as trackInitiateCheckoutFB } from '@/lib/meta-pixel'
 import { trackAddToCart as trackAddToCartGA, trackInitiateCheckout as trackInitiateCheckoutGA, trackRegeneration } from '@/lib/google-analytics'
 
@@ -232,7 +232,7 @@ export default function EscucharPage() {
               <div className="pay-label">Descargá la canción completa</div>
               <div className="pay-includes">
                 <div className="pay-item"><span className="pay-item-check">✓</span> MP3 320 kbps (máxima calidad)</div>
-                <div className="pay-item"><span className="pay-item-check">✓</span> {generation.duration_seconds} seg completos (vs 15 seg preview)</div>
+                <div className="pay-item"><span className="pay-item-check">✓</span> Canción completa</div>
                 <div className="pay-item"><span className="pay-item-check">✓</span> Licencia comercial (usala donde quieras)</div>
               </div>
             </div>
@@ -258,8 +258,8 @@ export default function EscucharPage() {
           </div>
         </div>
 
-        {/* Referral Share */}
-        <ReferralShare generationId={generationId} />
+        {/* Referral Share - HIDDEN */}
+        {/* <ReferralShare generationId={generationId} /> */}
 
         {/* Regen (movido debajo del pay-box) */}
         <p className="regen-link">
