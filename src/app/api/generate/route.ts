@@ -94,11 +94,45 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    // ── Auto-completar letra si es muy corta (< 50 chars) ──
+    let finalLyrics = body.customLyrics?.trim() || ''
+    const MIN_LYRICS_LENGTH = 50
+    
+    if (finalLyrics && finalLyrics.length < MIN_LYRICS_LENGTH) {
+      console.log('[/api/generate] Short lyrics detected, auto-completing with OpenAI...')
+      try {
+        const { default: OpenAI } = await import('openai')
+        const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+        
+        const completion = await openai.chat.completions.create({
+          model: 'gpt-4o-mini',
+          messages: [
+            {
+              role: 'system',
+              content: `Sos un experto en escribir letras de jingles publicitarios en español argentino. Tu trabajo es expandir y mejorar textos cortos que escriben los usuarios para convertirlos en letras pegadizas de 60-120 palabras. Mantené el tono original, agregá detalles atractivos, y asegurate de que sea memorable y fácil de cantar. Género musical: ${body.genre}.`
+            },
+            {
+              role: 'user',
+              content: `Expandí y mejorá esta letra corta para el jingle de "${body.brandName}":\n\n${finalLyrics}\n\nEscribí una versión completa (60-120 palabras) que sea pegadiza, memorable, y perfecta para una canción ${body.genre}.`
+            }
+          ],
+          temperature: 0.8,
+          max_tokens: 300
+        })
+        
+        finalLyrics = completion.choices[0]?.message?.content?.trim() || finalLyrics
+        console.log('[/api/generate] Auto-completed lyrics:', finalLyrics)
+      } catch (err) {
+        console.error('[/api/generate] OpenAI auto-complete failed:', err)
+        // Si falla OpenAI, usar la letra original (no bloquear)
+      }
+    }
+    
     // ── Construir el prompt para Suno ──────────────────────
-    // Si hay custom lyrics, usarlas directamente
+    // Si hay custom lyrics (o auto-completadas), usarlas directamente
     // Si no, generar prompt automático
-    const prompt = body.customLyrics?.trim() || buildSunoPrompt(body)
-    const isCustomMode = !!body.customLyrics?.trim()
+    const prompt = finalLyrics || buildSunoPrompt(body)
+    const isCustomMode = !!finalLyrics
 
     // ── Crear registro en Supabase ─────────────────────────
     const sessionToken = body.sessionToken || crypto.randomUUID()
@@ -106,7 +140,7 @@ export async function POST(req: NextRequest) {
 
     const generationData = {
       brand_name:        body.brandName.trim(),
-      brand_description: body.customLyrics?.trim() || null, // Guardar custom lyrics en description
+      brand_description: finalLyrics || null, // Guardar letra final (puede ser auto-completada)
       brand_location:    null,
       genre:             body.genre,
       moods:             [],

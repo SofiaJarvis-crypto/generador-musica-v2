@@ -138,15 +138,6 @@ export default function HomePage() {
       return 
     }
     
-    // Validar longitud mínima de letra (si escribió algo)
-    const lyricsText = customLyrics.trim()
-    const MIN_LYRICS_LENGTH = 50
-    
-    if (lyricsText && lyricsText.length < MIN_LYRICS_LENGTH) {
-      setError(`Tu letra es muy corta (mínimo ${MIN_LYRICS_LENGTH} caracteres). Usá "✨ Generar con IA" o escribí más detalles.`)
-      return
-    }
-    
     setError('')
     setLoading(true)
 
@@ -304,8 +295,8 @@ export default function HomePage() {
             </div>
           </div>
           {customLyrics && customLyrics.length < 50 && (
-            <div className="lyrics-warning">
-              ⚠️ Muy corto (mínimo 50 caracteres). Escribí más o usá "✨ Generar letra con IA"
+            <div className="lyrics-info">
+              💡 Texto corto detectado. Lo vamos a expandir automáticamente con IA para que tu canción suene mejor.
             </div>
           )}
           {customLyrics && customLyrics.length >= 50 && (
