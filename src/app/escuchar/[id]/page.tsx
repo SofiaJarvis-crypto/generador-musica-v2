@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, FormEvent } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import Nav from '@/components/Nav'
 import WaveformPlayer from '@/components/WaveformPlayer'
@@ -84,7 +84,7 @@ export default function EscucharPage() {
     return () => clearTimeout(t)
   }, [emailSaved])
 
-  const handleEmailCapture = async (e: React.FormEvent) => {
+  const handleEmailCapture = async (e: FormEvent) => {
     e.preventDefault()
     if (!emailInput || !emailInput.includes('@')) return
     setEmailLoading(true)
