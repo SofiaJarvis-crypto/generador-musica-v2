@@ -6,9 +6,6 @@ export const dynamic = 'force-dynamic'
 
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
-import { Resend } from 'resend'
-
-const resend = new Resend(process.env.RESEND_API_KEY!)
 const PRECIO = parseFloat(process.env.PRECIO_ARS || '8900')
 
 export async function POST(req: NextRequest) {
@@ -94,6 +91,8 @@ export async function POST(req: NextRequest) {
       // ── Enviar email con link de descarga ──
       if (payer?.email && downloadToken) {
         try {
+          const { Resend } = await import('resend')
+          const resend = new Resend(process.env.RESEND_API_KEY!)
           await resend.emails.send({
             from: 'Generador de Música <onboarding@resend.dev>',
             to: payer.email,

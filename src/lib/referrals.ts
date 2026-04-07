@@ -1,10 +1,12 @@
 // Referral system utilities
 import { createClient } from '@supabase/supabase-js'
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+function getSupabase() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
+}
 
 export interface ReferralStats {
   code: string
@@ -39,7 +41,7 @@ export async function createReferralCode(generationId: string, email?: string): 
 
   // Ensure uniqueness
   while (attempts < maxAttempts) {
-    const { data: existing } = await supabase
+    const { data: existing } = await getSupabase()
       .from('referrals')
       .select('code')
       .eq('code', code)
@@ -55,7 +57,7 @@ export async function createReferralCode(generationId: string, email?: string): 
     throw new Error('Failed to generate unique referral code')
   }
 
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from('referrals')
     .insert({
       code,
@@ -78,7 +80,7 @@ export async function trackReferralClick(
   userAgent?: string
 ): Promise<void> {
   // Increment click counter using RPC function
-  const { error: updateError } = await supabase.rpc('increment_referral_clicks', {
+  const { error: updateError } = await getSupabase().rpc('increment_referral_clicks', {
     ref_code: referralCode
   })
 
@@ -87,7 +89,7 @@ export async function trackReferralClick(
   }
 
   // Log detailed click
-  const { error: insertError } = await supabase
+  const { error: insertError } = await getSupabase()
     .from('referral_clicks')
     .insert({
       referral_code: referralCode,
@@ -104,7 +106,7 @@ export async function trackReferralClick(
  * Get referral stats by code
  */
 export async function getReferralStats(code: string): Promise<ReferralStats | null> {
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from('referral_dashboard')
     .select('*')
     .eq('code', code)
@@ -122,7 +124,7 @@ export async function getReferralStats(code: string): Promise<ReferralStats | nu
  * Get referral stats by generation ID
  */
 export async function getReferralStatsByGeneration(generationId: string): Promise<ReferralStats | null> {
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from('referral_dashboard')
     .select('*')
     .eq('generation_id', generationId)
@@ -140,7 +142,7 @@ export async function getReferralStatsByGeneration(generationId: string): Promis
  * Validate referral code exists
  */
 export async function validateReferralCode(code: string): Promise<boolean> {
-  const { data } = await supabase
+  const { data } = await getSupabase()
     .from('referrals')
     .select('code')
     .eq('code', code)
@@ -153,7 +155,7 @@ export async function validateReferralCode(code: string): Promise<boolean> {
  * Get all referrals for leaderboard
  */
 export async function getReferralLeaderboard(limit: number = 10): Promise<ReferralStats[]> {
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from('referral_dashboard')
     .select('*')
     .order('total_earned_ars', { ascending: false })

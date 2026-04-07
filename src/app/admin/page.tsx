@@ -4,8 +4,8 @@ import { useEffect, useState, useCallback } from 'react'
 import { createClient } from '@supabase/supabase-js'
 
 const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder'
 )
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -228,7 +228,7 @@ export default function AdminDashboard() {
           { label: 'Ventas 7d', value: metrics?.pays_7d || 0, icon: '💰', color: '#10b981' },
           { label: 'Conversión', value: `${metrics?.conv_rate || 0}%`, icon: '📈', color: '#f59e0b' },
           { label: 'Revenue 7d', value: `$${(metrics?.revenue_7d || 0).toLocaleString()}`, icon: '💵', color: '#ec4899' },
-          { label: 'NPS Score', value: metrics?.nps_score !== null ? metrics.nps_score : 'N/A', icon: '⭐', color: '#8b5cf6' },
+          { label: 'NPS Score', value: metrics?.nps_score ?? 'N/A', icon: '⭐', color: '#8b5cf6' },
           { label: 'Email Captures', value: metrics?.email_captures || 0, icon: '📧', color: '#06b6d4' },
         ].map(kpi => (
           <div key={kpi.label} style={{ background: '#1a1a2e', borderRadius: 12, padding: '16px', border: `1px solid ${kpi.color}22` }}>
