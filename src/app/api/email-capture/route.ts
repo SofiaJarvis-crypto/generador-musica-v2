@@ -8,7 +8,8 @@ import { supabaseAdmin } from '@/lib/supabase'
 
 export async function POST(req: NextRequest) {
   try {
-    const { email, generationId } = await req.json()
+    const { email, generationId, source: rawSource } = await req.json()
+    const source = rawSource || 'escuchar_page'
 
     if (!email || !email.includes('@')) {
       return NextResponse.json({ error: 'Email inválido' }, { status: 400 })
@@ -35,7 +36,7 @@ export async function POST(req: NextRequest) {
       .upsert({
         email: email.toLowerCase().trim(),
         generation_id: generationId,
-        source: 'escuchar_page',
+        source,
       }, {
         onConflict: 'email,generation_id',
         ignoreDuplicates: true,

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, FormEvent } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import Nav from '@/components/Nav'
 
@@ -28,6 +28,11 @@ export default function GenerandoPage() {
   const intervalRef = useRef<NodeJS.Timeout | null>(null)
   const animIntervalRef = useRef<NodeJS.Timeout | null>(null)
 
+  const [showEmailForm, setShowEmailForm] = useState(false)
+  const [emailInput, setEmailInput] = useState('')
+  const [emailSaved, setEmailSaved] = useState(false)
+  const [emailLoading, setEmailLoading] = useState(false)
+
   // Animate the UI steps independently of actual API status
   useEffect(() => {
     const timers = [
@@ -36,6 +41,31 @@ export default function GenerandoPage() {
     ]
     return () => timers.forEach(clearTimeout)
   }, [])
+
+  // Mostrar form de email a los 8 segundos
+  useEffect(() => {
+    if (emailSaved) return
+    const t = setTimeout(() => setShowEmailForm(true), 8000)
+    return () => clearTimeout(t)
+  }, [emailSaved])
+
+  const handleEmailCapture = async (e: FormEvent) => {
+    e.preventDefault()
+    if (!emailInput || !emailInput.includes('@')) return
+    setEmailLoading(true)
+    try {
+      await fetch('/api/email-capture', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: emailInput, generationId, source: 'generando_page' }),
+      })
+      setEmailSaved(true)
+    } catch {
+      // silencioso
+    } finally {
+      setEmailLoading(false)
+    }
+  }
 
   // Progress bar animation
   useEffect(() => {
@@ -128,6 +158,36 @@ export default function GenerandoPage() {
                 style={{ width: `${progress}%` }}
               />
             </div>
+
+            {/* Email capture mientras espera */}
+            {showEmailForm && !emailSaved && (
+              <div className="email-capture-banner" style={{ marginTop: 28 }}>
+                <div className="email-capture-icon">📩</div>
+                <div className="email-capture-text">
+                  <strong>¿Querés que te mandemos la canción?</strong>
+                  <span>Dejá tu email y te la enviamos en cuanto esté lista.</span>
+                </div>
+                <form onSubmit={handleEmailCapture} className="email-capture-form">
+                  <input
+                    type="email"
+                    placeholder="tu@email.com"
+                    value={emailInput}
+                    onChange={e => setEmailInput(e.target.value)}
+                    required
+                  />
+                  <button type="submit" disabled={emailLoading}>
+                    {emailLoading ? '…' : 'Avisame'}
+                  </button>
+                </form>
+                <button className="email-capture-dismiss" onClick={() => setShowEmailForm(false)}>✕</button>
+              </div>
+            )}
+
+            {emailSaved && (
+              <p style={{ textAlign: 'center', color: 'var(--amber)', marginTop: 20, fontSize: 14 }}>
+                ✅ ¡Listo! Te avisamos cuando esté lista.
+              </p>
+            )}
           </>
         )}
       </div>

@@ -8,10 +8,39 @@ export const dynamic = 'force-dynamic'
                                                                                                                                                     
    export async function POST(req: NextRequest) {                                                                                                   
      try {                                                                                                                                          
-       const { generationId, selectedSong } = await req.json()                                                                                      
-                                                                                                                                                    
-       if (!generationId || !['a', 'b'].includes(selectedSong)) {                                                                                   
-         return NextResponse.json({ error: 'Parametros invalidos' }, { status: 400 })                                                               
+       const { generationId, selectedSong, couponCode } = await req.json()
+
+       if (!generationId || !['a', 'b'].includes(selectedSong)) {
+         return NextResponse.json({ error: 'Parametros invalidos' }, { status: 400 })
+       }
+
+       // Resolver descuento si hay cupón (percent o fixed)
+       let finalPrice = PRECIO
+       let discountAmount = 0
+       let validatedCouponCode: string | null = null
+
+       if (couponCode) {
+         const { data: coupon } = await supabaseAdmin
+           .from('coupons')
+           .select('id, discount_type, discount_value, max_uses, uses_count, is_active')
+           .eq('code', (couponCode as string).toUpperCase().trim())
+           .single()
+
+         if (coupon && coupon.is_active && (coupon.max_uses === null || coupon.uses_count < coupon.max_uses)) {
+           validatedCouponCode = (couponCode as string).toUpperCase().trim()
+           if (coupon.discount_type === 'percent') {
+             discountAmount = Math.round(PRECIO * coupon.discount_value / 100)
+           } else if (coupon.discount_type === 'fixed') {
+             discountAmount = Math.min(coupon.discount_value, PRECIO)
+           }
+           finalPrice = Math.max(PRECIO - discountAmount, 1) // mínimo $1 para MP
+
+           // Incrementar uses_count
+           await supabaseAdmin
+             .from('coupons')
+             .update({ uses_count: coupon.uses_count + 1 })
+             .eq('id', coupon.id)
+         }
        }                                                                                                                                            
                                                                                                                                                     
        const { data: generation, error: genError } = await supabaseAdmin                                                                            
@@ -31,9 +60,11 @@ export const dynamic = 'force-dynamic'
        const { data: payment, error: payError } = await supabaseAdmin                                                                               
          .from('payments')                                                                                                                          
          .insert({                                                                                                                                  
-           generation_id: generationId,                                                                                                             
-           selected_song: selectedSong,                                                                                                             
-           amount_ars: PRECIO,                                                                                                                      
+           generation_id: generationId,
+           selected_song: selectedSong,
+           amount_ars: finalPrice,
+           discount_amount_ars: discountAmount,
+           coupon_code: validatedCouponCode,
            mp_status: 'pending',                                                                                                                    
          })                                                                                                                                         
          .select('id, download_token')                                                                                                              
@@ -60,7 +91,7 @@ export const dynamic = 'force-dynamic'
                description: `Cancion personalizada opcion ${selectedSong.toUpperCase()}`,                                                           
                quantity: 1,                                                                                                                         
                currency_id: 'ARS',                                                                                                                  
-               unit_price: PRECIO,                                                                                                                  
+               unit_price: finalPrice,                                                                                                                  
              },                                                                                                                                     
            ],                                                                                                                                       
            back_urls: {                                                                                                                             
