@@ -2211,3 +2211,80 @@ body::before {
   background: rgba(245, 200, 66, 0.1);
   transform: translateY(-2px);
 }
+
+/* ── Email Capture Banner ──────────────────────────────── */
+.email-capture-banner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(245, 200, 66, 0.08);
+  border: 1px solid rgba(245, 200, 66, 0.3);
+  border-radius: var(--radius-sm);
+  padding: 16px 20px;
+  margin: 0 auto 16px;
+  max-width: 580px;
+  flex-wrap: wrap;
+  animation: slideIn 0.3s ease;
+}
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.email-capture-icon { font-size: 24px; flex-shrink: 0; }
+.email-capture-text { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 160px; }
+.email-capture-text strong { color: var(--text); font-size: 14px; }
+.email-capture-text span   { color: var(--text-mid); font-size: 12px; }
+.email-capture-form { display: flex; gap: 8px; flex-shrink: 0; }
+.email-capture-form input {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: var(--text);
+  font-size: 13px;
+  width: 180px;
+}
+.email-capture-form button {
+  background: var(--amber);
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+}
+.email-capture-dismiss {
+  position: absolute;
+  top: 8px; right: 8px;
+  background: none; border: none;
+  color: var(--text-dim); cursor: pointer;
+  font-size: 14px; line-height: 1;
+  padding: 2px 4px;
+}
+
+/* ── Social Proof Bar ──────────────────────────────────── */
+.social-proof-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 20px;
+  margin: 0 auto 16px;
+  max-width: 580px;
+  font-size: 13px;
+  color: var(--text-mid);
+}
+.social-proof-bar strong { color: var(--text); }
+
+/* ── Price anchor ──────────────────────────────────────── */
+.pay-price-original {
+  font-size: 16px;
+  color: var(--text-dim);
+  text-decoration: line-through;
+  margin-bottom: 2px;
+}

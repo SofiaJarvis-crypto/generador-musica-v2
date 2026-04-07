@@ -8,6 +8,8 @@ import WaveformPlayer from '@/components/WaveformPlayer'
 import { trackAddToCart as trackAddToCartFB, trackInitiateCheckout as trackInitiateCheckoutFB } from '@/lib/meta-pixel'
 import { trackAddToCart as trackAddToCartGA, trackInitiateCheckout as trackInitiateCheckoutGA, trackRegeneration } from '@/lib/google-analytics'
 
+const PRECIO_ORIGINAL_ARS = 12900
+
 // src/app/escuchar/[id]/page.tsx — Pantalla 3: Player + Pago
 
 export const dynamic = 'force-dynamic'
@@ -30,6 +32,10 @@ export default function EscucharPage() {
   const [loadingRegen, setLoadingRegen] = useState(false)
   const [error, setError] = useState('')
   const [regenError, setRegenError] = useState('')
+  const [emailInput, setEmailInput] = useState('')
+  const [emailSaved, setEmailSaved] = useState(false)
+  const [emailLoading, setEmailLoading] = useState(false)
+  const [showEmailCapture, setShowEmailCapture] = useState(false)
 
   // Poll status in case suno_status is still stream_ready (audioUrl not yet ready)
   useEffect(() => {
@@ -70,6 +76,32 @@ export default function EscucharPage() {
     }, 5000)
     return () => clearInterval(iv)
   }, [generationId])
+
+  // Mostrar email capture después de 45s si no pagó
+  useEffect(() => {
+    if (emailSaved) return
+    const t = setTimeout(() => setShowEmailCapture(true), 45000)
+    return () => clearTimeout(t)
+  }, [emailSaved])
+
+  const handleEmailCapture = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!emailInput || !emailInput.includes('@')) return
+    setEmailLoading(true)
+    try {
+      await fetch('/api/email-capture', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: emailInput, generationId }),
+      })
+      setEmailSaved(true)
+      setShowEmailCapture(false)
+    } catch {
+      // silencioso
+    } finally {
+      setEmailLoading(false)
+    }
+  }
 
   // 🆕 Siempre usar stream_url - el player limita la reproducción si no está unlocked
   const isUnlocked = generation?.is_unlocked === true
@@ -222,23 +254,57 @@ export default function EscucharPage() {
           </div>
         )}
 
+        {/* Prueba social */}
+        {!isUnlocked && (
+          <div className="social-proof-bar">
+            <span>⭐⭐⭐⭐⭐</span>
+            <span>"Exactamente lo que necesitaba para mi negocio" — <strong>+320 marcas</strong> ya descargaron su jingle</span>
+          </div>
+        )}
+
+        {/* Email capture — aparece a los 45s */}
+        {showEmailCapture && !isUnlocked && !emailSaved && (
+          <div className="email-capture-banner">
+            <div className="email-capture-icon">📩</div>
+            <div className="email-capture-text">
+              <strong>¿Querés guardarlo para después?</strong>
+              <span>Te mandamos el link de tu jingle por email para que lo tengas a mano.</span>
+            </div>
+            <form onSubmit={handleEmailCapture} className="email-capture-form">
+              <input
+                type="email"
+                placeholder="tu@email.com"
+                value={emailInput}
+                onChange={e => setEmailInput(e.target.value)}
+                required
+              />
+              <button type="submit" disabled={emailLoading}>
+                {emailLoading ? '…' : 'Guardar'}
+              </button>
+            </form>
+            <button className="email-capture-dismiss" onClick={() => setShowEmailCapture(false)}>✕</button>
+          </div>
+        )}
+
         {/* Pay box */}
         <div className="pay-box">
           <div className="price-urgency-badge">
-            ⚠️ Precio de lanzamiento - Sube a $12,900 el 1 de Abril
+            ⚡ Precio de lanzamiento — quedan pocas semanas
           </div>
           <div className="pay-top">
             <div className="pay-left">
               <div className="pay-label">Descargá la canción completa</div>
               <div className="pay-includes">
                 <div className="pay-item"><span className="pay-item-check">✓</span> MP3 320 kbps (máxima calidad)</div>
-                <div className="pay-item"><span className="pay-item-check">✓</span> Canción completa</div>
-                <div className="pay-item"><span className="pay-item-check">✓</span> Licencia comercial (usala donde quieras)</div>
+                <div className="pay-item"><span className="pay-item-check">✓</span> Canción completa sin watermark</div>
+                <div className="pay-item"><span className="pay-item-check">✓</span> Licencia comercial (Instagram, TikTok, radio)</div>
+                <div className="pay-item"><span className="pay-item-check">✓</span> Tuya para siempre</div>
               </div>
             </div>
             <div className="pay-right">
+              <div className="pay-price-original">{formatPrice(PRECIO_ORIGINAL_ARS)}</div>
               <div className="pay-price">{formatPrice(PRECIO_ARS)}</div>
-              <div className="pay-note">Pago único · Descarga inmediata</div>
+              <div className="pay-note">Pago único · Sin suscripción</div>
             </div>
           </div>
 

@@ -8,19 +8,11 @@ import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 import { Resend } from 'resend'
 
-let mp: any = null
 const resend = new Resend(process.env.RESEND_API_KEY!)
+const PRECIO = parseFloat(process.env.PRECIO_ARS || '8900')
 
 export async function POST(req: NextRequest) {
   try {
-    // Lazy-load mercadopago to avoid build hang
-    if (!mp) {
-      const { default: MercadoPagoConfig } = await import('mercadopago')
-      mp = new MercadoPagoConfig({
-        accessToken: process.env.MP_ACCESS_TOKEN!,
-      })
-    }
-
     const body = await req.json()
     console.log('[MP Webhook] Received:', JSON.stringify(body, null, 2))
 
@@ -33,7 +25,10 @@ export async function POST(req: NextRequest) {
     const mpPaymentId = String(body.data.id)
 
     // ── Consultar el pago directamente a MP para verificar ─
-    const mpPayment = await mp.payment.get({ id: mpPaymentId })
+    const { MercadoPagoConfig, Payment } = await import('mercadopago')
+    const mpClient = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN! })
+    const paymentClient = new Payment(mpClient)
+    const mpPayment = await paymentClient.get({ id: mpPaymentId })
 
     if (!mpPayment || !mpPayment.status) {
       return NextResponse.json({ error: 'Pago no encontrado en MP' }, { status: 404 })
@@ -67,11 +62,23 @@ export async function POST(req: NextRequest) {
     if (status === 'approved' && payment) {
       await supabaseAdmin
         .from('generations')
-        .update({ 
+        .update({
           selected_song: selectedSong || null,
-          is_unlocked: true // 🆕 Desbloquear audio completo
+          is_unlocked: true
         })
         .eq('id', generationId)
+
+      // ── Notificar conversión a Google Ads (server-side) ────
+      if (process.env.GOOGLE_ADS_CONVERSION_ID && process.env.GOOGLE_ADS_CONVERSION_LABEL) {
+        try {
+          await fetch(
+            `https://www.googleadservices.com/pagead/conversion/${process.env.GOOGLE_ADS_CONVERSION_ID}/?label=${process.env.GOOGLE_ADS_CONVERSION_LABEL}&value=${PRECIO}&currency_code=ARS&oid=${paymentId}&fmt=3`,
+            { method: 'GET' }
+          )
+        } catch (e) {
+          console.error('[MP Webhook] Google Ads conversion ping failed:', e)
+        }
+      }
 
       // ── Obtener brand_name para personalizar el email ──
       const { data: generation } = await supabaseAdmin
@@ -82,7 +89,7 @@ export async function POST(req: NextRequest) {
 
       const brandName = generation?.brand_name || 'tu marca'
       const downloadToken = payment.download_token
-      const downloadUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/descarga?token=${downloadToken}`
+      const downloadUrl = `${process.env.NEXT_PUBLIC_APP_URL}/descarga?token=${downloadToken}`
 
       // ── Enviar email con link de descarga ──
       if (payer?.email && downloadToken) {
