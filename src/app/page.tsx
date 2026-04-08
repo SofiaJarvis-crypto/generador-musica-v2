@@ -5,7 +5,6 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Nav from '@/components/Nav'
 import ExitIntentPopup from '@/components/ExitIntentPopup'
-import SocialProof from '@/components/SocialProof'
 import { trackViewContent as trackViewContentFB, trackLead as trackLeadFB, trackGenerationStarted as trackGenerationStartedFB } from '@/lib/meta-pixel'
 import { trackViewContent as trackViewContentGA, trackLead as trackLeadGA, trackGenerationStarted as trackGenerationStartedGA } from '@/lib/google-analytics'
 import { getUserId, getVariant, trackABTestView, HEADLINE_VARIANTS } from '@/lib/ab-testing'
@@ -188,8 +187,6 @@ export default function HomePage() {
   return (
     <>
       <Nav step={1} />
-      
-      <SocialProof />
       
       {showExitPopup && (
         <ExitIntentPopup
