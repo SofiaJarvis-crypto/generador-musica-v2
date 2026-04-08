@@ -217,26 +217,19 @@ export default function HomePage() {
             </>
           )}
         </h1>
-        <p className="form-subline">
-          Probá gratis: Generamos 2 versiones y escuchás un preview de 25 seg.<br />
-          ¿Te gusta? Descargala entera por $8.900 (pago único)
-        </p>
-
-        <div className="trust-signals-compact">
-          ✅ +500 jingles generados · ✅ Sin derechos de autor · ✅ Marcas argentinas
-        </div>
-
         <div className="demo-section">
-          <div className="demo-header">🎧 Escuchá ejemplos:</div>
+          <div className="demo-header">🎧 Escuchá ejemplos reales</div>
           <div className="demo-grid">
             <div className="demo-card">
-              <div className="demo-label">🎸 Garbarino</div>
+              <div className="demo-card-brand">Garbarino</div>
+              <div className="demo-card-genre">🎸 Rock</div>
               <audio controls className="demo-player">
                 <source src="/demos/garbarino-rock.mp3" type="audio/mpeg" />
               </audio>
             </div>
             <div className="demo-card">
-              <div className="demo-label">🎷 Dinax</div>
+              <div className="demo-card-brand">Dinax</div>
+              <div className="demo-card-genre">🎷 Cuarteto</div>
               <audio controls className="demo-player">
                 <source src="/demos/dinax-cuarteto.mp3" type="audio/mpeg" />
               </audio>

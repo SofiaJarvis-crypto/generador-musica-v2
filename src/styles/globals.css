@@ -647,41 +647,54 @@ body::before {
 /* ── Demo Section ── */
 .demo-section {
   margin-bottom: 32px;
-  padding: 18px;
-  background: rgba(255,255,255,0.02);
+  padding: 20px;
+  background: rgba(255,255,255,0.03);
   border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius);
 }
 
 .demo-header {
-  font-size: 12px;
-  font-weight: 500;
+  font-size: 13px;
+  font-weight: 600;
   color: var(--text-mid);
-  margin-bottom: 12px;
+  margin-bottom: 16px;
   text-align: center;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
 }
 
 .demo-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  gap: 14px;
 }
 
 .demo-card {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  transition: border-color 0.15s;
 }
 
-.demo-label {
-  font-size: 13px;
+.demo-card:hover {
+  border-color: var(--border-amber);
+}
+
+.demo-card-brand {
+  font-size: 15px;
+  font-weight: 700;
   color: var(--text);
-  font-weight: 600;
-  margin-bottom: 8px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
+  line-height: 1;
+}
+
+.demo-card-genre {
+  font-size: 12px;
+  color: var(--text-mid);
+  margin-bottom: 2px;
 }
 
 .demo-player {
