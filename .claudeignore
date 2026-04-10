@@ -1,0 +1,31 @@
+# Build outputs
+.next/
+.vercel/
+tsconfig.tsbuildinfo
+next-env.d.ts
+
+# Dependencies (never needed)
+node_modules/
+package-lock.json
+
+# Docs históricos (solo referencia, no código)
+historial-docs/
+
+# Assets estáticos
+public/
+
+# Credenciales (nunca leer)
+.env.local
+.env.production
+.env.*.local
+
+# Env de ejemplo (no aporta a tareas de código)
+.env.example
+
+# Git internals
+.git/
+
+# Archivos de sistema
+.DS_Store
+*.log
+*.tsbuildinfo
