@@ -44,23 +44,18 @@ const schemaMarkup = {
       image: 'https://cancionesia.com.ar/opengraph-image',
       author: {
         '@type': 'Organization',
-        name: 'Generador de Música',
+        name: 'Cancionesia',
       },
     },
-    // LocalBusiness Schema
+    // Organization Schema
     {
-      '@type': 'LocalBusiness',
-      '@id': 'https://cancionesia.com.ar/#business',
-      name: 'Generador de Música para Marcas',
-      image: 'https://cancionesia.com.ar/logo.png',
+      '@type': 'Organization',
+      '@id': 'https://cancionesia.com.ar/#organization',
+      name: 'Cancionesia',
       url: 'https://cancionesia.com.ar',
-      priceRange: '$8,900',
-      address: {
-        '@type': 'PostalAddress',
-        addressCountry: 'AR',
-        addressLocality: 'Argentina',
-      },
-      description: 'Generador de jingles con IA para negocios locales',
+      logo: 'https://cancionesia.com.ar/logo.png',
+      description: 'Generador de jingles y canciones con IA para marcas y negocios argentinos.',
+      sameAs: [],
     },
   ],
 }
@@ -69,24 +64,6 @@ export const metadata: Metadata = {
   // Basic metadata
   title: 'Cancionesia | Creá la Canción de tu Marca con IA en 2 Minutos',
   description: 'Creá la canción de tu negocio o marca con IA en 2 minutos. Jingles profesionales, $8,900 pago único. Escuchás gratis sin registro. 2,100+ negocios ya tienen su canción.',
-  
-  keywords: [
-    'generador de jingles',
-    'crear jingle',
-    'canción para mi negocio',
-    'canción para mi marca',
-    'canción con inteligencia artificial',
-    'hacer una canción para mi marca',
-    'música para negocio',
-    'jingle con IA',
-    'canción para redes sociales',
-    'canción para emprendimiento',
-    'jingle publicitario',
-    'música para marca',
-    'crear canción con ia',
-    'jingle argentina',
-    'canción para mi local',
-  ],
   
   authors: [{ name: 'Generador de Música para Marcas' }],
   creator: 'Generador de Música',
@@ -158,13 +135,24 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es">
+    <html lang="es" suppressHydrationWarning>
       <head>
         {/* Preconnect to improve performance */}
         <link rel="preconnect" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://connect.facebook.net" />
-        
-        {/* Google tag (gtag.js) - Google Ads */}
+
+        {/* Schema Markup (JSON-LD) — inline para que Googlebot lo lea en el HTML inicial */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaMarkup) }}
+        />
+      </head>
+      <body>
+        <div className="page-wrap">
+          {children}
+        </div>
+
+        {/* Google tag (gtag.js) - Google Ads + GA4 */}
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ADS_ID}`}
           strategy="afterInteractive"
@@ -204,30 +192,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             `,
           }}
         />
-        <noscript>
-          <img
-            height="1"
-            width="1"
-            style={{ display: 'none' }}
-            src={`https://www.facebook.com/tr?id=${FB_PIXEL_ID}&ev=PageView&noscript=1`}
-            alt=""
-          />
-        </noscript>
-        
-        {/* Schema Markup (JSON-LD) */}
-        <Script
-          id="schema-markup"
-          type="application/ld+json"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(schemaMarkup),
-          }}
-        />
-      </head>
-      <body>
-        <div className="page-wrap">
-          {children}
-        </div>
+        <noscript dangerouslySetInnerHTML={{ __html: `<img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=${FB_PIXEL_ID}&ev=PageView&noscript=1" alt="" />` }} />
       </body>
     </html>
   )

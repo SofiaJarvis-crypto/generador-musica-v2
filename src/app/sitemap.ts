@@ -6,29 +6,32 @@ import { MetadataRoute } from 'next'
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://cancionesia.com.ar'
 
+  // Fecha de la última actualización significativa de contenido
+  const lastContentUpdate = new Date('2025-10-15')
+
   return [
     {
       url: baseUrl,
-      lastModified: new Date(),
+      lastModified: lastContentUpdate,
       changeFrequency: 'weekly',
       priority: 1,
     },
     // SEO Landing Pages
     {
       url: `${baseUrl}/generador-jingles-gratis`,
-      lastModified: new Date(),
+      lastModified: lastContentUpdate,
       changeFrequency: 'weekly',
       priority: 0.9,
     },
     {
       url: `${baseUrl}/como-crear-jingle-para-marca`,
-      lastModified: new Date(),
+      lastModified: lastContentUpdate,
       changeFrequency: 'monthly',
       priority: 0.8,
     },
     {
       url: `${baseUrl}/ejemplos-jingles-marcas-argentinas`,
-      lastModified: new Date(),
+      lastModified: lastContentUpdate,
       changeFrequency: 'monthly',
       priority: 0.8,
     },
@@ -36,25 +39,25 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // Landing pages "canción" (público general)
     {
       url: `${baseUrl}/cancion-para-mi-negocio`,
-      lastModified: new Date(),
+      lastModified: lastContentUpdate,
       changeFrequency: 'monthly',
       priority: 0.9,
     },
     {
       url: `${baseUrl}/cancion-para-mi-marca`,
-      lastModified: new Date(),
+      lastModified: lastContentUpdate,
       changeFrequency: 'monthly',
       priority: 0.9,
     },
     {
       url: `${baseUrl}/cancion-para-redes-sociales`,
-      lastModified: new Date(),
+      lastModified: lastContentUpdate,
       changeFrequency: 'monthly',
       priority: 0.8,
     },
     {
       url: `${baseUrl}/cancion-con-inteligencia-artificial`,
-      lastModified: new Date(),
+      lastModified: lastContentUpdate,
       changeFrequency: 'monthly',
       priority: 0.8,
     },
@@ -62,37 +65,37 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // Programmatic SEO pages (géneros)
     {
       url: `${baseUrl}/jingle-de-cumbia`,
-      lastModified: new Date(),
+      lastModified: lastContentUpdate,
       changeFrequency: 'monthly',
       priority: 0.7,
     },
     {
       url: `${baseUrl}/jingle-de-reggaeton`,
-      lastModified: new Date(),
+      lastModified: lastContentUpdate,
       changeFrequency: 'monthly',
       priority: 0.7,
     },
     {
       url: `${baseUrl}/jingle-de-pop`,
-      lastModified: new Date(),
+      lastModified: lastContentUpdate,
       changeFrequency: 'monthly',
       priority: 0.7,
     },
     {
       url: `${baseUrl}/jingle-de-folklore`,
-      lastModified: new Date(),
+      lastModified: lastContentUpdate,
       changeFrequency: 'monthly',
       priority: 0.7,
     },
     {
       url: `${baseUrl}/jingle-de-trap`,
-      lastModified: new Date(),
+      lastModified: lastContentUpdate,
       changeFrequency: 'monthly',
       priority: 0.7,
     },
     {
       url: `${baseUrl}/jingle-de-cuarteto`,
-      lastModified: new Date(),
+      lastModified: lastContentUpdate,
       changeFrequency: 'monthly',
       priority: 0.7,
     },
