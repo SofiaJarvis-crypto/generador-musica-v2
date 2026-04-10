@@ -35,6 +35,7 @@ export default function HomePage() {
   const [error, setError] = useState('')
   const [showExitPopup, setShowExitPopup] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
+  const [mounted, setMounted] = useState(false)
 
   // A/B Test: Get headline variant
   const [headlineVariant, setHeadlineVariant] = useState<keyof typeof HEADLINE_VARIANTS>('control')
@@ -44,11 +45,13 @@ export default function HomePage() {
     trackViewContentFB('Music Generator Homepage')
     trackViewContentGA('Music Generator Homepage')
 
+    setMounted(true)
+
     // Get user ID and variant for A/B test
     const userId = getUserId()
     const variant = getVariant('headline_v1', userId)
     setHeadlineVariant(variant as keyof typeof HEADLINE_VARIANTS)
-    
+
     // Track A/B test exposure
     trackABTestView('headline_v1', variant)
   }, [])
@@ -200,13 +203,13 @@ export default function HomePage() {
       )}
       
       <div className="form-screen">
-        <h1 className="form-headline">
-          {headlineVariant === 'variantB' ? (
+        <h1 className="form-headline" suppressHydrationWarning>
+          {mounted && headlineVariant === 'variantB' ? (
             <>
               Conseguí el jingle de tu marca<br />
               sin <em>músicos ni estudio</em>
             </>
-          ) : headlineVariant === 'variantA' ? (
+          ) : mounted && headlineVariant === 'variantA' ? (
             <>
               La canción perfecta para tu marca,<br />
               en menos de <em>3 minutos</em>
@@ -217,6 +220,19 @@ export default function HomePage() {
             </>
           )}
         </h1>
+        <div className="demo-section">
+          <div className="demo-header">🎧 Escuchá un ejemplo</div>
+          <div className="demo-grid-single">
+            <div className="demo-card">
+              <div className="demo-card-brand">Dinax</div>
+              <div className="demo-card-genre">Tecnología</div>
+              <audio controls className="demo-player">
+                <source src="/demos/dinax-cuarteto.mp3" type="audio/mpeg" />
+              </audio>
+            </div>
+          </div>
+        </div>
+
         <h2 className="form-section-title">Hacé tu canción ahora!</h2>
 
         {error && <div className="error-box">{error}</div>}
@@ -230,19 +246,6 @@ export default function HomePage() {
             onChange={e => setBrandName(e.target.value)}
             maxLength={80}
           />
-        </div>
-
-        <div className="demo-section">
-          <div className="demo-header">🎧 Escuchá un ejemplo</div>
-          <div className="demo-grid-single">
-            <div className="demo-card">
-              <div className="demo-card-brand">Dinax</div>
-              <div className="demo-card-genre">Tecnología</div>
-              <audio controls className="demo-player">
-                <source src="/demos/dinax-cuarteto.mp3" type="audio/mpeg" />
-              </audio>
-            </div>
-          </div>
         </div>
 
         <div className="form-section">

@@ -1,7 +1,22 @@
 // src/lib/ab-testing.ts
 // A/B Testing Framework for SUNO Generator
 
-export type ABTest = 
+/**
+ * Generates a UUID v4, with fallback for non-secure contexts (HTTP)
+ * where crypto.randomUUID() is not available.
+ */
+export function generateUUID(): string {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID()
+  }
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = Math.random() * 16 | 0
+    const v = c === 'x' ? r : (r & 0x3 | 0x8)
+    return v.toString(16)
+  })
+}
+
+export type ABTest =
   | 'headline_v1'          // Homepage headline test
   | 'paywall_v1'           // Paywall copy test
   | 'preview_duration'     // Preview duration optimization
@@ -70,7 +85,7 @@ export function getUserId(): string {
   
   let userId = sessionStorage.getItem('user_id')
   if (!userId) {
-    userId = crypto.randomUUID()
+    userId = generateUUID()
     sessionStorage.setItem('user_id', userId)
   }
   return userId
