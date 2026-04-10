@@ -4,7 +4,7 @@ import { useEffect, useState, Suspense, useRef } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Nav from '@/components/Nav'
 import { trackPurchase as trackPurchaseFB } from '@/lib/meta-pixel'
-import { trackPurchase as trackPurchaseGA } from '@/lib/google-analytics'
+import { trackPurchase as trackPurchaseGA, trackGoogleAdsConversion } from '@/lib/google-analytics'
 
 // src/app/descarga/page.tsx — Pantalla 4: Descarga post-pago
 
@@ -50,8 +50,8 @@ function DescargaContent() {
           const alreadyTracked = purchaseTrackedRef.current || localStorage.getItem(purchaseKey)
           
           if (!alreadyTracked) {
-            console.log('[Purchase Tracking] Disparando eventos GA4 + Meta Pixel')
-            
+            console.log('[Purchase Tracking] Disparando eventos GA4 + Google Ads + Meta Pixel')
+
             trackPurchaseFB({
               generationId,
               brandName: data.brandName || 'unknown',
@@ -63,6 +63,10 @@ function DescargaContent() {
               brandName: data.brandName || 'unknown',
               value: PRECIO_ARS,
               transactionId: token,
+            })
+            trackGoogleAdsConversion({
+              value: PRECIO_ARS,
+              transactionId: token || generationId,
             })
             
             purchaseTrackedRef.current = true

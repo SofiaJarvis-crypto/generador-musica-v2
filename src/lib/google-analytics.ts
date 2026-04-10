@@ -112,3 +112,17 @@ export const trackRegeneration = (generationId: string, regenCount: number) => {
     regen_count: regenCount,
   });
 };
+
+// Track Google Ads Conversion (acción "Compra" — AW-18023245806/zB41CKTcxYocEO7Pk5JD)
+// Debe llamarse en la página de descarga (post-pago), junto a trackPurchase de GA4.
+export const trackGoogleAdsConversion = (data: {
+  value: number;
+  transactionId: string;
+}) => {
+  gtag('event', 'conversion', {
+    send_to: 'AW-18023245806/zB41CKTcxYocEO7Pk5JD',
+    value: data.value,
+    currency: 'ARS',
+    transaction_id: data.transactionId,
+  });
+};

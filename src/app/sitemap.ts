@@ -4,7 +4,7 @@
 import { MetadataRoute } from 'next'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://generador-musica-v2.vercel.app'
+  const baseUrl = 'https://cancionesia.com.ar'
   
   return [
     {

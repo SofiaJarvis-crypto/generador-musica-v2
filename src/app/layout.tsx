@@ -19,7 +19,7 @@ const schemaMarkup = {
     // SoftwareApplication Schema
     {
       '@type': 'SoftwareApplication',
-      '@id': 'https://generador-musica-v2.vercel.app/#software',
+      '@id': 'https://cancionesia.com.ar/#software',
       name: 'Generador de Música para Marcas',
       applicationCategory: 'MultimediaApplication',
       operatingSystem: 'Web',
@@ -29,7 +29,7 @@ const schemaMarkup = {
         priceCurrency: 'ARS',
         availability: 'https://schema.org/InStock',
         priceValidUntil: '2027-12-31',
-        url: 'https://generador-musica-v2.vercel.app',
+        url: 'https://cancionesia.com.ar',
       },
       aggregateRating: {
         '@type': 'AggregateRating',
@@ -39,8 +39,8 @@ const schemaMarkup = {
         worstRating: '1',
       },
       description: 'Creá jingles profesionales para tu negocio con IA en 2 minutos. $8,900 pago único. Escuchás gratis, sin registro.',
-      url: 'https://generador-musica-v2.vercel.app',
-      image: 'https://generador-musica-v2.vercel.app/og-image.jpg',
+      url: 'https://cancionesia.com.ar',
+      image: 'https://cancionesia.com.ar/og-image.jpg',
       author: {
         '@type': 'Organization',
         name: 'Generador de Música',
@@ -49,10 +49,10 @@ const schemaMarkup = {
     // LocalBusiness Schema
     {
       '@type': 'LocalBusiness',
-      '@id': 'https://generador-musica-v2.vercel.app/#business',
+      '@id': 'https://cancionesia.com.ar/#business',
       name: 'Generador de Música para Marcas',
-      image: 'https://generador-musica-v2.vercel.app/logo.png',
-      url: 'https://generador-musica-v2.vercel.app',
+      image: 'https://cancionesia.com.ar/logo.png',
+      url: 'https://cancionesia.com.ar',
       priceRange: '$8,900',
       address: {
         '@type': 'PostalAddress',
@@ -103,13 +103,13 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'es_AR',
-    url: 'https://generador-musica-v2.vercel.app',
+    url: 'https://cancionesia.com.ar',
     siteName: 'Generador de Música para Marcas',
     title: 'Generador de Jingles con IA para Tu Negocio',
     description: 'Jingles profesionales en 2 minutos. $8,900 pago único. Escuchás gratis sin registro. 2,113 negocios ya tienen su canción.',
     images: [
       {
-        url: 'https://generador-musica-v2.vercel.app/og-image.jpg',
+        url: 'https://cancionesia.com.ar/og-image.jpg',
         width: 1200,
         height: 630,
         alt: 'Generador de Jingles con IA - Música para Tu Marca',
@@ -123,15 +123,15 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Generador de Jingles con IA | Música en 2 Minutos',
     description: 'Jingles profesionales para tu negocio. $8,900 pago único. Escuchás gratis.',
-    images: ['https://generador-musica-v2.vercel.app/og-image.jpg'],
+    images: ['https://cancionesia.com.ar/og-image.jpg'],
     creator: '@generadormusica', // Reemplazar con tu handle real
   },
   
   // Canonical
   alternates: {
-    canonical: 'https://generador-musica-v2.vercel.app',
+    canonical: 'https://cancionesia.com.ar',
     languages: {
-      'es-AR': 'https://generador-musica-v2.vercel.app',
+      'es-AR': 'https://cancionesia.com.ar',
     },
   },
   
