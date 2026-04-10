@@ -2,14 +2,14 @@ import type { Metadata } from 'next'
 import '@/styles/globals.css'
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://jinglegenerator.com'),
+  metadataBase: new URL('https://cancionesia.com.ar'),
   alternates: {
     canonical: '/',
   },
   openGraph: {
     type: 'website',
     locale: 'es_AR',
-    siteName: 'Jingle Generator',
+    siteName: 'Cancionesia',
   },
   twitter: {
     card: 'summary_large_image',

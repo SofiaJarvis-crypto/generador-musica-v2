@@ -1,8 +1,55 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: '¿Es realmente gratis el generador de jingles?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Sí. Podés generar 2 versiones únicas de tu jingle completamente gratis. No pedimos tarjeta de crédito ni registro. Si querés descargar la canción completa en alta calidad, tiene un costo único de $8,900 ARS.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '¿Cuánto tarda en generar un jingle?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'El proceso completo toma entre 30 segundos y 2 minutos. La IA compone la música, escribe la letra y genera el audio en tiempo real.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '¿Puedo usar el jingle comercialmente?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Sí. Una vez que descargás el jingle, tenés todos los derechos de uso comercial. Podés usarlo en tu publicidad, redes sociales, radio, TV, y cualquier otro medio.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '¿Qué diferencia hay entre las 2 versiones?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Cada versión tiene una composición musical diferente, melodía única, y estructura distinta. Así podés elegir la que mejor represente tu marca.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '¿Necesito conocimientos musicales para usar el generador?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'No. El generador hace todo el trabajo creativo. Solo necesitás contarnos sobre tu marca y elegir el estilo musical que más te guste.',
+      },
+    },
+  ],
+}
+
 export const metadata: Metadata = {
-  title: 'Generador de Jingles Gratis con IA | Jingle Generator',
+  title: 'Generador de Jingles Gratis con IA | Cancionesia',
   description: 'Creá jingles profesionales para tu marca en minutos con inteligencia artificial. Gratis, sin registro. Elegí tu estilo musical y generá 2 versiones únicas.',
   keywords: 'generador de jingles gratis, crear jingle con ia, jingle para marca, música publicitaria, jingle gratis argentina',
   openGraph: {
@@ -15,9 +62,13 @@ export const metadata: Metadata = {
 export default function GeneradorJinglesGratis() {
   return (
     <div className="landing-page">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
       <nav className="landing-nav">
         <Link href="/" className="landing-logo">
-          🎵 Jingle Generator
+          🎵 Cancionesia
         </Link>
         <Link href="/" className="landing-nav-cta">
           Generar Gratis
@@ -166,7 +217,7 @@ export default function GeneradorJinglesGratis() {
       <footer className="landing-footer">
         <div className="landing-footer-content">
           <div className="landing-footer-brand">
-            <div className="landing-logo">🎵 Jingle Generator</div>
+            <div className="landing-logo">🎵 Cancionesia</div>
             <p className="landing-footer-text">
               Jingles profesionales con IA.<br />
               Hecho en Argentina 🇦🇷
@@ -185,7 +236,7 @@ export default function GeneradorJinglesGratis() {
         </div>
         
         <div className="landing-footer-bottom">
-          © 2025 Jingle Generator. Todos los derechos reservados.
+          © 2025 Cancionesia. Todos los derechos reservados.
         </div>
       </footer>
     </div>

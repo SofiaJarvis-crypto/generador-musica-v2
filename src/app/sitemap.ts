@@ -5,7 +5,7 @@ import { MetadataRoute } from 'next'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://cancionesia.com.ar'
-  
+
   return [
     {
       url: baseUrl,
@@ -32,7 +32,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
       priority: 0.8,
     },
-    
+
     // Programmatic SEO pages (géneros)
     {
       url: `${baseUrl}/jingle-de-cumbia`,

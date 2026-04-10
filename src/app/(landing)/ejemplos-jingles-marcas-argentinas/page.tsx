@@ -17,7 +17,7 @@ export default function EjemplosJingles() {
     <div className="landing-page">
       <nav className="landing-nav">
         <Link href="/" className="landing-logo">
-          🎵 Jingle Generator
+          🎵 Cancionesia
         </Link>
         <Link href="/" className="landing-nav-cta">
           Generar Gratis
@@ -306,7 +306,7 @@ export default function EjemplosJingles() {
       <footer className="landing-footer">
         <div className="landing-footer-content">
           <div className="landing-footer-brand">
-            <div className="landing-logo">🎵 Jingle Generator</div>
+            <div className="landing-logo">🎵 Cancionesia</div>
             <p className="landing-footer-text">
               Jingles profesionales con IA.<br />
               Hecho en Argentina 🇦🇷
@@ -325,7 +325,7 @@ export default function EjemplosJingles() {
         </div>
         
         <div className="landing-footer-bottom">
-          © 2025 Jingle Generator. Todos los derechos reservados.
+          © 2025 Cancionesia. Todos los derechos reservados.
         </div>
       </footer>
     </div>

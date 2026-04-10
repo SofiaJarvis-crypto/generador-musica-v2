@@ -17,7 +17,7 @@ export default function ComoCrearJingle() {
     <div className="landing-page">
       <nav className="landing-nav">
         <Link href="/" className="landing-logo">
-          🎵 Jingle Generator
+          🎵 Cancionesia
         </Link>
         <Link href="/" className="landing-nav-cta">
           Generar Gratis
@@ -83,7 +83,7 @@ export default function ComoCrearJingle() {
           <p className="landing-text">
             <strong>Costo:</strong> Gratis - $10,000 ARS<br />
             <strong>Tiempo:</strong> 30 segundos - 2 minutos<br />
-            <strong>Herramientas:</strong> Jingle Generator, Suno, Udio
+            <strong>Herramientas:</strong> Cancionesia, Suno, Udio
           </p>
           <p className="landing-text">
             <strong>Ventajas:</strong> Instantáneo, múltiples versiones, muy económico<br />
@@ -258,7 +258,7 @@ export default function ComoCrearJingle() {
             <details className="landing-faq-item">
               <summary className="landing-faq-question">¿Necesito derechos de autor para usar mi jingle?</summary>
               <div className="landing-faq-answer">
-                Si creás el jingle con un generador (como Jingle Generator), tenés los derechos de uso comercial incluidos. Si contratás músicos o estudios, asegurate de especificar la cesión de derechos en el contrato.
+                Si creás el jingle con un generador (como Cancionesia), tenés los derechos de uso comercial incluidos. Si contratás músicos o estudios, asegurate de especificar la cesión de derechos en el contrato.
               </div>
             </details>
           </div>
@@ -268,7 +268,7 @@ export default function ComoCrearJingle() {
       <footer className="landing-footer">
         <div className="landing-footer-content">
           <div className="landing-footer-brand">
-            <div className="landing-logo">🎵 Jingle Generator</div>
+            <div className="landing-logo">🎵 Cancionesia</div>
             <p className="landing-footer-text">
               Jingles profesionales con IA.<br />
               Hecho en Argentina 🇦🇷
@@ -287,7 +287,7 @@ export default function ComoCrearJingle() {
         </div>
         
         <div className="landing-footer-bottom">
-          © 2025 Jingle Generator. Todos los derechos reservados.
+          © 2025 Cancionesia. Todos los derechos reservados.
         </div>
       </footer>
     </div>

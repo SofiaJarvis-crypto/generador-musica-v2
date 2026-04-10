@@ -40,7 +40,7 @@ const schemaMarkup = {
       },
       description: 'Creá jingles profesionales para tu negocio con IA en 2 minutos. $8,900 pago único. Escuchás gratis, sin registro.',
       url: 'https://cancionesia.com.ar',
-      image: 'https://cancionesia.com.ar/og-image.jpg',
+      image: 'https://cancionesia.com.ar/opengraph-image',
       author: {
         '@type': 'Organization',
         name: 'Generador de Música',
@@ -109,11 +109,11 @@ export const metadata: Metadata = {
     description: 'Jingles profesionales en 2 minutos. $8,900 pago único. Escuchás gratis sin registro. 2,113 negocios ya tienen su canción.',
     images: [
       {
-        url: 'https://cancionesia.com.ar/og-image.jpg',
+        url: 'https://cancionesia.com.ar/opengraph-image',
         width: 1200,
         height: 630,
-        alt: 'Generador de Jingles con IA - Música para Tu Marca',
-        type: 'image/jpeg',
+        alt: 'Cancionesia – Jingles con IA para tu marca',
+        type: 'image/png',
       },
     ],
   },
@@ -123,8 +123,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Generador de Jingles con IA | Música en 2 Minutos',
     description: 'Jingles profesionales para tu negocio. $8,900 pago único. Escuchás gratis.',
-    images: ['https://cancionesia.com.ar/og-image.jpg'],
-    creator: '@generadormusica', // Reemplazar con tu handle real
+    images: ['https://cancionesia.com.ar/opengraph-image'],
   },
   
   // Canonical
@@ -133,11 +132,6 @@ export const metadata: Metadata = {
     languages: {
       'es-AR': 'https://cancionesia.com.ar',
     },
-  },
-  
-  // Verification (agregar después de Google Search Console setup)
-  verification: {
-    google: 'pendiente-agregar-codigo', // Reemplazar con código real
   },
   
   // Additional metadata
