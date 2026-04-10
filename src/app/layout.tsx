@@ -4,6 +4,7 @@
 import type { Metadata } from 'next'
 import Script from 'next/script'
 import '../styles/globals.css'
+import '../styles/popups.css'
 import { FB_PIXEL_ID } from '@/lib/meta-pixel'
 
 // Google Analytics Measurement ID
