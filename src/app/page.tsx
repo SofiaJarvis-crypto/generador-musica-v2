@@ -7,7 +7,7 @@ import Nav from '@/components/Nav'
 import ExitIntentPopup from '@/components/ExitIntentPopup'
 import { trackViewContent as trackViewContentFB, trackLead as trackLeadFB, trackGenerationStarted as trackGenerationStartedFB } from '@/lib/meta-pixel'
 import { trackViewContent as trackViewContentGA, trackLead as trackLeadGA, trackGenerationStarted as trackGenerationStartedGA } from '@/lib/google-analytics'
-import { getUserId, getVariant, trackABTestView, HEADLINE_VARIANTS } from '@/lib/ab-testing'
+import { getUserId, getVariant, trackABTestView, HEADLINE_VARIANTS, generateUUID } from '@/lib/ab-testing'
 
 const GENRES = [
   { id: 'Pop', emoji: '🎹', label: 'Pop' },
@@ -148,7 +148,7 @@ export default function HomePage() {
       // Get or create session token
       let sessionToken = sessionStorage.getItem('session_token')
       if (!sessionToken) {
-        sessionToken = crypto.randomUUID()
+        sessionToken = generateUUID()
         sessionStorage.setItem('session_token', sessionToken)
       }
 
@@ -217,31 +217,11 @@ export default function HomePage() {
             </>
           )}
         </h1>
-        <div className="demo-section">
-          <div className="demo-header">🎧 Escuchá ejemplos reales</div>
-          <div className="demo-grid">
-            <div className="demo-card">
-              <div className="demo-card-brand">Garbarino</div>
-              <div className="demo-card-genre">🎸 Rock</div>
-              <audio controls className="demo-player">
-                <source src="/demos/garbarino-rock.mp3" type="audio/mpeg" />
-              </audio>
-            </div>
-            <div className="demo-card">
-              <div className="demo-card-brand">Dinax</div>
-              <div className="demo-card-genre">🎷 Cuarteto</div>
-              <audio controls className="demo-player">
-                <source src="/demos/dinax-cuarteto.mp3" type="audio/mpeg" />
-              </audio>
-            </div>
-          </div>
-        </div>
+        <h2 className="form-section-title">Hacé tu canción ahora!</h2>
 
         {error && <div className="error-box">{error}</div>}
 
-        <h2 className="form-section-title">Hacé tu canción ahora!</h2>
-
-        <div className="form-section">
+        <div className="form-section form-section-wizard">
           <label className="form-label">¿Cómo se llama tu marca?</label>
           <input
             className="input-field"
@@ -250,6 +230,19 @@ export default function HomePage() {
             onChange={e => setBrandName(e.target.value)}
             maxLength={80}
           />
+        </div>
+
+        <div className="demo-section">
+          <div className="demo-header">🎧 Escuchá un ejemplo</div>
+          <div className="demo-grid-single">
+            <div className="demo-card">
+              <div className="demo-card-brand">Dinax</div>
+              <div className="demo-card-genre">Tecnología</div>
+              <audio controls className="demo-player">
+                <source src="/demos/dinax-cuarteto.mp3" type="audio/mpeg" />
+              </audio>
+            </div>
+          </div>
         </div>
 
         <div className="form-section">

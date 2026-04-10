@@ -171,6 +171,13 @@ body::before {
 }
 
 .form-section { margin-bottom: 32px; }
+.form-section-wizard {
+  padding: 20px;
+  background: linear-gradient(135deg, rgba(245,200,66,0.06) 0%, rgba(245,200,66,0.02) 100%);
+  border: 1.5px solid rgba(245,200,66,0.25);
+  border-radius: var(--radius);
+  margin-bottom: 24px;
+}
 .form-label {
   font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
   color: var(--text-dim); font-weight: 500; margin-bottom: 12px; display: block;
@@ -646,18 +653,18 @@ body::before {
 
 /* ── Demo Section ── */
 .demo-section {
-  margin-bottom: 32px;
-  padding: 20px;
-  background: rgba(255,255,255,0.03);
+  margin-bottom: 28px;
+  padding: 16px;
+  background: rgba(255,255,255,0.02);
   border: 1px solid var(--border);
   border-radius: var(--radius);
 }
 
 .demo-header {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
-  color: var(--text-mid);
-  margin-bottom: 16px;
+  color: var(--text-dim);
+  margin-bottom: 12px;
   text-align: center;
   letter-spacing: 0.03em;
   text-transform: uppercase;
@@ -666,17 +673,25 @@ body::before {
 .demo-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 14px;
+  gap: 12px;
+}
+
+.demo-grid-single {
+  display: grid;
+  grid-template-columns: 1fr;
+  max-width: 280px;
+  margin: 0 auto;
+  gap: 12px;
 }
 
 .demo-card {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
   background: var(--surface2);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
-  padding: 14px;
+  padding: 12px;
   transition: border-color 0.15s;
 }
 
@@ -685,16 +700,18 @@ body::before {
 }
 
 .demo-card-brand {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 700;
   color: var(--text);
-  line-height: 1;
+  line-height: 1.2;
 }
 
 .demo-card-genre {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-mid);
-  margin-bottom: 2px;
+  margin-bottom: 1px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
 }
 
 .demo-player {
@@ -756,6 +773,13 @@ body::before {
   letter-spacing: -0.5px;
   margin-bottom: 28px;
   text-align: center;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, rgba(245,200,66,0.08) 0%, rgba(245,200,66,0.04) 100%);
+  border: 1.5px solid rgba(245,200,66,0.3);
+  border-radius: var(--radius);
+  display: inline-block;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* ── Exit Intent Popup ── */
