@@ -221,15 +221,15 @@ export default function HomePage() {
           )}
         </h1>
         <div className="demo-section">
-          <div className="demo-header">🎧 Escuchá un ejemplo</div>
-          <div className="demo-grid-single">
-            <div className="demo-card">
-              <div className="demo-card-brand">Dinax</div>
-              <div className="demo-card-genre">Tecnología</div>
-              <audio controls className="demo-player">
-                <source src="/demos/dinax-cuarteto.mp3" type="audio/mpeg" />
-              </audio>
+          <div className="demo-inline">
+            <span className="demo-inline-label">🎧 Ejemplo</span>
+            <div className="demo-inline-meta">
+              <span className="demo-card-brand">Dinax</span>
+              <span className="demo-card-genre">Tecnología</span>
             </div>
+            <audio controls className="demo-player demo-player-inline">
+              <source src="/demos/dinax-cuarteto.mp3" type="audio/mpeg" />
+            </audio>
           </div>
         </div>
 
