@@ -33,6 +33,32 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
 
+    // Landing pages "canción" (público general)
+    {
+      url: `${baseUrl}/cancion-para-mi-negocio`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/cancion-para-mi-marca`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/cancion-para-redes-sociales`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/cancion-con-inteligencia-artificial`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+
     // Programmatic SEO pages (géneros)
     {
       url: `${baseUrl}/jingle-de-cumbia`,

@@ -66,20 +66,25 @@ const schemaMarkup = {
 
 export const metadata: Metadata = {
   // Basic metadata
-  title: 'Generador de Jingles con IA | Música para Tu Marca en 2 Minutos',
-  description: 'Creá jingles profesionales para tu negocio con IA. $8,900 pago único. Escuchás gratis, sin registro. 2,113 negocios ya tienen su canción. Licencia comercial incluida.',
+  title: 'Cancionesia | Creá la Canción de tu Marca con IA en 2 Minutos',
+  description: 'Creá la canción de tu negocio o marca con IA en 2 minutos. Jingles profesionales, $8,900 pago único. Escuchás gratis sin registro. 2,100+ negocios ya tienen su canción.',
   
   keywords: [
     'generador de jingles',
     'crear jingle',
+    'canción para mi negocio',
+    'canción para mi marca',
+    'canción con inteligencia artificial',
+    'hacer una canción para mi marca',
     'música para negocio',
     'jingle con IA',
-    'generador de música',
+    'canción para redes sociales',
+    'canción para emprendimiento',
     'jingle publicitario',
     'música para marca',
-    'crear canción negocio',
+    'crear canción con ia',
     'jingle argentina',
-    'música para emprendimiento',
+    'canción para mi local',
   ],
   
   authors: [{ name: 'Generador de Música para Marcas' }],
@@ -105,7 +110,7 @@ export const metadata: Metadata = {
     locale: 'es_AR',
     url: 'https://cancionesia.com.ar',
     siteName: 'Generador de Música para Marcas',
-    title: 'Generador de Jingles con IA para Tu Negocio',
+    title: 'Cancionesia – Creá la Canción de tu Negocio o Marca con IA',
     description: 'Jingles profesionales en 2 minutos. $8,900 pago único. Escuchás gratis sin registro. 2,113 negocios ya tienen su canción.',
     images: [
       {
@@ -121,8 +126,8 @@ export const metadata: Metadata = {
   // Twitter
   twitter: {
     card: 'summary_large_image',
-    title: 'Generador de Jingles con IA | Música en 2 Minutos',
-    description: 'Jingles profesionales para tu negocio. $8,900 pago único. Escuchás gratis.',
+    title: 'Cancionesia | Canción para tu Marca con IA en 2 Minutos',
+    description: 'Creá la canción de tu negocio o marca con IA. $8,900 pago único. Escuchás gratis.',
     images: ['https://cancionesia.com.ar/opengraph-image'],
   },
   

@@ -49,9 +49,9 @@ const faqSchema = {
 }
 
 export const metadata: Metadata = {
-  title: 'Generador de Jingles Gratis con IA | Cancionesia',
-  description: 'Creá jingles profesionales para tu marca en minutos con inteligencia artificial. Gratis, sin registro. Elegí tu estilo musical y generá 2 versiones únicas.',
-  keywords: 'generador de jingles gratis, crear jingle con ia, jingle para marca, música publicitaria, jingle gratis argentina',
+  title: 'Generador de Canciones y Jingles Gratis con IA | Cancionesia',
+  description: 'Creá una canción o jingle para tu marca en minutos con IA. Gratis, sin registro. Canción para tu negocio, tu local o tus redes. 2 versiones únicas.',
+  keywords: 'generador de jingles gratis, crear canción con ia, canción para mi negocio gratis, jingle para marca, canción para marca gratis, música para negocio, jingle gratis argentina',
   openGraph: {
     title: 'Generador de Jingles Gratis con IA',
     description: 'Creá jingles profesionales para tu marca en minutos con IA. Gratis y sin registro.',
