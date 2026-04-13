@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from 'next/navigation'
 import Nav from '@/components/Nav'
 import { trackPurchase as trackPurchaseFB } from '@/lib/meta-pixel'
 import { trackPurchase as trackPurchaseGA, trackGoogleAdsConversion } from '@/lib/google-analytics'
+import { trackPaymentComplete } from '@/lib/posthog'
 
 // src/app/descarga/page.tsx — Pantalla 4: Descarga post-pago
 
@@ -69,6 +70,7 @@ function DescargaContent() {
               transactionId: token || generationId,
             })
             
+            trackPaymentComplete(generationId, PRECIO_ARS)
             purchaseTrackedRef.current = true
             localStorage.setItem(purchaseKey, 'true')
             console.log('[Purchase Tracking] ✅ Eventos disparados y guardados en localStorage')

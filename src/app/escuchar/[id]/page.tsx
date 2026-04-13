@@ -6,6 +6,7 @@ import Nav from '@/components/Nav'
 import WaveformPlayer from '@/components/WaveformPlayer'
 import { trackAddToCart as trackAddToCartFB, trackInitiateCheckout as trackInitiateCheckoutFB } from '@/lib/meta-pixel'
 import { trackAddToCart as trackAddToCartGA, trackInitiateCheckout as trackInitiateCheckoutGA, trackRegeneration } from '@/lib/google-analytics'
+import { trackPreviewLoaded, trackPaymentStarted, trackRegenRequested } from '@/lib/posthog'
 
 const PRECIO_ORIGINAL_ARS = 12900
 
@@ -66,6 +67,7 @@ export default function EscucharPage() {
           })
           localStorage.setItem(trackKey, 'true')
           console.log('[GA4] add_to_cart tracked (deduped)')
+          trackPreviewLoaded(generationId, data.brand_name, data.genre)
         }
       }
     }
@@ -183,6 +185,7 @@ export default function EscucharPage() {
       })
       localStorage.setItem(checkoutKey, 'true')
       console.log('[GA4] begin_checkout tracked (deduped)')
+      trackPaymentStarted(generationId, discountedPrice, !!couponApplied)
     }
 
     try {
@@ -210,6 +213,7 @@ export default function EscucharPage() {
     
     // Track regeneration
     trackRegeneration(generationId, (generation.regen_count || 0) + 1)
+    trackRegenRequested(generationId, (generation.regen_count || 0) + 1)
     
     try {
       const sessionToken = sessionStorage.getItem('session_token') || ''

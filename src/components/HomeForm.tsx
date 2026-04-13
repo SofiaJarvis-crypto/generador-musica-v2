@@ -10,6 +10,7 @@ import ExitIntentPopup from '@/components/ExitIntentPopup'
 import { trackViewContent as trackViewContentFB, trackLead as trackLeadFB, trackGenerationStarted as trackGenerationStartedFB } from '@/lib/meta-pixel'
 import { trackViewContent as trackViewContentGA, trackLead as trackLeadGA, trackGenerationStarted as trackGenerationStartedGA } from '@/lib/google-analytics'
 import { trackABTestView, HEADLINE_VARIANTS, generateUUID, type Variant } from '@/lib/ab-testing'
+import { trackFormSubmitted } from '@/lib/posthog'
 
 const GENRES = [
   { id: 'Pop', emoji: '🎹', label: 'Pop' },
@@ -142,6 +143,7 @@ export default function HomeForm() {
 
     trackLeadFB({ brand_name: brandName.trim() })
     trackLeadGA({ brand_name: brandName.trim() })
+    trackFormSubmitted(brandName.trim(), genre)
 
     try {
       let sessionToken = sessionStorage.getItem('session_token')

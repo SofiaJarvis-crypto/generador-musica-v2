@@ -6,9 +6,13 @@ import Script from 'next/script'
 import '../styles/globals.css'
 import '../styles/popups.css'
 import { FB_PIXEL_ID } from '@/lib/meta-pixel'
+import { PostHogProvider } from '@/lib/posthog'
 
 // Google Analytics Measurement ID
 const GA_MEASUREMENT_ID = 'G-RGN3X2NSZR'
+
+// Microsoft Clarity Project ID
+const CLARITY_ID = process.env.NEXT_PUBLIC_CLARITY_ID
 
 // Google Ads Conversion ID
 const GOOGLE_ADS_ID = 'AW-18023245806'
@@ -148,6 +152,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body>
+        <PostHogProvider>
         <div className="page-wrap">
           {children}
         </div>
@@ -193,6 +198,25 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }}
         />
         <noscript dangerouslySetInnerHTML={{ __html: `<img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=${FB_PIXEL_ID}&ev=PageView&noscript=1" alt="" />` }} />
+
+        </PostHogProvider>
+
+        {/* Microsoft Clarity — heatmaps + session recordings */}
+        {CLARITY_ID && (
+          <Script
+            id="microsoft-clarity"
+            strategy="afterInteractive"
+            dangerouslySetInnerHTML={{
+              __html: `
+                (function(c,l,a,r,i,t,y){
+                  c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                  t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                  y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+                })(window, document, "clarity", "script", "${CLARITY_ID}");
+              `,
+            }}
+          />
+        )}
       </body>
     </html>
   )
