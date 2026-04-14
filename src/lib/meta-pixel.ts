@@ -8,7 +8,8 @@ declare global {
     fbq?: (
       action: string,
       eventName: string,
-      data?: Record<string, any>
+      data?: Record<string, any>,
+      options?: { eventID?: string }
     ) => void;
   }
 }
@@ -83,20 +84,27 @@ export const trackInitiateCheckout = (data: {
 };
 
 // Track Purchase (pago completado)
+// eventId debe coincidir con el event_id enviado por CAPI en el webhook para que Meta desduplique
 export const trackPurchase = (data: {
   generationId: string;
   brandName?: string;
   value: number;
   transactionId?: string;
+  eventId?: string;
 }) => {
   if (typeof window !== 'undefined' && window.fbq) {
-    window.fbq('track', 'Purchase', {
-      content_ids: [data.generationId],
-      content_type: 'product',
-      content_name: data.brandName || 'Music Generation',
-      value: data.value,
-      currency: 'ARS',
-      transaction_id: data.transactionId,
-    });
+    window.fbq(
+      'track',
+      'Purchase',
+      {
+        content_ids: [data.generationId],
+        content_type: 'product',
+        content_name: data.brandName || 'Music Generation',
+        value: data.value,
+        currency: 'ARS',
+        transaction_id: data.transactionId,
+      },
+      data.eventId ? { eventID: data.eventId } : undefined
+    );
   }
 };

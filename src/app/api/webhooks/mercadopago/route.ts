@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic'
 
 // src/app/api/webhooks/mercadopago/route.ts
+import { createHash } from 'crypto'
 // POST — Mercado Pago nos notifica cuando un pago cambia de estado
 // Este endpoint es el más crítico: habilita la descarga cuando el pago está aprobado
 
@@ -64,6 +65,45 @@ export async function POST(req: NextRequest) {
           is_unlocked: true
         })
         .eq('id', generationId)
+
+      // ── Notificar conversión a Meta CAPI (server-side) ────
+      // event_id = purchase_${generationId} debe coincidir con el del pixel browser en /descarga
+      // para que Meta desduplique y no cuente la misma compra dos veces
+      const metaPixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID
+      const metaCapiToken = process.env.META_CAPI_TOKEN
+      if (metaPixelId && metaCapiToken) {
+        try {
+          const hashedEmail = payer?.email
+            ? createHash('sha256').update(payer.email.toLowerCase().trim()).digest('hex')
+            : undefined
+          await fetch(`https://graph.facebook.com/v21.0/${metaPixelId}/events`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              data: [{
+                event_name: 'Purchase',
+                event_time: Math.floor(Date.now() / 1000),
+                event_id: `purchase_${generationId}`,
+                action_source: 'website',
+                user_data: {
+                  em: hashedEmail ? [hashedEmail] : undefined,
+                },
+                custom_data: {
+                  currency: 'ARS',
+                  value: PRECIO,
+                  order_id: paymentId,
+                  content_ids: [generationId],
+                  content_type: 'product',
+                },
+              }],
+              access_token: metaCapiToken,
+            }),
+          })
+          console.log(`[MP Webhook] Meta CAPI Purchase enviado para generation ${generationId}`)
+        } catch (e) {
+          console.error('[MP Webhook] Meta CAPI Purchase failed:', e)
+        }
+      }
 
       // ── Notificar conversión a Google Ads (server-side) ────
       if (process.env.GOOGLE_ADS_CONVERSION_ID && process.env.GOOGLE_ADS_CONVERSION_LABEL) {

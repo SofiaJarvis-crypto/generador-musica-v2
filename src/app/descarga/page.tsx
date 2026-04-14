@@ -58,6 +58,7 @@ function DescargaContent() {
               brandName: data.brandName || 'unknown',
               value: PRECIO_ARS,
               transactionId: token,
+              eventId: `purchase_${generationId}`,
             })
             trackPurchaseGA({
               generationId,
