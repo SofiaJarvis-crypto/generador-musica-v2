@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic'
                                                                                                                                                     
    export async function POST(req: NextRequest) {                                                                                                   
      try {                                                                                                                                          
-       const { generationId, selectedSong, couponCode } = await req.json()
+       const { generationId, selectedSong, couponCode, utmParams } = await req.json()
 
        if (!generationId || !['a', 'b'].includes(selectedSong)) {
          return NextResponse.json({ error: 'Parametros invalidos' }, { status: 400 })
@@ -95,7 +95,16 @@ export const dynamic = 'force-dynamic'
              },                                                                                                                                     
            ],                                                                                                                                       
            back_urls: {                                                                                                                             
-             success: `${APP_URL}/descarga?token=${payment.download_token}`,                                                                        
+             success: (() => {
+               const url = new URL(`${APP_URL}/descarga`)
+               url.searchParams.set('token', payment.download_token)
+               if (utmParams && typeof utmParams === 'object') {
+                 for (const [k, v] of Object.entries(utmParams)) {
+                   if (typeof v === 'string' && k.startsWith('utm_')) url.searchParams.set(k, v)
+                 }
+               }
+               return url.toString()
+             })(),
              failure: `${APP_URL}/pago-fallido?generationId=${generationId}`,                                                                       
              pending: `${APP_URL}/pago-pendiente?generationId=${generationId}`,                                                                     
            },                                                                                                                                       

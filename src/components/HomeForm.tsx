@@ -48,6 +48,19 @@ export default function HomeForm() {
   const [showExitPopup, setShowExitPopup] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
 
+  // Capturar UTMs de la URL y guardarlos en sessionStorage para preservar atribución post-MP
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const utms: Record<string, string> = {}
+    for (const key of ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term']) {
+      const val = params.get(key)
+      if (val) utms[key] = val
+    }
+    if (Object.keys(utms).length > 0) {
+      sessionStorage.setItem('utm_params', JSON.stringify(utms))
+    }
+  }, [])
+
   // Track ViewContent + leer variante A/B desde cookie asignada por middleware
   useEffect(() => {
     trackViewContentFB('Music Generator Homepage')

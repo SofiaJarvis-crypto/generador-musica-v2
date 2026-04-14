@@ -189,10 +189,13 @@ export default function EscucharPage() {
     }
 
     try {
+      const utmParamsRaw = sessionStorage.getItem('utm_params')
+      const utmParams = utmParamsRaw ? JSON.parse(utmParamsRaw) : {}
+
       const res = await fetch('/api/payment/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ generationId, selectedSong, couponCode: couponApplied ? couponInput : undefined }),
+        body: JSON.stringify({ generationId, selectedSong, couponCode: couponApplied ? couponInput : undefined, utmParams }),
       })
       const data = await res.json()
       if (!res.ok) { setError(data.error || 'Error al iniciar el pago'); return }
