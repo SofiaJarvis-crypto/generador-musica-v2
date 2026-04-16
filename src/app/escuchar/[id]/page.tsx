@@ -96,13 +96,15 @@ export default function EscucharPage() {
     if (!emailInput || !emailInput.includes('@')) return
     setEmailLoading(true)
     try {
-      await fetch('/api/email-capture', {
+      const res = await fetch('/api/email-capture', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: emailInput, generationId }),
       })
-      setEmailSaved(true)
-      setShowEmailCapture(false)
+      if (res.ok) {
+        setEmailSaved(true)
+        setShowEmailCapture(false)
+      }
     } catch {
       // silencioso
     } finally {
@@ -271,7 +273,7 @@ export default function EscucharPage() {
 
         <h2 className="player-headline">
           {generation.brand_name}<br />
-          — Jingle {generation.genre}
+          — Canción {generation.genre}
         </h2>
         <p className="player-meta">
           {generation.genre} · {generation.moods?.join(', ')} · {generation.duration_seconds} segundos
@@ -284,8 +286,9 @@ export default function EscucharPage() {
               <strong>Elegí tu versión favorita:</strong> Generamos 2 opciones para vos
             </div>
             {(['a', 'b'] as const).map(s => (
-              <div
+              <button
                 key={s}
+                type="button"
                 className={`song-tab${selectedSong === s ? ' active' : ''}`}
                 onClick={() => setSelectedSong(s)}
               >
@@ -293,7 +296,7 @@ export default function EscucharPage() {
                 <div className="song-tab-name">
                   {s === 'a' ? '🎵 Primera versión' : '🎶 Segunda versión'}
                 </div>
-              </div>
+              </button>
             ))}
           </div>
         )}
@@ -321,7 +324,7 @@ export default function EscucharPage() {
             <div className="email-capture-icon">📩</div>
             <div className="email-capture-text">
               <strong>¿Querés guardarlo para después?</strong>
-              <span>Te mandamos el link de tu jingle por email para que lo tengas a mano.</span>
+              <span>Te mandamos el link de tu canción por email para que lo tengas a mano.</span>
             </div>
             <form onSubmit={handleEmailCapture} className="email-capture-form">
               <input
@@ -421,7 +424,7 @@ export default function EscucharPage() {
             {loadingPay
               ? 'Procesando…'
               : couponApplied?.type === 'free'
-              ? '🎉 Obtener mi jingle gratis'
+              ? '🎉 Obtener mi canción gratis'
               : 'Pagar con Mercado Pago'}
           </button>
 

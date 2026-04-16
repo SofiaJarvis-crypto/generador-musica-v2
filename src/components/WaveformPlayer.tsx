@@ -5,12 +5,14 @@ import { useEffect, useRef, useState, useCallback } from 'react'
 const WAVE_HEIGHTS = [20,35,55,70,45,80,60,90,75,50,85,95,70,55,40,60,75,85,65,50,90,80,55,70,45,60,75,50,35,25,45,60,70,80,55,75,85,65,50,40,60,75,50,35,55,70,80,60,45,30,50,65,75,55,40,60,70,85,65,50,40,30,20,35,50,65,75,55,40,60,70,80,55,45,35,50,65,75,60,45]
 
 // Audio component with optional preview mode (25 sec from second 5-30)
-function AudioPlayer({ src, isPlaying, onTimeUpdate, onEnded, isPreview }: {
+function AudioPlayer({ src, isPlaying, onTimeUpdate, onEnded, isPreview, onPlayError, seekRequest }: {
   src: string
   isPlaying: boolean
   onTimeUpdate: (t: number, d: number) => void
   onEnded: () => void
   isPreview: boolean
+  onPlayError: () => void
+  seekRequest: { ratio: number; id: number } | null
 }) {
   const audioRef = useRef<HTMLAudioElement>(null)
   const [previewStarted, setPreviewStarted] = useState(false)
@@ -23,15 +25,11 @@ function AudioPlayer({ src, isPlaying, onTimeUpdate, onEnded, isPreview }: {
       const currentTime = audio.currentTime
       const duration = audio.duration || 0
 
-      // Si es preview y estamos en segundo 5-30, permitir reproducción
       if (isPreview) {
-        // Al cargar, saltar al segundo 5
         if (!previewStarted && isPlaying && currentTime < 5) {
           audio.currentTime = 5
           setPreviewStarted(true)
         }
-        
-        // Si pasó del segundo 30, detener y resetear (25 seg preview)
         if (currentTime >= 30) {
           audio.pause()
           audio.currentTime = 5
@@ -52,28 +50,28 @@ function AudioPlayer({ src, isPlaying, onTimeUpdate, onEnded, isPreview }: {
 
     audio.addEventListener('timeupdate', handleTime)
     audio.addEventListener('ended', handleEnd)
-    
-    return () => { 
+
+    return () => {
       audio.removeEventListener('timeupdate', handleTime)
       audio.removeEventListener('ended', handleEnd)
     }
   }, [onTimeUpdate, onEnded, isPreview, isPlaying, previewStarted])
 
+  // Play/pause — expone error en vez de silenciarlo
   useEffect(() => {
     const audio = audioRef.current
     if (!audio) return
-    
+
     if (isPlaying) {
-      // Si es preview y no empezó, saltar al segundo 5
       if (isPreview && audio.currentTime < 5) {
         audio.currentTime = 5
         setPreviewStarted(true)
       }
-      audio.play().catch(() => {})
+      audio.play().catch(() => { onPlayError() })
     } else {
       audio.pause()
     }
-  }, [isPlaying, isPreview])
+  }, [isPlaying, isPreview, onPlayError])
 
   // Bloquear seek en preview mode
   useEffect(() => {
@@ -82,7 +80,6 @@ function AudioPlayer({ src, isPlaying, onTimeUpdate, onEnded, isPreview }: {
 
     const handleSeeking = () => {
       const currentTime = audio.currentTime
-      // Forzar rango 5-30 segundos (25 seg preview)
       if (currentTime < 5) {
         audio.currentTime = 5
       } else if (currentTime > 30) {
@@ -94,7 +91,17 @@ function AudioPlayer({ src, isPlaying, onTimeUpdate, onEnded, isPreview }: {
     return () => audio.removeEventListener('seeking', handleSeeking)
   }, [isPreview])
 
-  return <audio ref={audioRef} src={src} preload="metadata" crossOrigin="anonymous" />
+  // Seek en modo completo (desde click en waveform)
+  useEffect(() => {
+    const audio = audioRef.current
+    if (!audio || !seekRequest || isPreview) return
+    const duration = audio.duration
+    if (!duration || isNaN(duration)) return
+    audio.currentTime = seekRequest.ratio * duration
+  }, [seekRequest, isPreview])
+
+  // preload="auto" en vez de "metadata" — crítico para que play funcione en mobile
+  return <audio ref={audioRef} src={src} preload="auto" crossOrigin="anonymous" />
 }
 
 interface WaveformPlayerProps {
@@ -102,13 +109,15 @@ interface WaveformPlayerProps {
   duration: number
   brandName: string
   genre: string
-  isPreview?: boolean // 🆕 Si es true, limitar a 10 seg (segundo 15-25)
+  isPreview?: boolean
 }
 
 export default function WaveformPlayer({ streamUrl, duration, brandName, genre, isPreview = false }: WaveformPlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false)
   const [currentTime, setCurrentTime] = useState(0)
   const [audioDuration, setAudioDuration] = useState(duration)
+  const [playError, setPlayError] = useState(false)
+  const [seekRequest, setSeekRequest] = useState<{ ratio: number; id: number } | null>(null)
 
   const handleTimeUpdate = useCallback((t: number, d: number) => {
     setCurrentTime(t)
@@ -119,6 +128,29 @@ export default function WaveformPlayer({ streamUrl, duration, brandName, genre, 
     setIsPlaying(false)
     setCurrentTime(0)
   }, [])
+
+  const handlePlayError = useCallback(() => {
+    setIsPlaying(false)
+    setPlayError(true)
+  }, [])
+
+  const togglePlay = useCallback(() => {
+    setPlayError(false)
+    setIsPlaying(p => !p)
+  }, [])
+
+  // Click en waveform: play/pause en preview, seek+play en modo completo
+  const handleWaveformClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    setPlayError(false)
+    if (isPreview) {
+      setIsPlaying(p => !p)
+      return
+    }
+    const rect = e.currentTarget.getBoundingClientRect()
+    const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width))
+    setSeekRequest(prev => ({ ratio, id: (prev?.id ?? 0) + 1 }))
+    setIsPlaying(true)
+  }, [isPreview])
 
   const progress = audioDuration > 0 ? currentTime / audioDuration : 0
   const playedBars = Math.floor(WAVE_HEIGHTS.length * progress)
@@ -135,14 +167,20 @@ export default function WaveformPlayer({ streamUrl, duration, brandName, genre, 
         <div className="player-info">
           <div className="player-track-name">{brandName}</div>
           <div className="player-track-meta">
-            Jingle {genre} · {isPreview ? '25 seg preview' : `${duration} seg`}
+            Canción {genre} · {isPreview ? '25 seg preview' : `${duration} seg`}
           </div>
           {isPreview && <div className="watermark-badge">🔒 Preview de 25 segundos</div>}
         </div>
       </div>
 
+      {/* Waveform — ahora clickeable para play/pause o seek */}
       <div className="waveform-wrap">
-        <div className="waveform">
+        <div
+          className="waveform"
+          onClick={handleWaveformClick}
+          role="button"
+          aria-label={isPlaying ? 'Pausar' : 'Reproducir'}
+        >
           {WAVE_HEIGHTS.map((h, i) => (
             <div
               key={i}
@@ -158,13 +196,24 @@ export default function WaveformPlayer({ streamUrl, duration, brandName, genre, 
       </div>
 
       <div className="player-controls">
-        <button className="ctrl-play" onClick={() => setIsPlaying(p => !p)}>
+        <button
+          className="ctrl-play"
+          onClick={togglePlay}
+          style={{ touchAction: 'manipulation' }}
+          aria-label={isPlaying ? 'Pausar' : 'Reproducir'}
+        >
           {isPlaying ? '⏸' : '▶'}
         </button>
         <div className="ctrl-info">
-          <div className="ctrl-playing" id="playing-status">
-            {isPlaying ? 'Reproduciendo… 🎶' : 'Presioná play para escuchar'}
-          </div>
+          {playError ? (
+            <div className="ctrl-playing" style={{ color: 'var(--orange)' }}>
+              Tocá ▶ para activar el audio
+            </div>
+          ) : (
+            <div className="ctrl-playing" id="playing-status">
+              {isPlaying ? 'Reproduciendo… 🎶' : 'Presioná play para escuchar'}
+            </div>
+          )}
           <div className="ctrl-tip">
             {isPreview ? 'Preview de 25 segundos (seg 5-30)' : 'Podés escuchar toda la canción'}
           </div>
@@ -186,6 +235,8 @@ export default function WaveformPlayer({ streamUrl, duration, brandName, genre, 
         onTimeUpdate={handleTimeUpdate}
         onEnded={handleEnded}
         isPreview={isPreview}
+        onPlayError={handlePlayError}
+        seekRequest={seekRequest}
       />
     </div>
   )

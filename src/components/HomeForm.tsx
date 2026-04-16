@@ -3,7 +3,7 @@
 // Recibe headlineVariant desde el Server Component (vía cookie asignada en middleware),
 // por lo que el H1 se renderiza con el valor correcto desde el servidor.
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import Nav from '@/components/Nav'
 import ExitIntentPopup from '@/components/ExitIntentPopup'
@@ -46,7 +46,8 @@ export default function HomeForm() {
   const [loadingLyrics, setLoadingLyrics] = useState(false)
   const [error, setError] = useState('')
   const [showExitPopup, setShowExitPopup] = useState(false)
-  const [isMobile, setIsMobile] = useState(false)
+
+  const paso1Ref = useRef<HTMLDivElement>(null)
 
   // Capturar UTMs de la URL y guardarlos en sessionStorage para preservar atribución post-MP
   useEffect(() => {
@@ -68,16 +69,6 @@ export default function HomeForm() {
     const variant = readVariantCookie()
     setHeadlineVariant(variant)
     trackABTestView('headline_v1', variant)
-  }, [])
-
-  // Detect mobile for sticky button
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 640)
-    }
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-    return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
   // Track referral clicks
@@ -194,12 +185,36 @@ export default function HomeForm() {
     }
   }
 
+  // Scroll a Paso 1 + animación flash si el campo de marca está vacío
+  const scrollToPaso1AndFlash = useCallback(() => {
+    const el = paso1Ref.current
+    if (!el) return
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    // Quitar la clase primero para que se pueda re-disparar si ya estaba
+    el.classList.remove('flash')
+    void el.offsetWidth // reflow para reiniciar animación
+    el.classList.add('flash')
+    el.addEventListener('animationend', () => el.classList.remove('flash'), { once: true })
+    // Foco en el input del paso 1
+    const input = el.querySelector('input')
+    setTimeout(() => input?.focus(), 400)
+  }, [])
+
+  // Handler del CTA principal: scroll+flash si paso 1 vacío, submit si está completo
+  const handleCTAClick = useCallback(() => {
+    if (!brandName.trim()) {
+      scrollToPaso1AndFlash()
+      return
+    }
+    handleSubmit()
+  }, [brandName, scrollToPaso1AndFlash]) // eslint-disable-line react-hooks/exhaustive-deps
+
   // Renderizar el H1 según la variante asignada en el servidor (sin parpadeo)
   const renderHeadline = () => {
     if (headlineVariant === 'variantB') {
       return (
         <>
-          Conseguí el jingle de tu marca<br />
+          Conseguí la canción de tu marca<br />
           sin <em>músicos ni estudio</em>
         </>
       )
@@ -214,7 +229,7 @@ export default function HomeForm() {
     }
     return (
       <>
-        Jingles profesionales con IA<br />en <em>2 minutos</em>
+        Canciones profesionales con IA<br />en <em>2 minutos</em>
       </>
     )
   }
@@ -250,11 +265,19 @@ export default function HomeForm() {
           </div>
         </div>
 
-        <h2 className="form-section-title">Hacé tu canción ahora!</h2>
+        <h2
+          className="form-section-title"
+          onClick={scrollToPaso1AndFlash}
+          role="button"
+          aria-label="Empezar a crear mi canción"
+        >
+          Hacé tu canción ahora!
+        </h2>
 
         {error && <div className="error-box">{error}</div>}
 
-        <div className="form-section form-section-wizard">
+        <span className="paso-label">Paso 1</span>
+        <div className="form-section form-section-wizard" ref={paso1Ref}>
           <label className="form-label">¿Cómo se llama tu marca?</label>
           <input
             className="input-field"
@@ -265,10 +288,11 @@ export default function HomeForm() {
           />
         </div>
 
+        <span className="paso-label">Paso 2</span>
         <div className="form-section">
           <label className="form-label">
             ¿Qué querés que diga tu canción?
-            <span className="form-label-hint">Este texto será la LETRA de tu jingle. Escribí al menos 50 caracteres o usá IA.</span>
+            <span className="form-label-hint">Este texto será la LETRA de tu canción. Escribí al menos 50 caracteres o usá IA.</span>
           </label>
           <textarea
             className="lyrics-field"
@@ -325,18 +349,17 @@ export default function HomeForm() {
           </div>
         </div>
 
+        <p className="generate-btn-note">
+          Gratis · Escuchás 25 seg de cada versión · Solo pagás si querés descargar
+        </p>
+
         <button
-          className={isMobile ? 'generate-btn generate-btn-sticky' : 'generate-btn'}
-          onClick={handleSubmit}
+          className="generate-btn generate-btn-sticky"
+          onClick={handleCTAClick}
           disabled={loading}
         >
           {loading ? '⏳ Iniciando…' : '🎵 Crear mis 2 versiones ahora'}
         </button>
-        {!isMobile && (
-          <p className="generate-btn-note">
-            Gratis. Escuchás 25 seg de cada versión. Solo pagás si querés descargar.
-          </p>
-        )}
 
       </div>
     </>
