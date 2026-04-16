@@ -220,15 +220,6 @@ export default function WaveformPlayer({ streamUrl, duration, brandName, genre, 
         </div>
       </div>
 
-      {isPreview && (
-        <div className="watermark-info">
-          <div style={{ fontSize: 18, flexShrink: 0 }}>🔒</div>
-          <div className="watermark-info-text">
-            Estás escuchando un <strong>preview de 25 segundos</strong>. Pagá para desbloquear la canción entera y descargarla.
-          </div>
-        </div>
-      )}
-
       <AudioPlayer
         src={streamUrl}
         isPlaying={isPlaying}

@@ -42,6 +42,7 @@ export default function EscucharPage() {
   const [couponLoading, setCouponLoading] = useState(false)
   const [couponError, setCouponError] = useState('')
   const [showCouponField, setShowCouponField] = useState(false)
+  const [showLyrics, setShowLyrics] = useState(false)
 
   // Poll status in case suno_status is still stream_ready (audioUrl not yet ready)
   useEffect(() => {
@@ -318,27 +319,33 @@ export default function EscucharPage() {
           </div>
         )}
 
-        {/* Email capture — aparece a los 45s */}
-        {showEmailCapture && !isUnlocked && !emailSaved && (
-          <div className="email-capture-banner">
-            <div className="email-capture-icon">📩</div>
-            <div className="email-capture-text">
-              <strong>¿Querés guardarlo para después?</strong>
-              <span>Te mandamos el link de tu canción por email para que lo tengas a mano.</span>
-            </div>
-            <form onSubmit={handleEmailCapture} className="email-capture-form">
-              <input
-                type="email"
-                placeholder="tu@email.com"
-                value={emailInput}
-                onChange={e => setEmailInput(e.target.value)}
-                required
-              />
-              <button type="submit" disabled={emailLoading}>
-                {emailLoading ? '…' : 'Guardar'}
-              </button>
-            </form>
-            <button className="email-capture-dismiss" onClick={() => setShowEmailCapture(false)}>✕</button>
+        {/* Letra de la canción — colapsable */}
+        {(generation.song_a_lyrics || generation.song_b_lyrics) && (
+          <div style={{ marginBottom: 20 }}>
+            <button
+              onClick={() => setShowLyrics(v => !v)}
+              style={{
+                width: '100%', background: 'rgba(245,200,66,0.05)',
+                border: '1px solid rgba(245,200,66,0.15)', borderRadius: 10,
+                padding: '12px 16px', color: 'var(--text-mid)', cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                fontSize: 14, fontFamily: 'DM Sans, sans-serif',
+                transition: 'background 0.2s',
+              }}
+            >
+              <span>🎤 Ver letra de la canción</span>
+              <span style={{ fontSize: 12, color: 'var(--amber)' }}>{showLyrics ? '▲ Cerrar' : '▼ Ver'}</span>
+            </button>
+            {showLyrics && (
+              <div style={{
+                marginTop: 8, padding: '16px 20px',
+                background: 'var(--surface)', border: '1px solid var(--border)',
+                borderRadius: 10, fontSize: 14, color: 'var(--text-mid)',
+                lineHeight: 1.8, whiteSpace: 'pre-wrap', fontStyle: 'italic',
+              }}>
+                {selectedSong === 'a' ? generation.song_a_lyrics : generation.song_b_lyrics}
+              </div>
+            )}
           </div>
         )}
 
@@ -413,6 +420,15 @@ export default function EscucharPage() {
 
           {error && <div className="error-box" style={{ marginTop: 12, marginBottom: 0 }}>{error}</div>}
 
+          {/* Social proof */}
+          <div style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+            fontSize: 13, color: 'var(--text-dim)', marginTop: 16, marginBottom: 0,
+          }}>
+            <span>⭐⭐⭐⭐⭐</span>
+            <span>+5000 marcas ya descargaron su canción</span>
+          </div>
+
           <button
             className="mp-btn"
             onClick={handlePay}
@@ -448,6 +464,35 @@ export default function EscucharPage() {
           </button>
         </p>
         {regenError && <div className="error-box" style={{ marginBottom: 16 }}>{regenError}</div>}
+
+        {/* Email capture — aparece a los 45s, debajo del CTA de pago */}
+        {showEmailCapture && !isUnlocked && !emailSaved && (
+          <div className="email-capture-banner">
+            <div className="email-capture-icon">📩</div>
+            <div className="email-capture-text">
+              <strong>¿Querés guardarlo para después?</strong>
+              <span>Te mandamos el link de tu canción por email para que lo tengas a mano.</span>
+            </div>
+            <form onSubmit={handleEmailCapture} className="email-capture-form">
+              <input
+                type="email"
+                placeholder="tu@email.com"
+                value={emailInput}
+                onChange={e => setEmailInput(e.target.value)}
+                required
+              />
+              <button type="submit" disabled={emailLoading}>
+                {emailLoading ? '…' : 'Guardar'}
+              </button>
+            </form>
+            <button className="email-capture-dismiss" onClick={() => setShowEmailCapture(false)}>✕</button>
+          </div>
+        )}
+        {emailSaved && (
+          <p style={{ textAlign: 'center', color: 'var(--amber)', marginTop: 12, fontSize: 14 }}>
+            ✅ ¡Listo! Te mandamos el link por email.
+          </p>
+        )}
       </div>
     </>
   )

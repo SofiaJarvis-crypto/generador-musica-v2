@@ -30,19 +30,21 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Generación no encontrada' }, { status: 404 })
     }
 
-    // Guardar email (upsert para evitar duplicados)
+    // Guardar email — INSERT simple, ignoramos si ya existe (duplicate key)
     const { error } = await supabaseAdmin
       .from('email_captures')
-      .upsert({
+      .insert({
         email: email.toLowerCase().trim(),
         generation_id: generationId,
-        source,
-      }, {
-        onConflict: 'email,generation_id',
-        ignoreDuplicates: true,
+        capture_point: source,
+        brand_name: generation.brand_name,
       })
 
-    if (error) throw error
+    // 23505 = unique_violation (ya existe ese email+generation_id) → OK igual
+    if (error && error.code !== '23505') {
+      console.error('[Email Capture] Supabase error:', error.code, error.message)
+      throw error
+    }
 
     console.log(`[Email Capture] ${email} → generation ${generationId}`)
     return NextResponse.json({ ok: true })

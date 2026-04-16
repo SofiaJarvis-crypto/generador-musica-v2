@@ -54,12 +54,12 @@ export default function GenerandoPage() {
     if (!emailInput || !emailInput.includes('@')) return
     setEmailLoading(true)
     try {
-      await fetch('/api/email-capture', {
+      const res = await fetch('/api/email-capture', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: emailInput, generationId, source: 'generando_page' }),
       })
-      setEmailSaved(true)
+      if (res.ok) setEmailSaved(true)
     } catch {
       // silencioso
     } finally {
@@ -120,7 +120,7 @@ export default function GenerandoPage() {
 
         <h2 className="gen-title">Componiendo tu canción…</h2>
         <p className="gen-sub">
-          La IA está trabajando en tu jingle personalizado.<br />
+          La IA está trabajando en tu canción personalizada.<br />
           Tarda entre 30 segundos y 2 minutos.
         </p>
 
