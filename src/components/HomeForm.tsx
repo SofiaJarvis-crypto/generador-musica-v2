@@ -252,7 +252,7 @@ export default function HomeForm() {
         <h1 className="form-headline" suppressHydrationWarning>
           {renderHeadline()}
         </h1>
-        <div className="demo-section">
+        <div id="demo-section" className="demo-section">
           <div className="demo-inline">
             <span className="demo-inline-label">🎧 Ejemplo</span>
             <div className="demo-inline-meta">
@@ -274,10 +274,15 @@ export default function HomeForm() {
           Hacé tu canción ahora!
         </h2>
 
-        {error && <div className="error-box">{error}</div>}
+        {error && (
+          <div className="error-box error-box-dismissable">
+            <span>{error}</span>
+            <button className="error-box-close" onClick={() => setError('')} aria-label="Cerrar error">✕</button>
+          </div>
+        )}
 
         <span className="paso-label">Paso 1</span>
-        <div className="form-section form-section-wizard" ref={paso1Ref}>
+        <div id="paso1" className="form-section form-section-wizard" ref={paso1Ref}>
           <label className="form-label">¿Cómo se llama tu marca?</label>
           <input
             className="input-field"
@@ -303,20 +308,24 @@ export default function HomeForm() {
             maxLength={500}
           />
           <div className="lyrics-actions">
-            <button
-              type="button"
-              className="magic-btn"
-              onClick={handleGenerateLyrics}
-              disabled={loadingLyrics || !brandName.trim()}
-            >
-              {loadingLyrics ? (
-                <>⏳ Generando...</>
-              ) : customLyrics.trim() ? (
-                <>✨ Mejorar con IA</>
-              ) : (
-                <>✨ Generar letra con IA</>
-              )}
-            </button>
+            <div className="magic-btn-wrap">
+              <button
+                type="button"
+                className="magic-btn"
+                onClick={!brandName.trim() ? scrollToPaso1AndFlash : handleGenerateLyrics}
+                disabled={loadingLyrics}
+                data-disabled-hint={!brandName.trim() ? 'Primero ingresá el nombre de tu marca' : undefined}
+              >
+                {loadingLyrics ? (
+                  <>⏳ Generando...</>
+                ) : customLyrics.trim() ? (
+                  <>✨ Mejorar con IA</>
+                ) : (
+                  <>✨ Generar letra con IA</>
+                )}
+              </button>
+              {!brandName.trim() && <span className="magic-btn-hint">← ingresá tu marca primero</span>}
+            </div>
             <div className="lyrics-counter">
               {customLyrics.length}/500 {customLyrics.length > 0 && customLyrics.length < 50 && '⚠️'}
             </div>

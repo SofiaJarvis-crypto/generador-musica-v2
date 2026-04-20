@@ -13,6 +13,16 @@ const STEPS = [
   { n: 4, label: 'Descargá' },
 ]
 
+function scrollTo(id: string, focusInput?: boolean) {
+  const el = document.getElementById(id)
+  if (!el) return
+  el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+  if (focusInput) {
+    const input = el.querySelector('input, textarea') as HTMLElement | null
+    setTimeout(() => input?.focus(), 400)
+  }
+}
+
 export default function Nav({ step }: NavProps) {
   const router = useRouter()
 
@@ -23,8 +33,12 @@ export default function Nav({ step }: NavProps) {
           Generador de<br /><span>Música</span> para <em>Marcas</em>
         </div>
         <div className="nav-right">
-          <span className="nav-link">Ver ejemplos</span>
-          <span className="nav-link" style={{ color: 'var(--amber)', fontWeight: 500 }}>
+          <span className="nav-link" onClick={() => scrollTo('demo-section')}>Ver ejemplos</span>
+          <span
+            className="nav-link"
+            style={{ color: 'var(--amber)', fontWeight: 500 }}
+            onClick={() => scrollTo('paso1', true)}
+          >
             Es gratis probar →
           </span>
         </div>
