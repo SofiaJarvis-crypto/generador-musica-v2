@@ -7,15 +7,15 @@ const faqSchema = {
   mainEntity: [
     {
       '@type': 'Question',
-      name: '¿Es realmente gratis el generador de jingles?',
+      name: '¿Es realmente gratis el generador de canciones?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Sí. Podés generar 2 versiones únicas de tu jingle completamente gratis. No pedimos tarjeta de crédito ni registro. Si querés descargar la canción completa en alta calidad, tiene un costo único de $8,900 ARS.',
+        text: 'Sí. Podés generar 2 versiones únicas de tu canción completamente gratis. No pedimos tarjeta de crédito ni registro. Si querés descargar la canción completa en alta calidad, tiene un costo único de $8,900 ARS.',
       },
     },
     {
       '@type': 'Question',
-      name: '¿Cuánto tarda en generar un jingle?',
+      name: '¿Cuánto tarda en generar una canción?',
       acceptedAnswer: {
         '@type': 'Answer',
         text: 'El proceso completo toma entre 30 segundos y 2 minutos. La IA compone la música, escribe la letra y genera el audio en tiempo real.',
@@ -23,10 +23,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question',
-      name: '¿Puedo usar el jingle comercialmente?',
+      name: '¿Puedo usar la canción comercialmente?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Sí. Una vez que descargás el jingle, tenés todos los derechos de uso comercial. Podés usarlo en tu publicidad, redes sociales, radio, TV, y cualquier otro medio.',
+        text: 'Sí. Una vez que descargás la canción, tenés todos los derechos de uso comercial. Podés usarla en tu publicidad, redes sociales, radio, TV, y cualquier otro medio.',
       },
     },
     {
@@ -49,13 +49,16 @@ const faqSchema = {
 }
 
 export const metadata: Metadata = {
-  title: 'Generador de Canciones y Jingles Gratis con IA | Cancionesia',
-  description: 'Creá una canción o jingle para tu marca en minutos con IA. Gratis, sin registro. Canción para tu negocio, tu local o tus redes. 2 versiones únicas.',
-  keywords: 'generador de jingles gratis, crear canción con ia, canción para mi negocio gratis, jingle para marca, canción para marca gratis, música para negocio, jingle gratis argentina',
+  title: 'Generador de Canciones Gratis con IA | Cancionesia',
+  description: 'Creá una canción para tu marca en minutos con IA. Gratis, sin registro. Canción para tu negocio, tu local o tus redes. 2 versiones únicas.',
+  keywords: 'generador de canciones gratis, crear canción con ia, canción para mi negocio gratis, canción para marca, canción para marca gratis, música para negocio, canción gratis argentina',
+  alternates: {
+    canonical: 'https://cancionesia.com.ar/generador-jingles-gratis',
+  },
   openGraph: {
-    title: 'Generador de Jingles Gratis con IA',
-    description: 'Creá jingles profesionales para tu marca en minutos con IA. Gratis y sin registro.',
-    url: '/generador-jingles-gratis',
+    title: 'Generador de Canciones Gratis con IA',
+    description: 'Creá canciones profesionales para tu marca en minutos con IA. Gratis y sin registro.',
+    url: 'https://cancionesia.com.ar/generador-jingles-gratis',
   },
 }
 
@@ -77,18 +80,18 @@ export default function GeneradorJinglesGratis() {
 
       <header className="landing-hero">
         <h1 className="landing-h1">
-          Generador de Jingles Gratis<br />
+          Generador de Canciones Gratis<br />
           <span className="landing-gradient">con Inteligencia Artificial</span>
         </h1>
-        
+
         <p className="landing-lead">
-          Creá jingles profesionales para tu marca en minutos.<br />
+          Creá canciones profesionales para tu marca en minutos.<br />
           Sin conocimientos musicales. Sin registro. 100% gratis.
         </p>
 
         <div className="landing-cta-group">
           <Link href="/" className="landing-cta-primary">
-            🎵 Generar mi Jingle Gratis
+            🎵 Generar mi Canción Gratis
           </Link>
           <div className="landing-trust-badge">
             ✅ Sin tarjeta • 2 versiones únicas
@@ -98,7 +101,7 @@ export default function GeneradorJinglesGratis() {
         <div className="landing-stats">
           <div className="landing-stat">
             <div className="landing-stat-value">2,000+</div>
-            <div className="landing-stat-label">Jingles creados</div>
+            <div className="landing-stat-label">Canciones creadas</div>
           </div>
           <div className="landing-stat">
             <div className="landing-stat-value">30 seg</div>
@@ -112,9 +115,9 @@ export default function GeneradorJinglesGratis() {
       </header>
 
       <section className="landing-section">
-        <h2 className="landing-h2">¿Qué es un generador de jingles?</h2>
+        <h2 className="landing-h2">¿Qué es un generador de canciones?</h2>
         <p className="landing-text">
-          Un <strong>generador de jingles</strong> es una herramienta que utiliza inteligencia artificial para crear música publicitaria personalizada. A diferencia de contratar un estudio de grabación (que puede costar desde $50,000 hasta $200,000 ARS), nuestro generador crea jingles profesionales en minutos por una fracción del costo.
+          Un <strong>generador de canciones</strong> es una herramienta que utiliza inteligencia artificial para crear música publicitaria personalizada. A diferencia de contratar un estudio de grabación (que puede costar desde $50,000 hasta $200,000 ARS), nuestro generador crea canciones profesionales en minutos por una fracción del costo.
         </p>
       </section>
 
@@ -164,12 +167,12 @@ export default function GeneradorJinglesGratis() {
       </section>
 
       <section className="landing-section landing-cta-section">
-        <h2 className="landing-h2">¿Listo para crear tu jingle?</h2>
+        <h2 className="landing-h2">¿Listo para crear tu canción?</h2>
         <p className="landing-text">
           Usá nuestro generador ahora. Es gratis y no necesitás registrarte.
         </p>
         <Link href="/" className="landing-cta-primary">
-          🎵 Generar mi Jingle Gratis
+          🎵 Generar mi Canción Gratis
         </Link>
       </section>
 
@@ -180,21 +183,21 @@ export default function GeneradorJinglesGratis() {
           <details className="landing-faq-item">
             <summary className="landing-faq-question">¿Es realmente gratis?</summary>
             <div className="landing-faq-answer">
-              Sí. Podés generar 2 versiones únicas de tu jingle completamente gratis. No pedimos tarjeta de crédito ni registro. Si querés descargar la canción completa en alta calidad, tiene un costo único de $8,900 ARS.
+              Sí. Podés generar 2 versiones únicas de tu canción completamente gratis. No pedimos tarjeta de crédito ni registro. Si querés descargar la canción completa en alta calidad, tiene un costo único de $8,900 ARS.
             </div>
           </details>
 
           <details className="landing-faq-item">
-            <summary className="landing-faq-question">¿Cuánto tarda en generar un jingle?</summary>
+            <summary className="landing-faq-question">¿Cuánto tarda en generar una canción?</summary>
             <div className="landing-faq-answer">
               El proceso completo toma entre 30 segundos y 2 minutos. La IA compone la música, escribe la letra y genera el audio en tiempo real.
             </div>
           </details>
 
           <details className="landing-faq-item">
-            <summary className="landing-faq-question">¿Puedo usar el jingle comercialmente?</summary>
+            <summary className="landing-faq-question">¿Puedo usar la canción comercialmente?</summary>
             <div className="landing-faq-answer">
-              Sí. Una vez que descargás el jingle, tenés todos los derechos de uso comercial. Podés usarlo en tu publicidad, redes sociales, radio, TV, y cualquier otro medio.
+              Sí. Una vez que descargás la canción, tenés todos los derechos de uso comercial. Podés usarla en tu publicidad, redes sociales, radio, TV, y cualquier otro medio.
             </div>
           </details>
 
@@ -219,18 +222,18 @@ export default function GeneradorJinglesGratis() {
           <div className="landing-footer-brand">
             <div className="landing-logo">🎵 Cancionesia</div>
             <p className="landing-footer-text">
-              Jingles profesionales con IA.<br />
+              Canciones profesionales con IA.<br />
               Hecho en Argentina 🇦🇷
             </p>
           </div>
-          
+
           <div className="landing-footer-links">
             <h4 className="landing-footer-title">Recursos</h4>
             <Link href="/como-crear-jingle-para-marca" className="landing-footer-link">
-              Cómo crear un jingle
+              Cómo crear una canción
             </Link>
             <Link href="/ejemplos-jingles-marcas-argentinas" className="landing-footer-link">
-              Ejemplos de jingles
+              Ejemplos de canciones
             </Link>
           </div>
         </div>

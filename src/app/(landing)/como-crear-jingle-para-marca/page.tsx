@@ -2,13 +2,16 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'Cómo Crear un Jingle para tu Marca | Guía Completa 2025',
-  description: 'Guía paso a paso para crear un jingle efectivo. Desde la composición tradicional hasta generadores con IA. Ejemplos, tips y mejores prácticas.',
-  keywords: 'como crear un jingle, hacer jingle para marca, componer jingle publicitario, jingle efectivo, música para publicidad',
+  title: 'Cómo Crear una Canción para tu Marca | Guía Completa 2025',
+  description: 'Guía paso a paso para crear una canción efectiva. Desde la composición tradicional hasta generadores con IA. Ejemplos, tips y mejores prácticas.',
+  keywords: 'como crear una canción, hacer canción para marca, componer canción publicitaria, canción efectiva, música para publicidad',
+  alternates: {
+    canonical: 'https://cancionesia.com.ar/como-crear-jingle-para-marca',
+  },
   openGraph: {
-    title: 'Cómo Crear un Jingle para tu Marca | Guía Completa',
-    description: 'Guía paso a paso para crear un jingle efectivo para tu marca o negocio.',
-    url: '/como-crear-jingle-para-marca',
+    title: 'Cómo Crear una Canción para tu Marca | Guía Completa',
+    description: 'Guía paso a paso para crear una canción efectiva para tu marca o negocio.',
+    url: 'https://cancionesia.com.ar/como-crear-jingle-para-marca',
   },
 }
 
@@ -27,12 +30,12 @@ export default function ComoCrearJingle() {
       <article className="landing-article">
         <header className="landing-article-header">
           <h1 className="landing-h1">
-            Cómo Crear un Jingle<br />
+            Cómo Crear una Canción<br />
             <span className="landing-gradient">para tu Marca</span>
           </h1>
-          
+
           <p className="landing-lead">
-            Guía completa para crear un jingle memorable y efectivo.<br />
+            Guía completa para crear una canción memorable y efectiva.<br />
             Desde la composición tradicional hasta la IA.
           </p>
 
@@ -42,9 +45,9 @@ export default function ComoCrearJingle() {
         </header>
 
         <section className="landing-section">
-          <h2 className="landing-h2">¿Qué es un jingle?</h2>
+          <h2 className="landing-h2">¿Qué es una canción publicitaria?</h2>
           <p className="landing-text">
-            Un <strong>jingle</strong> es una pieza musical corta (usualmente 15-30 segundos) diseñada para promover una marca, producto o servicio. Los jingles más efectivos son:
+            Una <strong>canción publicitaria</strong> es una pieza musical corta (usualmente 15-30 segundos) diseñada para promover una marca, producto o servicio. Las canciones más efectivas son:
           </p>
           <ul className="landing-list">
             <li><strong>Memorables:</strong> Se quedan en la cabeza después de escucharlos</li>
@@ -55,7 +58,7 @@ export default function ComoCrearJingle() {
         </section>
 
         <section className="landing-section">
-          <h2 className="landing-h2">Métodos para crear un jingle</h2>
+          <h2 className="landing-h2">Métodos para crear una canción</h2>
           
           <h3 className="landing-h3">1. Contratar un estudio profesional</h3>
           <p className="landing-text">
@@ -98,7 +101,7 @@ export default function ComoCrearJingle() {
         </section>
 
         <section className="landing-section">
-          <h2 className="landing-h2">Paso a paso: Crear tu jingle con IA</h2>
+          <h2 className="landing-h2">Paso a paso: Crear tu canción con IA</h2>
           
           <div className="landing-steps">
             <div className="landing-step">
@@ -136,7 +139,7 @@ export default function ComoCrearJingle() {
               <div className="landing-step-number">4</div>
               <h3 className="landing-step-title">Implementá en tu publicidad</h3>
               <p className="landing-step-text">
-                Usá tu jingle en:<br />
+                Usá tu canción en:<br />
                 • Redes sociales (Instagram, TikTok, Facebook)<br />
                 • Radio local<br />
                 • Videos publicitarios<br />
@@ -147,8 +150,8 @@ export default function ComoCrearJingle() {
         </section>
 
         <section className="landing-section">
-          <h2 className="landing-h2">Características de un jingle efectivo</h2>
-          
+          <h2 className="landing-h2">Características de una canción efectiva</h2>
+
           <div className="landing-checklist">
             <div className="landing-checklist-item">
               <span className="landing-checklist-icon">✅</span>
@@ -160,7 +163,7 @@ export default function ComoCrearJingle() {
             <div className="landing-checklist-item">
               <span className="landing-checklist-icon">✅</span>
               <div>
-                <strong>Nombre de marca repetido:</strong> Mencioná tu marca al menos 2 veces en el jingle.
+                <strong>Nombre de marca repetido:</strong> Mencioná tu marca al menos 2 veces en la canción.
               </div>
             </div>
 
@@ -188,7 +191,7 @@ export default function ComoCrearJingle() {
         </section>
 
         <section className="landing-section">
-          <h2 className="landing-h2">Ejemplos de jingles argentinos exitosos</h2>
+          <h2 className="landing-h2">Ejemplos de canciones argentinas exitosas</h2>
           
           <div className="landing-examples">
             <div className="landing-example">
@@ -215,18 +218,18 @@ export default function ComoCrearJingle() {
 
           <p className="landing-text">
             <Link href="/ejemplos-jingles-marcas-argentinas" className="landing-link">
-              Ver más ejemplos de jingles argentinos →
+              Ver más ejemplos de canciones argentinas →
             </Link>
           </p>
         </section>
 
         <section className="landing-section landing-cta-section">
-          <h2 className="landing-h2">Creá tu jingle ahora</h2>
+          <h2 className="landing-h2">Creá tu canción ahora</h2>
           <p className="landing-text">
             Probá nuestro generador con IA. Gratis, sin registro, en 30 segundos.
           </p>
           <Link href="/" className="landing-cta-primary">
-            🎵 Generar mi Jingle Gratis
+            🎵 Generar mi Canción Gratis
           </Link>
         </section>
 
@@ -235,30 +238,30 @@ export default function ComoCrearJingle() {
           
           <div className="landing-faq">
             <details className="landing-faq-item">
-              <summary className="landing-faq-question">¿Cuánto cuesta hacer un jingle profesional?</summary>
+              <summary className="landing-faq-question">¿Cuánto cuesta hacer una canción profesional?</summary>
               <div className="landing-faq-answer">
                 Un estudio profesional cobra entre $50,000 y $200,000 ARS. Un freelancer entre $10,000 y $50,000. Un generador con IA desde gratis hasta $10,000 para la versión completa descargable.
               </div>
             </details>
 
             <details className="landing-faq-item">
-              <summary className="landing-faq-question">¿Cuánto tiempo toma crear un jingle?</summary>
+              <summary className="landing-faq-question">¿Cuánto tiempo toma crear una canción?</summary>
               <div className="landing-faq-answer">
                 Método tradicional: 2-4 semanas. Freelancer: 1-2 semanas. Generador con IA: 30 segundos a 2 minutos.
               </div>
             </details>
 
             <details className="landing-faq-item">
-              <summary className="landing-faq-question">¿Los jingles generados con IA son de buena calidad?</summary>
+              <summary className="landing-faq-question">¿Las canciones generadas con IA son de buena calidad?</summary>
               <div className="landing-faq-answer">
-                Sí. La tecnología actual produce jingles de calidad profesional, con voces naturales y producción pulida. Son ideales para marcas pequeñas y medianas que necesitan resultados rápidos y económicos.
+                Sí. La tecnología actual produce canciones de calidad profesional, con voces naturales y producción pulida. Son ideales para marcas pequeñas y medianas que necesitan resultados rápidos y económicos.
               </div>
             </details>
 
             <details className="landing-faq-item">
-              <summary className="landing-faq-question">¿Necesito derechos de autor para usar mi jingle?</summary>
+              <summary className="landing-faq-question">¿Necesito derechos de autor para usar mi canción?</summary>
               <div className="landing-faq-answer">
-                Si creás el jingle con un generador (como Cancionesia), tenés los derechos de uso comercial incluidos. Si contratás músicos o estudios, asegurate de especificar la cesión de derechos en el contrato.
+                Si creás la canción con un generador (como Cancionesia), tenés los derechos de uso comercial incluidos. Si contratás músicos o estudios, asegurate de especificar la cesión de derechos en el contrato.
               </div>
             </details>
           </div>
@@ -270,7 +273,7 @@ export default function ComoCrearJingle() {
           <div className="landing-footer-brand">
             <div className="landing-logo">🎵 Cancionesia</div>
             <p className="landing-footer-text">
-              Jingles profesionales con IA.<br />
+              Canciones profesionales con IA.<br />
               Hecho en Argentina 🇦🇷
             </p>
           </div>
@@ -281,7 +284,7 @@ export default function ComoCrearJingle() {
               Generador gratis
             </Link>
             <Link href="/ejemplos-jingles-marcas-argentinas" className="landing-footer-link">
-              Ejemplos de jingles
+              Ejemplos de canciones
             </Link>
           </div>
         </div>

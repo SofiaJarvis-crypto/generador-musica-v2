@@ -2,13 +2,16 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: '20 Ejemplos de Jingles de Marcas Argentinas | Inspiración 2025',
-  description: 'Los mejores jingles de marcas argentinas que se convirtieron en éxitos. Análisis de qué los hace memorables y cómo aplicar estas técnicas a tu marca.',
-  keywords: 'ejemplos jingles argentinos, jingles marcas argentina, jingles publicitarios, jingles famosos argentina, música publicitaria',
+  title: '20 Ejemplos de Canciones de Marcas Argentinas | Inspiración 2025',
+  description: 'Las mejores canciones publicitarias de marcas argentinas que se convirtieron en éxitos. Análisis de qué las hace memorables y cómo aplicar estas técnicas a tu marca.',
+  keywords: 'ejemplos canciones publicitarias argentinas, canciones marcas argentina, canciones publicitarias, canciones famosas argentina, música publicitaria',
+  alternates: {
+    canonical: 'https://cancionesia.com.ar/ejemplos-jingles-marcas-argentinas',
+  },
   openGraph: {
-    title: 'Ejemplos de Jingles de Marcas Argentinas',
-    description: 'Los mejores jingles argentinos que se convirtieron en éxitos memorables.',
-    url: '/ejemplos-jingles-marcas-argentinas',
+    title: 'Ejemplos de Canciones de Marcas Argentinas',
+    description: 'Las mejores canciones publicitarias argentinas que se convirtieron en éxitos memorables.',
+    url: 'https://cancionesia.com.ar/ejemplos-jingles-marcas-argentinas',
   },
 }
 
@@ -27,13 +30,13 @@ export default function EjemplosJingles() {
       <article className="landing-article">
         <header className="landing-article-header">
           <h1 className="landing-h1">
-            20 Ejemplos de Jingles<br />
+            20 Ejemplos de Canciones<br />
             <span className="landing-gradient">de Marcas Argentinas</span>
           </h1>
-          
+
           <p className="landing-lead">
-            Los jingles más memorables de la publicidad argentina.<br />
-            Qué los hace efectivos y cómo aplicarlo a tu marca.
+            Las canciones más memorables de la publicidad argentina.<br />
+            Qué las hace efectivas y cómo aplicarlo a tu marca.
           </p>
 
           <div className="landing-meta">
@@ -42,9 +45,9 @@ export default function EjemplosJingles() {
         </header>
 
         <section className="landing-section">
-          <h2 className="landing-h2">¿Qué hace a un jingle memorable?</h2>
+          <h2 className="landing-h2">¿Qué hace a una canción memorable?</h2>
           <p className="landing-text">
-            Los jingles más exitosos de Argentina comparten características clave:
+            Las canciones publicitarias más exitosas de Argentina comparten características clave:
           </p>
           <ul className="landing-list">
             <li><strong>Simplicidad:</strong> Melodías fáciles de recordar</li>
@@ -55,7 +58,7 @@ export default function EjemplosJingles() {
         </section>
 
         <section className="landing-section">
-          <h2 className="landing-h2">Jingles clásicos argentinos</h2>
+          <h2 className="landing-h2">Canciones clásicas argentinas</h2>
 
           <div className="landing-jingle-list">
             <div className="landing-jingle">
@@ -141,14 +144,14 @@ export default function EjemplosJingles() {
         </section>
 
         <section className="landing-section">
-          <h2 className="landing-h2">Jingles modernos (2020-2025)</h2>
+          <h2 className="landing-h2">Canciones modernas (2020-2025)</h2>
 
           <div className="landing-jingle-list">
             <div className="landing-jingle">
               <h3 className="landing-jingle-title">📱 "Mercado Libre, tu tienda online"</h3>
               <div className="landing-jingle-meta">Categoría: E-commerce • Estilo: Electrónica/Pop</div>
               <p className="landing-jingle-analysis">
-                <strong>Por qué funciona:</strong> Adaptación moderna del clásico jingle. Mantiene la melodía reconocible pero con producción actual.
+                <strong>Por qué funciona:</strong> Adaptación moderna de la canción clásica. Mantiene la melodía reconocible pero con producción actual.
               </p>
             </div>
 
@@ -187,7 +190,7 @@ export default function EjemplosJingles() {
         </section>
 
         <section className="landing-section">
-          <h2 className="landing-h2">Lecciones de los mejores jingles</h2>
+          <h2 className="landing-h2">Lecciones de las mejores canciones</h2>
           
           <div className="landing-lessons">
             <div className="landing-lesson">
@@ -195,7 +198,7 @@ export default function EjemplosJingles() {
               <div className="landing-lesson-content">
                 <h3 className="landing-lesson-title">Un mensaje, una idea</h3>
                 <p className="landing-lesson-text">
-                  Los jingles más recordados no intentan comunicar múltiples beneficios. Eligen UNA cosa y la repiten de forma memorable.
+                  Las canciones más recordadas no intentan comunicar múltiples beneficios. Eligen UNA cosa y la repiten de forma memorable.
                 </p>
               </div>
             </div>
@@ -225,7 +228,7 @@ export default function EjemplosJingles() {
               <div className="landing-lesson-content">
                 <h3 className="landing-lesson-title">Emoción antes que información</h3>
                 <p className="landing-lesson-text">
-                  Los jingles que duran décadas no listan características. Generan sentimientos: nostalgia, alegría, pertenencia, orgullo.
+                  Las canciones que duran décadas no listan características. Generan sentimientos: nostalgia, alegría, pertenencia, orgullo.
                 </p>
               </div>
             </div>
@@ -233,13 +236,13 @@ export default function EjemplosJingles() {
         </section>
 
         <section className="landing-section landing-cta-section">
-          <h2 className="landing-h2">Creá tu propio jingle memorable</h2>
+          <h2 className="landing-h2">Creá tu propia canción memorable</h2>
           <p className="landing-text">
-            Inspirate en estos ejemplos y generá un jingle único para tu marca.<br />
+            Inspirate en estos ejemplos y generá una canción única para tu marca.<br />
             Gratis, sin registro, en 30 segundos.
           </p>
           <Link href="/" className="landing-cta-primary">
-            🎵 Generar mi Jingle Gratis
+            🎵 Generar mi Canción Gratis
           </Link>
         </section>
 
@@ -248,30 +251,30 @@ export default function EjemplosJingles() {
           
           <div className="landing-faq">
             <details className="landing-faq-item">
-              <summary className="landing-faq-question">¿Estos jingles fueron hechos por estudios profesionales?</summary>
+              <summary className="landing-faq-question">¿Estas canciones fueron hechas por estudios profesionales?</summary>
               <div className="landing-faq-answer">
-                Sí, la mayoría fueron creados por estudios de grabación con compositores profesionales. Sin embargo, hoy en día podés lograr resultados similares con generadores de IA por una fracción del costo.
+                Sí, la mayoría fueron creadas por estudios de grabación con compositores profesionales. Sin embargo, hoy en día podés lograr resultados similares con generadores de IA por una fracción del costo.
               </div>
             </details>
 
             <details className="landing-faq-item">
-              <summary className="landing-faq-question">¿Cuánto invirtieron estas marcas en sus jingles?</summary>
+              <summary className="landing-faq-question">¿Cuánto invirtieron estas marcas en sus canciones?</summary>
               <div className="landing-faq-answer">
                 Las grandes marcas (Quilmes, Renault, Ariel) invirtieron entre $100,000 y $500,000 ARS en producción musical. Marcas más pequeñas gastaron entre $30,000 y $100,000 ARS.
               </div>
             </details>
 
             <details className="landing-faq-item">
-              <summary className="landing-faq-question">¿Puedo crear un jingle similar para mi marca?</summary>
+              <summary className="landing-faq-question">¿Puedo crear una canción similar para mi marca?</summary>
               <div className="landing-faq-answer">
-                Sí. Aunque no copies la melodía exacta (derechos de autor), podés inspirarte en la estructura, estilo musical y técnicas de estos jingles para crear el tuyo con un generador de IA.
+                Sí. Aunque no copies la melodía exacta (derechos de autor), podés inspirarte en la estructura, estilo musical y técnicas de estas canciones para crear la tuya con un generador de IA.
               </div>
             </details>
 
             <details className="landing-faq-item">
-              <summary className="landing-faq-question">¿Los jingles siguen siendo efectivos en 2025?</summary>
+              <summary className="landing-faq-question">¿Las canciones publicitarias siguen siendo efectivas en 2025?</summary>
               <div className="landing-faq-answer">
-                Absolutamente. Con el auge de TikTok, Instagram Reels y contenido de video corto, los jingles son más relevantes que nunca. Un audio pegadizo puede volverse viral en redes sociales.
+                Absolutamente. Con el auge de TikTok, Instagram Reels y contenido de video corto, las canciones publicitarias son más relevantes que nunca. Un audio pegadizo puede volverse viral en redes sociales.
               </div>
             </details>
           </div>
@@ -285,7 +288,7 @@ export default function EjemplosJingles() {
               <div className="landing-resource-content">
                 <h3 className="landing-resource-title">Guía completa</h3>
                 <p className="landing-resource-text">
-                  Cómo crear un jingle paso a paso
+                  Cómo crear una canción paso a paso
                 </p>
               </div>
             </Link>
@@ -295,7 +298,7 @@ export default function EjemplosJingles() {
               <div className="landing-resource-content">
                 <h3 className="landing-resource-title">Generador gratis</h3>
                 <p className="landing-resource-text">
-                  Creá tu jingle con IA en 30 segundos
+                  Creá tu canción con IA en 30 segundos
                 </p>
               </div>
             </Link>
@@ -308,7 +311,7 @@ export default function EjemplosJingles() {
           <div className="landing-footer-brand">
             <div className="landing-logo">🎵 Cancionesia</div>
             <p className="landing-footer-text">
-              Jingles profesionales con IA.<br />
+              Canciones profesionales con IA.<br />
               Hecho en Argentina 🇦🇷
             </p>
           </div>
@@ -319,7 +322,7 @@ export default function EjemplosJingles() {
               Generador gratis
             </Link>
             <Link href="/como-crear-jingle-para-marca" className="landing-footer-link">
-              Cómo crear un jingle
+              Cómo crear una canción
             </Link>
           </div>
         </div>

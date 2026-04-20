@@ -7,7 +7,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://cancionesia.com.ar'
 
   // Fecha de la última actualización significativa de contenido
-  const lastContentUpdate = new Date('2025-10-15')
+  const lastContentUpdate = new Date('2026-04-20')
 
   return [
     {
