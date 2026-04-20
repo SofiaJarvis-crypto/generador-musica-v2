@@ -3,11 +3,61 @@
 // Al ser un Server Component, React lo incluye en el payload RSC,
 // garantizando hidratación estable independiente del ciclo de HomeForm.
 
+import Link from 'next/link'
+
+const GENRES = [
+  { href: '/jingle-de-cumbia',    emoji: '🪘', label: 'Cumbia',    desc: 'El ritmo más popular de Argentina' },
+  { href: '/jingle-de-pop',       emoji: '🎹', label: 'Pop',       desc: 'El género más versátil para cualquier marca' },
+  { href: '/jingle-de-folklore',  emoji: '🎸', label: 'Folklore',  desc: 'Identidad argentina, conexión regional' },
+  { href: '/jingle-de-reggaeton', emoji: '🎤', label: 'Reggaetón', desc: 'Para marcas juveniles y dinámicas' },
+  { href: '/jingle-de-cuarteto',  emoji: '🎷', label: 'Cuarteto',  desc: 'El ritmo del interior del país' },
+  { href: '/jingle-de-trap',      emoji: '🎧', label: 'Trap',      desc: 'Moderno y urbano para marcas de tendencia' },
+]
+
+const BUSINESS_TYPES = [
+  { href: '/jingle-para-peluqueria',   emoji: '✂️', label: 'Peluquería',   desc: 'Para peluquerías y barberías' },
+  { href: '/jingle-para-ferreteria',   emoji: '🔧', label: 'Ferretería',   desc: 'Para ferreterías y corralones' },
+  { href: '/jingle-para-almacen',      emoji: '🛒', label: 'Almacén',      desc: 'Para almacenes y despensas' },
+  { href: '/jingle-para-restaurant',   emoji: '🍖', label: 'Restaurante',  desc: 'Para parrillas, pizzerías y delivery' },
+  { href: '/jingle-para-emprendimiento', emoji: '🚀', label: 'Emprendimiento', desc: 'Para cualquier tipo de emprendimiento' },
+  { href: '/jingle-para-radio-fm',     emoji: '📻', label: 'Radio FM',     desc: 'Cuñas listas para emitir en radio' },
+]
+
 export default function SeoSections() {
   return (
     <div className="seo-sections-wrap">
+      <section className="seo-section" aria-label="Géneros disponibles">
+        <h2 className="seo-section-title">Elegí el género ideal para tu marca</h2>
+        <ul className="seo-genres-grid">
+          {GENRES.map(({ href, emoji, label, desc }) => (
+            <li key={href}>
+              <Link href={href} className="seo-genre-card">
+                <span className="seo-genre-emoji">{emoji}</span>
+                <strong className="seo-genre-label">{label}</strong>
+                <span className="seo-genre-desc">{desc}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section className="seo-section" aria-label="Jingles por tipo de negocio">
+        <h2 className="seo-section-title">Jingles para cada tipo de negocio</h2>
+        <ul className="seo-genres-grid">
+          {BUSINESS_TYPES.map(({ href, emoji, label, desc }) => (
+            <li key={href}>
+              <Link href={href} className="seo-genre-card">
+                <span className="seo-genre-emoji">{emoji}</span>
+                <strong className="seo-genre-label">{label}</strong>
+                <span className="seo-genre-desc">{desc}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
+
       <section className="seo-section" aria-label="Cómo funciona Cancionesia">
-        <h2 className="seo-section-title">¿Cómo funciona el generador de jingles con IA?</h2>
+        <h2 className="seo-section-title">¿Cómo funciona el generador de canciones con IA?</h2>
         <ol className="seo-steps">
           <li className="seo-step">
             <span className="seo-step-num">1</span>
@@ -37,16 +87,16 @@ export default function SeoSections() {
         <h2 className="seo-section-title">Por qué tu marca necesita una canción propia</h2>
         <ul className="seo-benefits">
           <li>
-            <strong>Recordación hasta 9 veces mayor</strong> — El cerebro procesa la música de forma emocional. Una marca con jingle se recuerda mucho más que una sin música.
+            <strong>Recordación hasta 9 veces mayor</strong> — El cerebro procesa la música de forma emocional. Una marca con canción se recuerda mucho más que una sin música.
           </li>
           <li>
             <strong>Diferenciación instantánea</strong> — En un feed de redes sociales saturado, una canción hace que tu contenido se distinga a los 3 segundos.
           </li>
           <li>
-            <strong>Consistencia de marca en todos los canales</strong> — Usá el mismo jingle en Instagram, TikTok, WhatsApp y radio local para construir una identidad sonora reconocible.
+            <strong>Consistencia de marca en todos los canales</strong> — Usá la misma canción en Instagram, TikTok, WhatsApp y radio local para construir una identidad sonora reconocible.
           </li>
           <li>
-            <strong>Sin costos de estudio ni músicos</strong> — Un jingle profesional grabado en estudio puede costar entre $50,000 y $300,000 ARS. Con Cancionesia lo obtenés desde $8,900 en minutos.
+            <strong>Sin costos de estudio ni músicos</strong> — Una canción profesional grabada en estudio puede costar entre $50,000 y $300,000 ARS. Con Cancionesia lo obtenés desde $8,900 en minutos.
           </li>
         </ul>
       </section>
@@ -61,15 +111,15 @@ export default function SeoSections() {
             </dd>
           </div>
           <div className="seo-faq-item" itemScope itemType="https://schema.org/Question">
-            <dt itemProp="name">¿Puedo usar el jingle en publicidad y redes sociales?</dt>
+            <dt itemProp="name">¿Puedo usar la canción en publicidad y redes sociales?</dt>
             <dd itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-              <span itemProp="text">Sí. Al descargar tu jingle obtenés una licencia comercial que te permite usarlo en Instagram, TikTok, YouTube, radio local, y cualquier otro medio publicitario sin restricciones.</span>
+              <span itemProp="text">Sí. Al descargar tu canción obtenés una licencia comercial que te permite usarla en Instagram, TikTok, YouTube, radio local, y cualquier otro medio publicitario sin restricciones.</span>
             </dd>
           </div>
           <div className="seo-faq-item" itemScope itemType="https://schema.org/Question">
             <dt itemProp="name">¿Cuánto tarda en generarse mi canción?</dt>
             <dd itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
-              <span itemProp="text">Entre 1 y 3 minutos. La IA genera dos versiones distintas de tu jingle en paralelo para que puedas comparar y elegir la que más te guste.</span>
+              <span itemProp="text">Entre 1 y 3 minutos. La IA genera dos versiones distintas de tu canción en paralelo para que puedas comparar y elegir la que más te guste.</span>
             </dd>
           </div>
           <div className="seo-faq-item" itemScope itemType="https://schema.org/Question">
@@ -79,7 +129,7 @@ export default function SeoSections() {
             </dd>
           </div>
           <div className="seo-faq-item" itemScope itemType="https://schema.org/Question">
-            <dt itemProp="name">¿En qué formatos puedo descargar el jingle?</dt>
+            <dt itemProp="name">¿En qué formatos puedo descargar la canción?</dt>
             <dd itemScope itemType="https://schema.org/Answer" itemProp="acceptedAnswer">
               <span itemProp="text">El archivo descargable es MP3 a 320 kbps, el estándar de calidad de producción profesional, listo para usar en cualquier plataforma o software de edición de video.</span>
             </dd>
